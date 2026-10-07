@@ -168,7 +168,13 @@ function sampleState(){
 }
 var S=load();
 function load(){try{var v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&v.child)return v;}catch(e){}return sampleState();}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+var KEY_UI='suhak-ui-v1';
+function cloudOn(){return !!(S.cloud&&S.cloud.status==='on');}
+function save(){try{
+  if(cloudOn())localStorage.setItem(KEY_UI,JSON.stringify({size:S.size,selftest:S.selftest}));
+  else{var c=S.cloud;delete S.cloud;localStorage.setItem(KEY,JSON.stringify(S));S.cloud=c;}
+}catch(e){}}
+function localState(){var keep={size:S.size,selftest:S.selftest};var v=load();v.size=keep.size;v.selftest=keep.selftest;return v;}
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
@@ -188,6 +194,8 @@ function diagResult(){
   var st=cand[0]||DATA.stations.filter(function(s){return s.grade===S.child.grade;}).slice(-1)[0];
   return {gate:null,start:st,back:[],ahead:st.next.map(function(i){return byId[i];})};
 }
+
+function syncDiag(){if(!DATA)return;DATA.gates.forEach(function(g){var p=S.progress[g.station];if(p)S.diag[g.no]=p.s==='passed'?'pass':'stuck';});}
 
 // ---------- 노선도 SVG ----------
 function routeSVG(hereId){
@@ -218,7 +226,7 @@ function routeSVG(hereId){
 }
 
 // ---------- 화면 ----------
-function chip(){document.getElementById('childChip').innerHTML=esc(S.child.nickname)+' · '+S.child.grade+'학년'+(S.sample?'<span class="example">예시</span>':'');}
+function chip(){document.getElementById('childChip').innerHTML=(cloudOn()?'<span title="로그인됨">☁ </span>':'')+esc(S.child.nickname)+' · '+S.child.grade+'학년'+(S.sample?'<span class="example">예시</span>':'');}
 
 function viewToday(){
   var r=diagResult(), passed=Object.values(S.progress).filter(function(p){return p.s==='passed';}).length;
@@ -284,14 +292,47 @@ function viewMap(){
 function viewRecord(){
   var rows=Object.keys(S.progress).sort().map(function(id){var p=S.progress[id],s=byId[id];
     return '<tr><td>'+id+'</td><td>'+esc(s.name)+'</td><td><span class="pill '+(p.s==='passed'?'pass':'stuck')+'">'+(p.s==='passed'?'통과':'막힘')+'</span></td><td class="muted">'+p.at+'</td></tr>';}).join('');
-  var h='<div class="col">'+selfTestCard()+'<section class="card"><h3>'+esc(S.child.nickname)+'의 기록</h3>'+(rows?'<div style="overflow-x:auto"><table class="rec"><thead><tr><th>역</th><th>이름</th><th>상태</th><th>날짜</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p class="muted">아직 기록이 없어요. 역 카드에서 ‘통과’나 ‘막힘’을 누르면 여기에 쌓여요.</p>')+'</section>'+
+  var h='<div class="col">'+accountCard()+selfTestCard()+'<section class="card"><h3>'+esc(S.child.nickname)+'의 기록</h3>'+(rows?'<div style="overflow-x:auto"><table class="rec"><thead><tr><th>역</th><th>이름</th><th>상태</th><th>날짜</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p class="muted">아직 기록이 없어요. 역 카드에서 ‘통과’나 ‘막힘’을 누르면 여기에 쌓여요.</p>')+'</section>'+
     '<section class="card"><h3>아이 프로필</h3><p class="small muted">별명과 학년만 저장해요. 실명·생년월일·사진은 받지 않아요.</p>'+
     '<form id="profile" class="row" style="align-items:end"><label class="field" for="nick">별명<input id="nick" maxlength="12" required value="'+esc(S.child.nickname)+'"></label>'+
     '<label class="field" for="grade">학년<select id="grade">'+[1,2,3,4,5,6].map(function(i){return '<option value="'+i+'"'+(i===S.child.grade?' selected':'')+'>'+i+'학년</option>';}).join('')+'</select></label><button class="btn" type="submit">저장</button></form></section>'+
     sizeCard()+purchaseCard()+
-    '<section class="card"><button class="btn ghost" data-act="reset">예시 데이터로 되돌리기</button><p class="notice">기록은 이 기기의 브라우저에만 남는 시제품입니다.</p></section></div>';
+    (cloudOn()?'':'<section class="card"><button class="btn ghost" data-act="reset">예시 데이터로 되돌리기</button><p class="notice">로그인하지 않으면 기록은 이 기기의 브라우저에만 남아요.</p></section>')+'</div>';
   return h+detailCol();
 }
+
+// ---------- 계정(로그인·저장) ----------
+function accountCard(){
+  var c=S.cloud||{status:'loading'}, msg=c.msg?'<p class="notice" role="status" style="color:var(--red)">'+esc(c.msg)+'</p>':'';
+  var h='<section class="card tape" id="account"><h3>계정</h3>';
+  if(c.status==='loading'){h+='<p class="small muted">로그인 상태를 확인하고 있어요…</p>';}
+  else if(c.status==='unavailable'){h+='<p class="small">로그인은 실제 주소(GitHub Pages)에서만 동작해요. 지금은 이 기기에만 저장돼요.</p>';}
+  else if(c.status==='off'){
+    h+='<p class="small">로그인하면 기록이 저장되고 휴대폰·패드·PC에서 이어 볼 수 있어요. <b>부모(보호자)만</b> 가입해요.</p>'+
+      '<div class="row"><button class="btn" data-act="login-google">Google로 로그인</button></div>'+
+      '<form id="emailForm" class="list" style="margin-top:12px" autocomplete="on">'+
+      '<label class="field" for="em">이메일<input id="em" type="email" autocomplete="email" required></label>'+
+      '<label class="field" for="pw">비밀번호 (6자 이상)<input id="pw" type="password" autocomplete="current-password" minlength="6" required></label>'+
+      '<div class="row"><button class="btn ghost" type="submit" data-mode="in">이메일로 로그인</button><button class="btn ghost" type="submit" data-mode="up">새로 가입</button><button class="back" type="button" data-act="reset-pw">비밀번호를 잊었어요</button></div></form>';
+  }
+  else if(c.status==='consent'){
+    h+='<p class="small">'+esc(c.email||'')+' 계정으로 처음 오셨어요.</p>'+
+      '<label class="small" for="over14" style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" id="over14" style="margin-top:5px;accent-color:var(--green)"> <span>만 14세 이상의 부모(보호자)입니다. 아이 정보는 별명과 학년만 입력하겠습니다.</span></label>'+
+      '<p class="notice">가입하면 이용약관과 개인정보 처리방침에 따라 정보가 처리돼요.</p>'+
+      '<div class="row"><button class="btn" data-act="consent">시작하기</button><button class="btn ghost" data-act="logout">로그아웃</button></div>';
+  }
+  else if(c.status==='on'){
+    var kids=c.children||[];
+    h+='<p class="small">☁ <b>'+esc(c.email||'')+'</b> · 기록이 자동으로 저장돼요.</p>'+
+      '<p class="small muted" style="margin-bottom:4px">아이 고르기</p><div class="tabs" role="group" aria-label="아이" style="flex-wrap:wrap">'+
+      kids.map(function(k){return '<button class="tab" aria-pressed="'+(k.id===c.childId)+'" data-child="'+k.id+'">'+esc(k.nickname)+' · '+k.grade+'학년</button>';}).join('')+
+      (kids.length<4?'<button class="tab" data-act="add-child">＋ 아이 추가</button>':'')+'</div>'+
+      '<div class="row" style="margin-top:12px"><button class="btn ghost" data-act="logout">로그아웃</button><button class="back" data-act="delete-ask" style="color:var(--red)">계정 삭제</button></div>';
+    if(c.confirmDelete)h+='<div class="card" style="box-shadow:none;border-color:var(--red);margin-top:10px"><p class="small"><b>정말 삭제할까요?</b> 아이 프로필과 모든 기록이 지워지고 되돌릴 수 없어요.</p><div class="row"><button class="btn red" data-act="delete-yes">삭제합니다</button><button class="btn ghost" data-act="delete-no">취소</button></div></div>';
+  }
+  return h+msg+'</section>';
+}
+function cloudCall(fn){if(window.Cloud&&window.Cloud[fn])return window.Cloud[fn].apply(null,[].slice.call(arguments,1));}
 
 // ---------- 구독(앱 안 결제) ----------
 var PLAT={web:'웹',android:'안드로이드 앱',ios:'아이폰·패드 앱'};
@@ -317,6 +358,7 @@ function purchaseCard(){
 // ---------- 셀프 테스트 ----------
 var SELF_TEST=[
   ['first','휴대폰 첫 화면만 보고 무엇을 하는 앱인지 알 수 있다'],
+  ['login','기록 탭에서 가입·로그인하고, 다른 기기에서 같은 계정으로 기록이 보인다'],
   ['setup','‘우리 아이로 시작하기’로 별명·학년을 바꿀 수 있다'],
   ['diag','관문 진단을 끝까지 해 본다(통과·막힘 둘 다 눌러 보기)'],
   ['result','진단 결과의 출발역이 아이 상황과 맞게 나온다'],
@@ -382,22 +424,31 @@ document.addEventListener('click',function(e){
   if(t.dataset.grade){S.mapGrade=+t.dataset.grade;render();return;}
   if(t.dataset.size){S.size=t.dataset.size;render();return;}
   if(t.dataset.plat){S.platform=t.dataset.plat;S.storeSheet=false;render();return;}
-  if(t.dataset.mark){S.progress[t.dataset.id]={s:t.dataset.mark,at:today()};render();return;}
+  if(t.dataset.mark){S.progress[t.dataset.id]={s:t.dataset.mark,at:today()};syncDiag();if(cloudOn())cloudCall('saveProgress',t.dataset.id,t.dataset.mark);render();return;}
+  if(t.dataset.child){cloudCall('selectChild',t.dataset.child);return;}
   if(t.dataset.diag){var gs=gatesFor(S.child.grade),g=gs[S.diagStep];
     if(t.dataset.diag==='prev'){S.diagStep=Math.max(0,S.diagStep-1);render();return;}
-    S.diag[g.no]=t.dataset.diag; S.progress[g.station]={s:t.dataset.diag==='pass'?'passed':'stuck',at:today()};
+    S.diag[g.no]=t.dataset.diag; S.progress[g.station]={s:t.dataset.diag==='pass'?'passed':'stuck',at:today()}; if(cloudOn())cloudCall('saveProgress',g.station,S.progress[g.station].s);
     S.diagStep=t.dataset.diag==='stuck'?gs.length:S.diagStep+1; if(S.diagStep>=gs.length)S.sel=diagResult().start.id; render();return;}
   var a=t.dataset.act;
   if(a==='diag-start'){S.diagStep=0;render();}
   else if(a==='diag-reset'){S.diag={};S.diagStep=0;render();}
+  else if(a==='login-google'){cloudCall('loginGoogle');}
+  else if(a==='reset-pw'){var em=document.getElementById('em');cloudCall('resetPassword',em?em.value.trim():'');}
+  else if(a==='consent'){var ok=document.getElementById('over14');if(!ok||!ok.checked){S.cloud.msg='만 14세 이상 부모(보호자) 확인에 체크해 주세요.';render();}else cloudCall('consent');}
+  else if(a==='logout'){cloudCall('logout');}
+  else if(a==='add-child'){cloudCall('addChild');}
+  else if(a==='delete-ask'){S.cloud.confirmDelete=true;render();}
+  else if(a==='delete-no'){S.cloud.confirmDelete=false;render();}
+  else if(a==='delete-yes'){cloudCall('deleteAccount');}
   else if(a==='close'){S.detailOpen=false;render();}
   else if(a==='pass'){S.pass=!S.pass;S.passSource=null;S.couponMsg='';render();}
   else if(a==='subscribe'){S.storeSheet=true;render();}
   else if(a==='cancelSheet'){S.storeSheet=false;render();}
   else if(a==='buy'){S.storeSheet=false;S.pass=true;S.passSource=S.platform==='ios'?'App Store':'Google Play';render();}
   else if(a==='restore'){render();}
-  else if(a==='reset'){var keep=S.selftest;S=sampleState();S.selftest=keep||{};render();}
-  else if(a==='setup'){S={sample:false,child:{nickname:'우리 아이',grade:S.child.grade},progress:{},diag:{},pass:false,view:'record',sel:null,mapGrade:S.child.grade,diagStep:null,detailOpen:false,selftest:S.selftest||{}};render();var n=document.getElementById('nick');if(n){n.focus();n.select();}}
+  else if(a==='reset'){var keep=S.selftest,cl=S.cloud;S=sampleState();S.selftest=keep||{};S.cloud=cl;render();}
+  else if(a==='setup'){S={sample:false,child:{nickname:'우리 아이',grade:S.child.grade},progress:{},diag:{},pass:false,view:'record',sel:null,mapGrade:S.child.grade,diagStep:null,detailOpen:false,selftest:S.selftest||{},size:S.size,cloud:S.cloud};render();var n=document.getElementById('nick');if(n){n.focus();n.select();}}
 });
 document.addEventListener('change',function(e){
   var k=e.target.dataset&&e.target.dataset.st; if(!k)return;
@@ -410,17 +461,178 @@ document.addEventListener('submit',function(e){
     if(code==='DONGARI-2027'||code==='DONGARI2027'){S.pass=true;S.passSource='coupon';S.couponMsg='동아리 쿠폰이 적용됐어요. 1년 동안 모든 역이 열립니다.';}
     else S.couponMsg=code?'이 코드는 쓸 수 없어요. 철자를 확인하거나, 이미 쓴 코드인지 확인해 주세요.':'쿠폰 코드를 넣어 주세요.';
     render();return;}
+  if(e.target.id==='emailForm'){e.preventDefault();
+    var mode=(e.submitter&&e.submitter.dataset.mode)||'in';
+    cloudCall(mode==='up'?'signUpEmail':'loginEmail',document.getElementById('em').value.trim(),document.getElementById('pw').value);return;}
   if(e.target.id!=='profile')return; e.preventDefault();
   var n=document.getElementById('nick').value.trim().slice(0,12)||'우리 아이';
   var g=+document.getElementById('grade').value;
   if(g!==S.child.grade){S.diag={};S.diagStep=null;}
-  S.child={nickname:n,grade:g};S.sample=false;S.mapGrade=g;S.view='today';render();
+  S.child={nickname:n,grade:g};S.sample=false;S.mapGrade=g;S.view='today';if(cloudOn())cloudCall('saveChild',n,g);render();
 });
 window.matchMedia('(min-width:600px)').addEventListener('change',render);
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
+
+window.SUHAK={
+  get:function(){return S;},
+  set:function(fn){fn(S);syncDiag();if(DATA)render();},
+  local:function(){var c=S.cloud;S=localState();S.cloud=c;},
+  today:today
+};
+S.cloud={status:'loading'};
+setTimeout(function(){if(!window.Cloud&&S.cloud.status==='loading'){S.cloud={status:'unavailable'};if(DATA)render();}},6000);
 
 fetch('stations.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json();}).then(function(d){
   DATA=d; d.stations.forEach(function(s){byId[s.id]=s;}); if(S.sel&&!byId[S.sel])S.sel=null; render();
 }).catch(function(){document.getElementById('main').innerHTML='<div class="col"><div class="card">역 데이터(stations.json)를 불러오지 못했어요. 같은 폴더에 파일이 있는지 확인해 주세요.</div></div>';});
 })();
+</script>
+
+<script type="module">
+// ---------- Firebase: 로그인·기록 저장 ----------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
+  signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, addDoc, deleteDoc, collection, getDocs, serverTimestamp, writeBatch
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAlm65URPZODqWMsBHPb8S4V0vJABaNOHQ",
+  authDomain: "suhak-sireoyeo.firebaseapp.com",
+  projectId: "suhak-sireoyeo",
+  storageBucket: "suhak-sireoyeo.firebasestorage.app",
+  messagingSenderId: "152725828969",
+  appId: "1:152725828969:web:4b1a2e4964632307c579f8"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const H = window.SUHAK;
+
+const MSG = {
+  'auth/invalid-credential':'이메일 또는 비밀번호가 맞지 않아요.',
+  'auth/wrong-password':'이메일 또는 비밀번호가 맞지 않아요.',
+  'auth/user-not-found':'가입된 이메일이 아니에요. ‘새로 가입’을 눌러 주세요.',
+  'auth/email-already-in-use':'이미 가입된 이메일이에요. ‘이메일로 로그인’을 눌러 주세요.',
+  'auth/weak-password':'비밀번호를 6자 이상으로 정해 주세요.',
+  'auth/invalid-email':'이메일 주소 형식을 확인해 주세요.',
+  'auth/missing-email':'이메일을 먼저 입력해 주세요.',
+  'auth/popup-closed-by-user':'로그인 창이 닫혔어요. 다시 눌러 주세요.',
+  'auth/unauthorized-domain':'이 주소는 로그인이 허용되지 않았어요. Firebase 승인된 도메인을 확인해 주세요.',
+  'auth/network-request-failed':'인터넷 연결을 확인해 주세요.',
+  'auth/too-many-requests':'시도가 너무 많아요. 잠시 뒤 다시 해 주세요.',
+  'permission-denied':'저장 권한이 없어요. 보안 규칙이 게시됐는지 확인해 주세요.'
+};
+function fail(e){ console.error(e); H.set(S => { S.cloud = Object.assign({}, S.cloud, { msg: MSG[e && e.code] || '문제가 생겼어요. 잠시 뒤 다시 해 주세요. (' + ((e && e.code) || '알 수 없음') + ')' }); }); }
+function ymd(ts){ const d = ts && ts.toDate ? ts.toDate() : new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+const kidsRef = uid => collection(db, 'users', uid, 'children');
+const progRef = (uid, cid) => collection(db, 'users', uid, 'children', cid, 'progress');
+
+async function loadChild(uid, child, children, email){
+  const snap = await getDocs(progRef(uid, child.id));
+  const progress = {};
+  snap.forEach(d => { const v = d.data(); if (v.status === 'passed' || v.status === 'stuck') progress[d.id] = { s: v.status, at: ymd(v.updatedAt) }; });
+  try { localStorage.setItem('suhak-child-' + uid, child.id); } catch (e) {}
+  H.set(S => {
+    S.cloud = { status: 'on', uid, email, children, childId: child.id };
+    S.sample = false; S.child = { nickname: child.nickname, grade: child.grade };
+    S.progress = progress; S.diag = {}; S.diagStep = null; S.mapGrade = child.grade;
+    if (S.sel && !S.progress[S.sel]) S.sel = null;
+  });
+}
+
+async function openAccount(user){
+  const uid = user.uid, email = user.email || '';
+  const u = await getDoc(doc(db, 'users', uid));
+  if (!u.exists()) { H.set(S => { S.cloud = { status: 'consent', uid, email }; S.view = 'record'; }); return; }
+  const ks = await getDocs(kidsRef(uid));
+  let children = [];
+  ks.forEach(d => { const v = d.data(); children.push({ id: d.id, nickname: v.nickname, grade: v.grade, t: v.createdAt ? v.createdAt.toMillis() : 0 }); });
+  children.sort((a, b) => a.t - b.t);
+  if (!children.length) {
+    // 처음 로그인: 이 기기에서 쓰던 아이와 기록을 계정으로 옮김(예시 데이터는 옮기지 않음)
+    const L = H.get();
+    const nick = L.sample ? '우리 아이' : L.child.nickname, grade = L.sample ? L.child.grade : L.child.grade;
+    const ref = await addDoc(kidsRef(uid), { nickname: nick, grade: grade, createdAt: serverTimestamp() });
+    if (!L.sample && L.progress) {
+      const b = writeBatch(db); let n = 0;
+      Object.keys(L.progress).forEach(id => { const p = L.progress[id]; if (p.s === 'passed' || p.s === 'stuck') { b.set(doc(db, 'users', uid, 'children', ref.id, 'progress', id), { status: p.s, updatedAt: serverTimestamp() }); n++; } });
+      if (n) await b.commit();
+    }
+    children = [{ id: ref.id, nickname: nick, grade }];
+  }
+  let pick = null; try { pick = localStorage.getItem('suhak-child-' + uid); } catch (e) {}
+  const child = children.find(k => k.id === pick) || children[0];
+  await loadChild(uid, child, children, email);
+}
+
+onAuthStateChanged(auth, user => {
+  if (!user) { H.local(); H.set(S => { S.cloud = { status: 'off' }; }); return; }
+  openAccount(user).catch(fail);
+});
+
+window.Cloud = {
+  async loginGoogle(){
+    const p = new GoogleAuthProvider();
+    try { await signInWithPopup(auth, p); }
+    catch (e) { if (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment') { await signInWithRedirect(auth, p); } else fail(e); }
+  },
+  async loginEmail(em, pw){ try { await signInWithEmailAndPassword(auth, em, pw); } catch (e) { fail(e); } },
+  async signUpEmail(em, pw){ try { await createUserWithEmailAndPassword(auth, em, pw); } catch (e) { fail(e); } },
+  async resetPassword(em){
+    try { await sendPasswordResetEmail(auth, em); H.set(S => { S.cloud = Object.assign({}, S.cloud, { msg: em + ' 로 비밀번호 재설정 메일을 보냈어요.' }); }); }
+    catch (e) { fail(e); }
+  },
+  async consent(){
+    const user = auth.currentUser; if (!user) return;
+    try {
+      await setDoc(doc(db, 'users', user.uid), { displayName: user.displayName || '', over14: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+      await openAccount(user);
+    } catch (e) { fail(e); }
+  },
+  async logout(){ try { await signOut(auth); } catch (e) { fail(e); } },
+  async saveProgress(id, status){
+    const c = H.get().cloud; if (!c || c.status !== 'on') return;
+    try { await setDoc(doc(db, 'users', c.uid, 'children', c.childId, 'progress', id), { status, updatedAt: serverTimestamp() }); }
+    catch (e) { fail(e); }
+  },
+  async saveChild(nickname, grade){
+    const c = H.get().cloud; if (!c || c.status !== 'on') return;
+    try {
+      await setDoc(doc(db, 'users', c.uid, 'children', c.childId), { nickname, grade: Number(grade) }, { merge: true });
+      H.set(S => { S.cloud.children = S.cloud.children.map(k => k.id === c.childId ? Object.assign({}, k, { nickname, grade: Number(grade) }) : k); });
+    } catch (e) { fail(e); }
+  },
+  async addChild(){
+    const c = H.get().cloud; if (!c || c.status !== 'on' || c.children.length >= 4) return;
+    try {
+      const ref = await addDoc(kidsRef(c.uid), { nickname: '아이 ' + (c.children.length + 1), grade: 1, createdAt: serverTimestamp() });
+      const children = c.children.concat([{ id: ref.id, nickname: '아이 ' + (c.children.length + 1), grade: 1 }]);
+      await loadChild(c.uid, children[children.length - 1], children, c.email);
+      H.set(S => { S.view = 'record'; });
+      setTimeout(() => { const n = document.getElementById('nick'); if (n) { n.focus(); n.select(); } }, 50);
+    } catch (e) { fail(e); }
+  },
+  async selectChild(id){
+    const c = H.get().cloud; if (!c || c.status !== 'on') return;
+    const child = c.children.find(k => k.id === id); if (!child) return;
+    try { await loadChild(c.uid, child, c.children, c.email); } catch (e) { fail(e); }
+  },
+  async deleteAccount(){
+    const user = auth.currentUser; const c = H.get().cloud; if (!user || !c) return;
+    const recent = Date.now() - new Date(user.metadata.lastSignInTime).getTime() < 5 * 60 * 1000;
+    if (!recent) { H.set(S => { S.cloud.confirmDelete = false; S.cloud.msg = '보안을 위해 로그아웃 후 다시 로그인하고 5분 안에 삭제해 주세요.'; }); return; }
+    try {
+      for (const k of c.children) {
+        const ps = await getDocs(progRef(c.uid, k.id));
+        for (const d of ps.docs) await deleteDoc(d.ref);
+        await deleteDoc(doc(db, 'users', c.uid, 'children', k.id));
+      }
+      await deleteDoc(doc(db, 'users', c.uid));
+      await deleteUser(user);
+      try { localStorage.removeItem('suhak-child-' + c.uid); } catch (e) {}
+    } catch (e) { fail(e); }
+  }
+};
 </script>
