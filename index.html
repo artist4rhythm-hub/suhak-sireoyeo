@@ -378,7 +378,7 @@ var SELF_TEST=[
   ['here','노선도의 ‘지금 여기’ 위치가 맞다'],
   ['map','지도에서 다른 학년 역 카드를 열어 본다'],
   ['mark','역 카드에서 통과·막힘을 누르면 기록에 쌓인다'],
-  ['ws','1-07·2-01 역 카드에서 무료 학습지가 열리고, PC에서 출력된다'],
+  ['ws','1-07·2-01·2-06 역 카드에서 무료 학습지가 열리고, PC에서 출력된다'],
   ['lock','잠긴 칸을 보고 무료와 유료 차이를 알 수 있다'],
   ['coupon','앱 구독(안드로이드·아이폰)과 웹 쿠폰 적용 뒤 잠금이 풀린다'],
   ['font','제목(단정해)·본문(심플해)·손글씨(고운밤)이 잘 읽히고, 글자 크기 ‘크게’가 편하다'],
@@ -398,7 +398,7 @@ function selfTestCard(){
 
 // ---------- 역 카드 ----------
 // 무료 학습지(PDF): 관문역부터 하나씩 추가
-var WS={'1-07':'worksheets/gate1-ten.pdf','2-01':'worksheets/gate2-place-value.pdf'};
+var WS={'1-07':'worksheets/gate1-ten.pdf','2-01':'worksheets/gate2-place-value.pdf','2-06':'worksheets/gate3-multiplication.pdf'};
 function wsLink(id){return WS[id]?'<div class="wsbox"><a class="btn" href="'+WS[id]+'" target="_blank" rel="noopener">무료 학습지 열기 (PDF)</a><span class="small muted">A4 · 41문항 + 부모용 정답. PC에서 열면 바로 출력할 수 있어요.</span></div>':'';}
 function stationCard(id){
   var s=byId[id]; if(!s)return '';
