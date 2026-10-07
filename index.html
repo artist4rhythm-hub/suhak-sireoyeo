@@ -1,3 +1,11 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2E6B45">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="수학시러여">
 <title>수학하기 시러여!</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -102,6 +110,8 @@ main{flex:1;padding:16px 16px 24px;display:grid;grid-template-columns:minmax(0,1
 .field{display:grid;gap:4px}
 .field input,.field select{font:inherit;border:2px solid var(--edge);border-radius:10px;padding:8px 10px;background:var(--card);color:var(--ink)}
 .back{background:none;border:0;color:var(--green);font-weight:700;padding:0}
+.wsbox{display:grid;gap:6px;margin-top:12px;justify-items:start}
+a.btn{text-decoration:none;display:inline-block}
 .notice{font-size:0.8125rem;color:var(--muted)}
 table.rec{width:100%;border-collapse:collapse;font-size:0.9375rem}
 table.rec td,table.rec th{padding:6px 4px;border-bottom:1.5px dashed var(--grid);text-align:left}
@@ -117,6 +127,7 @@ table.rec th{font-weight:400;color:var(--muted);font-size:0.8125rem}
   .shell{flex:1;min-width:0;display:flex;flex-direction:column}
   .top .logo{display:none}
   main{padding:20px 24px 32px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+  main.single{grid-template-columns:minmax(0,760px);justify-content:center}
   .panel-detail{display:grid;gap:16px;align-content:start;position:sticky;top:76px;max-height:calc(100vh - 96px);overflow:auto;min-width:0}
   .phone-only{display:none}
   .foot{padding:12px 24px 24px}
@@ -124,6 +135,8 @@ table.rec th{font-weight:400;color:var(--muted);font-size:0.8125rem}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
+</head>
+<body>
 <div class="app">
   <nav class="rail" aria-label="메뉴">
     <div class="logo">수학<br>시러여!</div>
@@ -298,7 +311,7 @@ function viewRecord(){
     '<label class="field" for="grade">학년<select id="grade">'+[1,2,3,4,5,6].map(function(i){return '<option value="'+i+'"'+(i===S.child.grade?' selected':'')+'>'+i+'학년</option>';}).join('')+'</select></label><button class="btn" type="submit">저장</button></form></section>'+
     sizeCard()+purchaseCard()+
     (cloudOn()?'':'<section class="card"><button class="btn ghost" data-act="reset">예시 데이터로 되돌리기</button><p class="notice">로그인하지 않으면 기록은 이 기기의 브라우저에만 남아요.</p></section>')+'</div>';
-  return h+detailCol();
+  return h;
 }
 
 // ---------- 계정(로그인·저장) ----------
@@ -365,6 +378,7 @@ var SELF_TEST=[
   ['here','노선도의 ‘지금 여기’ 위치가 맞다'],
   ['map','지도에서 다른 학년 역 카드를 열어 본다'],
   ['mark','역 카드에서 통과·막힘을 누르면 기록에 쌓인다'],
+  ['ws','1-07·2-01 역 카드에서 무료 학습지가 열리고, PC에서 출력된다'],
   ['lock','잠긴 칸을 보고 무료와 유료 차이를 알 수 있다'],
   ['coupon','앱 구독(안드로이드·아이폰)과 웹 쿠폰 적용 뒤 잠금이 풀린다'],
   ['font','제목(단정해)·본문(심플해)·손글씨(고운밤)이 잘 읽히고, 글자 크기 ‘크게’가 편하다'],
@@ -383,6 +397,9 @@ function selfTestCard(){
 }
 
 // ---------- 역 카드 ----------
+// 무료 학습지(PDF): 관문역부터 하나씩 추가
+var WS={'1-07':'worksheets/gate1-ten.pdf','2-01':'worksheets/gate2-place-value.pdf'};
+function wsLink(id){return WS[id]?'<div class="wsbox"><a class="btn" href="'+WS[id]+'" target="_blank" rel="noopener">무료 학습지 열기 (PDF)</a><span class="small muted">A4 · 41문항 + 부모용 정답. PC에서 열면 바로 출력할 수 있어요.</span></div>':'';}
 function stationCard(id){
   var s=byId[id]; if(!s)return '';
   var p=S.progress[id], open=unlocked(s);
@@ -397,7 +414,7 @@ function stationCard(id){
     '<div><h3>핵심 개념</h3><p>'+s.core.map(function(x){return '<span class="mark">'+esc(x)+'</span>';}).join(' · ')+'</p></div>'+
     '<div><h3>확인 질문</h3><p class="q">“'+esc(s.check.q)+'”</p><p class="small"><span class="redpen">통과</span> '+esc(s.check.pass)+'</p>'+
       '<div class="row"><button class="btn" data-mark="passed" data-id="'+s.id+'">통과했어요</button><button class="btn red" data-mark="stuck" data-id="'+s.id+'">막혔어요</button></div></div>'+
-    '<div><h3>생각 문제</h3><div class="levels">'+lv('입구',s.think.entry,false)+lv('가운데',s.think.middle,!open)+lv('도전',s.think.challenge,!open)+'</div></div>'+
+    '<div><h3>생각 문제</h3><div class="levels">'+lv('입구',s.think.entry,false)+lv('가운데',s.think.middle,!open)+lv('도전',s.think.challenge,!open)+'</div>'+wsLink(s.id)+'</div>'+
     '<div><h3>오개념</h3>'+(open?'<p><span class="redpen">✗</span> '+esc(s.misc.wrong)+'<br><span class="redpen" style="color:var(--green)">→</span> '+esc(s.misc.fix)+'</p>':'<p class="lock small">가족 연 구독에서 열려요</p>')+'</div>'+
     '<div class="row small">'+(s.fromIds.length?'<span class="muted">출발역</span> '+s.fromIds.map(function(i){return '<button class="pill pass" data-open="'+i+'">'+i+'</button>';}).join(' '):'')+
       (s.next.length?' <span class="muted">다음 역</span> '+s.next.map(function(i){return '<button class="pill pass" data-open="'+i+'">'+i+'</button>';}).join(' '):'')+'</div>'+
@@ -414,6 +431,7 @@ function render(){
   var m=document.getElementById('main');
   if(!wide && S.detailOpen && S.sel){m.innerHTML='<div class="col">'+stationCard(S.sel)+'</div>';}
   else m.innerHTML=({today:viewToday,diag:viewDiag,map:viewMap,record:viewRecord}[S.view]||viewToday)();
+  m.classList.toggle('single',S.view==='record');
   save();
 }
 
@@ -636,3 +654,5 @@ window.Cloud = {
   }
 };
 </script>
+</body>
+</html>
