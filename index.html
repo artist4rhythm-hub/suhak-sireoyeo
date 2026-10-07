@@ -7,6 +7,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="수학시러여">
 <title>수학하기 시러여!</title>
+<meta name="description" content="빨리 푸는 수학 말고, 고민하고 깊게 생각하는 수학. 초등 6년 수학을 노선도로 펼쳐, 우리 아이가 막힌 역을 찾아 함께 다시 걷는 부모용 길안내 앱.">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- 대체 글꼴(카페24 글꼴 파일이 없을 때만 보임) -->
@@ -117,6 +121,43 @@ table.rec{width:100%;border-collapse:collapse;font-size:0.9375rem}
 table.rec td,table.rec th{padding:6px 4px;border-bottom:1.5px dashed var(--grid);text-align:left}
 table.rec th{font-weight:400;color:var(--muted);font-size:0.8125rem}
 
+
+/* ---------- 시작 화면 ---------- */
+button.logo{background:none;border:0;padding:0;text-align:left;line-height:1.15}
+.rail button.logo{text-align:center}
+#intro{display:none}
+body.intro-on #intro{display:block}
+body.intro-on .app{display:none}
+.intro{word-break:keep-all;max-width:880px;margin:0 auto;padding:28px 16px calc(40px + env(safe-area-inset-bottom,0px));display:grid;gap:20px}
+.hero{text-align:center;display:grid;justify-items:center;gap:10px;padding:18px 0 4px}
+.brandmark{display:inline-grid;justify-items:center;line-height:1;color:var(--green);font-family:var(--title)}
+.brandmark .bm-top{font-size:1.5rem;letter-spacing:.32em;margin-right:-.32em;color:var(--ink)}
+.brandmark .bm-main{font-size:clamp(3.4rem,15vw,5.6rem);letter-spacing:-.02em;position:relative;padding:0 .08em;
+  background:linear-gradient(transparent 62%,var(--hl) 62%,var(--hl) 92%,transparent 92%)}
+.brandmark .bm-bang{color:var(--red);display:inline-block;transform:rotate(12deg) translateY(-.04em);margin-left:.02em}
+.bm-route{width:min(340px,86vw);height:auto;margin-top:6px}
+.hero .sub{font-family:var(--title);font-size:1.25rem;margin:4px 0 0;text-wrap:balance}
+.hero .lead{max-width:34em;margin:0;color:var(--muted);text-wrap:pretty}
+.hero .row{justify-content:center;margin-top:8px}
+.btn.lg{font-size:1.125rem;padding:12px 22px}
+.steps{display:grid;gap:12px;grid-template-columns:minmax(0,1fr)}
+.step{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;align-content:start}
+.step .n{width:2.1rem;height:2.1rem;border-radius:50%;background:var(--green);color:var(--on-green);display:grid;place-items:center;font-family:var(--title);font-size:1.125rem}
+.step h3{font-size:1.25rem;margin-bottom:2px}
+.step p{margin:0;color:var(--muted)}
+.story h2,.intro h2{font-size:1.5rem;margin-bottom:8px}
+.story p{margin:0 0 10px;text-wrap:pretty}
+.story .say{font-family:var(--hand);font-size:1.75rem;color:var(--red);margin:6px 0 12px;transform:rotate(-1.5deg);display:inline-block}
+.story .sign{text-align:right;font-family:var(--hand);font-size:1.3rem;margin:0}
+.who{margin:0;padding-left:1.2em}
+.who li{margin:4px 0}
+.intro .foot-note{font-size:.8125rem;color:var(--muted);text-align:center;margin:0}
+@media (min-width:600px){
+  .intro{padding-top:40px}
+  .steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .step{grid-template-columns:1fr}
+}
+
 @media (min-width:600px){
   .app{flex-direction:row}
   .rail{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;box-sizing:border-box;width:96px;flex:none;
@@ -137,9 +178,10 @@ table.rec th{font-weight:400;color:var(--muted);font-size:0.8125rem}
 
 </head>
 <body>
+<div id="intro" aria-label="앱 소개"></div>
 <div class="app">
   <nav class="rail" aria-label="메뉴">
-    <div class="logo">수학<br>시러여!</div>
+    <button class="logo" data-act="intro-open" aria-label="앱 소개 보기">수학<br>시러여!</button>
     <button class="navbtn" data-nav="today"><b>오늘</b></button>
     <button class="navbtn" data-nav="diag"><b>진단</b></button>
     <button class="navbtn" data-nav="map"><b>지도</b></button>
@@ -147,7 +189,7 @@ table.rec th{font-weight:400;color:var(--muted);font-size:0.8125rem}
   </nav>
   <div class="shell">
     <header class="top">
-      <div class="logo">수학하기 시러여!<small>빨리 푸는 수학 말고, 고민하고 깊게 생각하는 수학</small></div>
+      <button class="logo" data-act="intro-open" aria-label="앱 소개 보기">수학하기 시러여!<small>빨리 푸는 수학 말고, 고민하고 깊게 생각하는 수학</small></button>
       <span class="child-chip" id="childChip"></span>
     </header>
     <main id="main"><div class="col"><p>불러오는 중…</p></div></main>
@@ -372,6 +414,7 @@ function purchaseCard(){
 var SELF_TEST=[
   ['first','휴대폰 첫 화면만 보고 무엇을 하는 앱인지 알 수 있다'],
   ['login','기록 탭에서 가입·로그인하고, 다른 기기에서 같은 계정으로 기록이 보인다'],
+  ['intro','처음 열면 시작 화면(로고·만든 이유)이 보이고, 왼쪽 위 로고를 누르면 다시 열린다'],
   ['setup','‘우리 아이로 시작하기’로 별명·학년을 바꿀 수 있다'],
   ['diag','관문 진단을 끝까지 해 본다(통과·막힘 둘 다 눌러 보기)'],
   ['result','진단 결과의 출발역이 아이 상황과 맞게 나온다'],
@@ -421,10 +464,64 @@ function stationCard(id){
     (!open?'<p class="notice">이 학년의 맛보기 역은 <button class="pill gate" data-open="'+sampleStationOf(s.grade)+'">'+sampleStationOf(s.grade)+'</button> 입니다.</p>':'')+
     '</div></section>';
 }
+
+// ---------- 시작 화면 ----------
+// ※ '이 앱을 만든 이유' 글은 아래 STORY만 고치면 됩니다. 한 줄 = 한 문단.
+var STORY=[
+  '저는 수학을 잘하던 사람이 아닙니다. 고졸 아빠예요.',
+  '첫째는 저학년 때 어느 수가 더 큰지 가늠하는 감각이 자리 잡기까지 오래 걸렸습니다. 둘째는 수 감각은 있는데, 오래 붙잡고 생각해야 하는 계산 앞에서는 몸부터 들썩였지요. 그리고 둘 다 같은 말을 했습니다.',
+  '“아빠, 수학하기 시러여!”',
+  '문제집을 한 권 더 푼다고 달라지지 않았습니다. 필요한 건 빨리 푸는 요령이 아니라, 아이가 지금 어느 역에서 멈춰 섰는지 아는 일이었어요. 그래서 초등 6년 수학을 하나의 노선도로 펼쳐 놓고, 막힌 역으로 돌아가 손으로 만지고 말로 설명하게 했습니다.',
+  '이 앱은 그 길을 정리한 길안내입니다. 수학 전문가가 아니어도, 부모가 아이 옆에서 같이 걸을 수 있도록요.'
+];
+var STORY_SIGN='— 두 아이의 아빠, 현우';
+var INTRO_KEY='suhak-intro-v1';
+var introOpen=false;
+try{introOpen=!localStorage.getItem(INTRO_KEY);}catch(e){introOpen=true;}
+function closeIntro(){introOpen=false;try{localStorage.setItem(INTRO_KEY,'1');}catch(e){}}
+function brandRoute(){
+  // 노선 위 다섯 역: 지나온 역(채움) · 막힌 역(빨강) · 앞으로 갈 역(빈 점)
+  var xs=[20,95,170,245,320],h='<svg class="bm-route" viewBox="0 0 340 58" aria-hidden="true">';
+  h+='<line x1="20" y1="20" x2="320" y2="20" stroke="var(--green)" stroke-width="5" stroke-linecap="round"/>';
+  xs.forEach(function(x,i){var st=i<2?'done':i===2?'stuck':'next';
+    h+='<circle cx="'+x+'" cy="20" r="'+(i===2?10:7.5)+'" fill="'+(st==='done'?'var(--green)':st==='stuck'?'var(--red)':'var(--card)')+'" stroke="'+(st==='stuck'?'var(--red)':'var(--green)')+'" stroke-width="3"/>';});
+  h+='<text x="170" y="52" text-anchor="middle" font-family="Cafe24 Oneprettynight, Gaegu, cursive" font-size="20" fill="var(--red)">여기서 막혔구나!</text></svg>';
+  return h;
+}
+function viewIntro(){
+  var cnt=DATA?DATA.stations.length:69, fresh=S.sample&&!cloudOn();
+  var startBtn=fresh?'<button class="btn lg" data-act="intro-start">우리 아이로 시작하기</button>':'<button class="btn lg" data-act="intro-start">앱으로 돌아가기</button>';
+  var sampleBtn=fresh?'<button class="btn ghost lg" data-act="intro-sample">예시 아이로 먼저 둘러보기</button>':'';
+  var h='<div class="intro">';
+  h+='<section class="hero"><h1 class="brandmark"><span class="bm-top">수학하기</span><span class="bm-main">시러여<span class="bm-bang">!</span></span></h1>'+brandRoute()
+    +'<p class="sub">빨리 푸는 수학 말고, 고민하고 깊게 생각하는 수학</p>'
+    +'<p class="lead">초등 6년 수학을 지하철 노선도처럼 펼쳐 놓고, 우리 아이가 막힌 역을 찾아 함께 다시 걷는 <b>부모용 길안내 앱</b>이에요.</p>'
+    +'<div class="row">'+startBtn+sampleBtn+'</div></section>';
+  h+='<section class="card tape"><h2>이렇게 써요</h2><div class="steps">'
+    +'<div class="step"><span class="n">1</span><div><h3>관문 진단</h3><p>질문 5개, 10분이면 돼요. 정답보다 아이가 <span class="mark">어떻게 설명하는지</span>를 들어요.</p></div></div>'
+    +'<div class="step"><span class="n">2</span><div><h3>노선도</h3><p>초등 수학 '+cnt+'개 역을 네 노선으로 이었어요. 막힌 역과, 그 앞에서 돌아갈 역이 보여요.</p></div></div>'
+    +'<div class="step"><span class="n">3</span><div><h3>역 카드</h3><p>확인 질문, 생각 문제(입구·가운데·도전), 흔한 오개념, 출력용 학습지까지 한 장에 담았어요.</p></div></div>'
+    +'</div></section>';
+  h+='<section class="card story"><h2>이 앱을 만든 이유</h2>'+STORY.map(function(p){return /^“.*”$/.test(p)?'<p class="say">'+esc(p)+'</p>':'<p>'+esc(p)+'</p>';}).join('')
+    +'<p class="sign">'+esc(STORY_SIGN)+'</p></section>';
+  h+='<section class="card"><h2>이런 부모님께</h2><ul class="who">'
+    +'<li>홈스쿨·대안학교처럼 다른 길을 택했지만, 수학적 사고력은 놓치고 싶지 않은 부모님</li>'
+    +'<li>빠른 문제 풀이에 지쳐 “수학 싫어”가 입에 붙은 아이를 둔 부모님</li>'
+    +'<li>우리 아이가 어디서 막혔는지, 어디로 돌아가야 하는지 알고 싶은 부모님</li></ul></section>';
+  h+='<div class="hero" style="padding-top:0"><div class="row">'+startBtn+sampleBtn+'</div></div>';
+  h+='<p class="foot-note">부모님이 가입하고 쓰는 앱이에요. 아이 정보는 별명과 학년만 받아요. · 지금은 무료 베타예요.</p>';
+  h+='<p class="foot-note">© 2026 수학하기 시러여! 모든 확인 질문과 생각 문제는 자체 제작했습니다.</p></div>';
+  return h;
+}
+
 function detailCol(){return '<aside class="panel-detail" aria-label="역 카드">'+(S.sel?stationCard(S.sel):'<div class="card"><p class="muted">역을 고르면 여기에 카드가 열려요.</p></div>')+'</aside>';}
 
 function render(){
   document.documentElement.setAttribute('data-size',S.size==='lg'?'lg':'md');
+  document.body.classList.toggle('intro-on',introOpen);
+  var ib=document.getElementById('intro');
+  if(introOpen){ib.innerHTML=viewIntro();save();return;}
+  ib.innerHTML='';
   chip();
   document.querySelectorAll('[data-nav]').forEach(function(b){b.setAttribute('aria-current',b.dataset.nav===S.view?'page':'false');});
   var wide=window.matchMedia('(min-width:600px)').matches;
@@ -449,6 +546,9 @@ document.addEventListener('click',function(e){
     S.diag[g.no]=t.dataset.diag; S.progress[g.station]={s:t.dataset.diag==='pass'?'passed':'stuck',at:today()}; if(cloudOn())cloudCall('saveProgress',g.station,S.progress[g.station].s);
     S.diagStep=t.dataset.diag==='stuck'?gs.length:S.diagStep+1; if(S.diagStep>=gs.length)S.sel=diagResult().start.id; render();return;}
   var a=t.dataset.act;
+  if(a==='intro-open'){introOpen=true;render();window.scrollTo(0,0);return;}
+  if(a==='intro-sample'){closeIntro();S.view='today';render();window.scrollTo(0,0);return;}
+  if(a==='intro-start'){closeIntro();if(S.sample&&!cloudOn()){a='setup';window.scrollTo(0,0);}else{S.view='today';render();window.scrollTo(0,0);return;}}
   if(a==='diag-start'){S.diagStep=0;render();}
   else if(a==='diag-reset'){S.diag={};S.diagStep=0;render();}
   else if(a==='login-google'){cloudCall('loginGoogle');}

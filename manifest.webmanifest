@@ -1,0 +1,16 @@
+{
+  "name": "수학하기 시러여!",
+  "short_name": "수학시러여",
+  "description": "빨리 푸는 수학 말고, 고민하고 깊게 생각하는 수학 — 부모용 초등 수학 길안내",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F7FBF4",
+  "theme_color": "#2E6B45",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
