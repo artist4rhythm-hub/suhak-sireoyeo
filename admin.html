@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#2E6B45">
+<title>관리자 · 수학하기 시러여!</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@600&family=Gowun+Dodum&display=swap">
+<style>
+@font-face{font-family:"Cafe24 Danjunghae";font-display:swap;src:url("fonts/Cafe24Danjunghae.woff2") format("woff2"),url("fonts/Cafe24Danjunghae.woff") format("woff")}
+@font-face{font-family:"Cafe24 Simplehae";font-display:swap;src:url("fonts/Cafe24Simplehae.woff2") format("woff2"),url("fonts/Cafe24Simplehae.woff") format("woff")}
+@font-face{font-family:"Cafe24 Oneprettynight";font-display:swap;src:url("fonts/Cafe24Oneprettynight.woff2") format("woff2"),url("fonts/Cafe24Oneprettynight.woff") format("woff")}
+:root{
+  --paper:#F7FBF4; --grid:#DDEBD7; --card:#FDFEFB; --ink:#22382A; --muted:#5B7262;
+  --green:#2E6B45; --bar:#3F8A5C; --soft:#E2F0DC; --edge:#2C4A36; --red:#C9392F; --hl:#FFEB85; --on-green:#FFFFFF;
+  --title:"Cafe24 Danjunghae","IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"Cafe24 Simplehae","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --hand:"Cafe24 Oneprettynight","Apple SD Gothic Neo",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141D17; --grid:#1F2C23; --card:#1A251E; --ink:#E2EDE4; --muted:#9DB3A3;
+  --green:#8FCB9F; --bar:#7DBB8F; --soft:#22362A; --edge:#8FB39A; --red:#F08273; --hl:#5E5214; --on-green:#10261A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141D17; --grid:#1F2C23; --card:#1A251E; --ink:#E2EDE4; --muted:#9DB3A3;
+  --green:#8FCB9F; --bar:#7DBB8F; --soft:#22362A; --edge:#8FB39A; --red:#F08273; --hl:#5E5214; --on-green:#10261A; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.65;word-break:keep-all}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+h1,h2,h3{font-family:var(--title);font-weight:400;line-height:1.25;margin:0}
+header{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:2px solid var(--edge);padding:10px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+header h1{font-size:1.35rem;color:var(--green)}
+header h1 small{font-family:var(--body);font-size:.8rem;color:var(--muted);margin-left:6px}
+header .me{margin-left:auto;font-size:.85rem;color:var(--muted);display:flex;gap:8px;align-items:center}
+main{max-width:1100px;margin:0 auto;padding:16px 16px 60px;display:grid;gap:16px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.tab{border:2px solid var(--edge);border-radius:10px;background:var(--card);padding:5px 14px;font-family:var(--title);white-space:nowrap}
+.tab[aria-pressed="true"]{background:var(--green);color:var(--on-green)}
+.card{background:var(--card);border:2px solid var(--edge);border-radius:14px;padding:16px;box-shadow:3px 3px 0 var(--edge);min-width:0}
+.card h2{font-size:1.25rem;margin-bottom:4px}
+.card .desc{font-size:.85rem;color:var(--muted);margin:0 0 12px}
+.btn{border:2px solid var(--edge);border-radius:12px;background:var(--green);color:var(--on-green);padding:8px 16px;font-family:var(--title);box-shadow:2px 2px 0 var(--edge)}
+.btn.ghost{background:var(--card);color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.muted{color:var(--muted)} .small{font-size:.875rem}
+.grid2{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+@media (min-width:820px){.grid2{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tiles{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (min-width:700px){.tiles{grid-template-columns:repeat(5,minmax(0,1fr))}}
+.tile{background:var(--card);border:2px solid var(--edge);border-radius:12px;padding:10px 12px}
+.tile .lab{font-size:.8rem;color:var(--muted)}
+.tile .val{font-family:var(--title);font-size:1.9rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile .sub{font-size:.75rem;color:var(--muted)}
+svg.chart{display:block;width:100%;height:auto;overflow:visible}
+svg.chart .bar{fill:var(--bar)}
+svg.chart .hit{fill:transparent}
+svg.chart g.b:hover .bar{fill:var(--green)}
+svg.chart .ax{fill:var(--muted);font-size:11px;font-family:var(--body)}
+svg.chart .gl{stroke:var(--grid);stroke-width:1}
+svg.chart .base{stroke:var(--muted);stroke-width:1}
+.tip{position:fixed;pointer-events:none;z-index:20;background:var(--ink);color:var(--paper);font-size:.8rem;padding:4px 8px;border-radius:6px;white-space:nowrap;display:none}
+.hb{display:grid;grid-template-columns:minmax(80px,30%) 1fr auto;gap:8px;align-items:center;font-size:.9rem;margin:5px 0}
+.hb .track{display:block;height:12px;border-radius:0 4px 4px 0;background:var(--soft);overflow:hidden}
+.hb .fill{display:block;height:100%;background:var(--bar);border-radius:0 4px 4px 0}
+.hb .num{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.85rem;min-width:70px;text-align:right}
+.hb .name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+details.tbl{margin-top:8px;font-size:.85rem}
+details.tbl table{border-collapse:collapse;width:100%;margin-top:6px}
+details.tbl td,details.tbl th{border-bottom:1px dashed var(--grid);padding:3px 6px;text-align:right;font-variant-numeric:tabular-nums}
+details.tbl td:first-child,details.tbl th:first-child{text-align:left}
+.field{display:grid;gap:4px;margin-bottom:12px}
+.field span{font-size:.85rem;color:var(--muted)}
+.field input,.field textarea,.field select{border:2px solid var(--edge);border-radius:10px;padding:8px 10px;background:var(--card);width:100%}
+.field textarea{min-height:90px;resize:vertical;line-height:1.6}
+.field textarea.tall{min-height:260px}
+.field textarea.short{min-height:64px}
+@media (min-width:820px){.sticky{position:sticky;top:72px;align-self:start;max-height:calc(100vh - 90px);overflow:auto}}
+.count{font-size:.75rem;color:var(--muted);text-align:right}
+.msg{font-size:.9rem;padding:8px 12px;border-radius:10px;background:var(--soft)}
+.msg.err{background:transparent;border:2px solid var(--red);color:var(--red)}
+.preview{border:2px dashed var(--edge);border-radius:14px;padding:16px;background:var(--paper)}
+.preview .p-sub{font-family:var(--title);font-size:1.15rem;text-align:center;margin:0}
+.preview .p-lead{color:var(--muted);text-align:center;margin:6px 0 12px}
+.preview h3{font-size:1.1rem;margin:12px 0 4px;color:var(--green)}
+.preview .say{font-family:var(--hand);color:var(--red);font-size:1.4rem}
+.preview .sign{text-align:right;font-family:var(--hand);font-size:1.15rem}
+.preview .p-notice{border:2px solid var(--green);border-radius:10px;padding:6px 10px;margin-bottom:10px;font-size:.9rem}
+.fb{border-bottom:1px dashed var(--grid);padding:10px 0}
+.fb:last-child{border-bottom:0}
+.fb .meta{font-size:.8rem;color:var(--muted)}
+.fb p{margin:2px 0 0;white-space:pre-wrap}
+code{background:var(--soft);padding:1px 6px;border-radius:4px;font-size:.9em;word-break:break-all}
+ol li,ul li{margin:4px 0}
+.uid{font-family:ui-monospace,Menlo,monospace;font-size:.9rem;background:var(--soft);padding:8px 10px;border-radius:8px;word-break:break-all;user-select:all}
+.empty{color:var(--muted);font-size:.9rem;padding:8px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>수학하기 시러여! <small>관리자</small></h1>
+  <div class="me" id="me"></div>
+</header>
+<main id="main"><div class="card"><p class="muted">불러오는 중…</p></div></main>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, collection, collectionGroup, getDocs, query, orderBy, limit, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAlm65URPZODqWMsBHPb8S4V0vJABaNOHQ",
+  authDomain: "suhak-sireoyeo.firebaseapp.com",
+  projectId: "suhak-sireoyeo",
+  storageBucket: "suhak-sireoyeo.firebasestorage.app",
+  messagingSenderId: "152725828969",
+  appId: "1:152725828969:web:4b1a2e4964632307c579f8"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// 앱(index.html)의 기본 글과 같아야 합니다
+const SITE_DEFAULT = {
+  sub: '빨리 푸는 수학 말고, 고민하고 깊게 생각하는 수학',
+  lead: '초등 6년 수학을 지하철 노선도처럼 펼쳐 놓고, 우리 아이가 막힌 역을 찾아 함께 다시 걷는 **부모용 길안내 앱**이에요.',
+  step1t: '관문 진단', step1: '질문 5개, 10분이면 돼요. 정답보다 아이가 **어떻게 설명하는지**를 들어요.',
+  step2t: '노선도', step2: '초등 수학 {역수}개 역을 네 노선으로 이었어요. 막힌 역과, 그 앞에서 돌아갈 역이 보여요.',
+  step3t: '역 카드', step3: '확인 질문, 생각 문제(입구·가운데·도전), 흔한 오개념, 출력용 학습지까지 한 장에 담았어요.',
+  story: '저는 수학을 잘하던 사람이 아닙니다. 고졸 아빠예요.\n\n첫째는 저학년 때 어느 수가 더 큰지 가늠하는 감각이 자리 잡기까지 오래 걸렸습니다. 둘째는 수 감각은 있는데, 오래 붙잡고 생각해야 하는 계산 앞에서는 몸부터 들썩였지요. 그리고 둘 다 같은 말을 했습니다.\n\n“아빠, 수학하기 시러여!”\n\n문제집을 한 권 더 푼다고 달라지지 않았습니다. 필요한 건 빨리 푸는 요령이 아니라, 아이가 지금 어느 역에서 멈춰 섰는지 아는 일이었어요. 그래서 초등 6년 수학을 하나의 노선도로 펼쳐 놓고, 막힌 역으로 돌아가 손으로 만지고 말로 설명하게 했습니다.\n\n이 앱은 그 길을 정리한 길안내입니다. 수학 전문가가 아니어도, 부모가 아이 옆에서 같이 걸을 수 있도록요.',
+  sign: '— 두 아이의 아빠, 현우',
+  who: '홈스쿨·대안학교처럼 다른 길을 택했지만, 수학적 사고력은 놓치고 싶지 않은 부모님\n빠른 문제 풀이에 지쳐 “수학 싫어”가 입에 붙은 아이를 둔 부모님\n우리 아이가 어디서 막혔는지, 어디로 돌아가야 하는지 알고 싶은 부모님',
+  note: '부모님이 가입하고 쓰는 앱이에요. 아이 정보는 별명과 학년만 받아요. · 지금은 무료 베타예요.',
+  notice: ''
+};
+const FIELDS = [
+  ['notice', '오늘 화면 알림 한 줄', 200, '비워 두면 알림이 안 보여요. 예: 10월 20일까지 관문 ④ 학습지가 새로 나와요!'],
+  ['sub', '부제', 120],
+  ['lead', '한 줄 소개', 400],
+  ['step1t', '① 제목', 40], ['step1', '① 설명', 300],
+  ['step2t', '② 제목', 40], ['step2', '② 설명', 300],
+  ['step3t', '③ 제목', 40], ['step3', '③ 설명', 300],
+  ['story', '이 앱을 만든 이유', 4000, '빈 줄로 문단을 나눠요. “ ”로 감싼 문단은 빨간 손글씨로 보여요.'],
+  ['sign', '서명', 80],
+  ['who', '이런 부모님께', 1500, '한 줄에 한 항목'],
+  ['note', '맨 아래 안내문', 400]
+];
+const LONG = { story: 'tall', who: '', lead: 'short', step1: 'short', step2: 'short', step3: 'short', note: 'short' };
+
+const $ = s => document.querySelector(s);
+const esc = t => String(t == null ? '' : t).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = n => Number(n || 0).toLocaleString('ko-KR');
+const pct = (a, b) => b ? Math.round(a / b * 100) + '%' : '–';
+
+let ST = { stations: [], byId: {}, gates: [] };
+let A = { tab: 'overview', days: 7, stats: null, user: null };
+
+const stationsReady = fetch('stations.json').then(r => r.json()).then(d => { ST.stations = d.stations; ST.gates = d.gates; d.stations.forEach(s => ST.byId[s.id] = s); }).catch(() => {});
+
+// ---------- 날짜 ----------
+function kstDate(offsetDays) { return new Date(Date.now() + 9 * 3600 * 1000 - offsetDays * 86400 * 1000); }
+function dayKey(d) { return d.getUTCFullYear() + String(d.getUTCMonth() + 1).padStart(2, '0') + String(d.getUTCDate()).padStart(2, '0'); }
+function dayLabel(k) { return Number(k.slice(4, 6)) + '/' + Number(k.slice(6)); }
+
+// ---------- 로그인 ----------
+function showLogin(msg) {
+  $('#me').innerHTML = '';
+  $('#main').innerHTML = `<section class="card" style="max-width:460px">
+    <h2>관리자 로그인</h2><p class="desc">앱에서 쓰는 계정으로 로그인해요. 관리자로 등록된 계정만 들어갈 수 있어요.</p>
+    <div class="row"><button class="btn" id="g">Google로 로그인</button></div>
+    <form id="ef" style="margin-top:14px">
+      <label class="field"><span>이메일</span><input id="em" type="email" autocomplete="email" required></label>
+      <label class="field"><span>비밀번호</span><input id="pw" type="password" autocomplete="current-password" required></label>
+      <button class="btn ghost" type="submit">이메일로 로그인</button>
+    </form>${msg ? `<p class="msg err" role="alert">${esc(msg)}</p>` : ''}</section>`;
+  $('#g').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => showLogin(e.code));
+  $('#ef').onsubmit = e => { e.preventDefault(); signInWithEmailAndPassword(auth, $('#em').value.trim(), $('#pw').value).catch(err => showLogin(err.code === 'auth/invalid-credential' ? '이메일 또는 비밀번호가 맞지 않아요.' : err.code)); };
+}
+function showNotAdmin(user) {
+  $('#main').innerHTML = `<section class="card" style="max-width:680px">
+    <h2>아직 관리자로 등록되지 않은 계정이에요</h2>
+    <p class="desc">처음 한 번만 Firebase 콘솔에서 등록하면 돼요.</p>
+    <p class="small">이 계정의 UID (눌러서 전체 선택 → 복사)</p><div class="uid">${esc(user.uid)}</div>
+    <ol class="small">
+      <li><a href="https://console.firebase.google.com/project/suhak-sireoyeo/firestore/data" target="_blank" rel="noopener">Firebase 콘솔 → Firestore Database</a>를 열어요.</li>
+      <li><b>컬렉션 시작</b> → 컬렉션 ID에 <code>admins</code></li>
+      <li>문서 ID에 위의 UID를 붙여 넣어요.</li>
+      <li>필드: 이름 <code>role</code>, 유형 string, 값 <code>admin</code> → 저장</li>
+      <li>이 화면을 새로고침해요.</li>
+    </ol>
+    <p class="small muted">보안 규칙 v0.3을 먼저 게시해야 해요. 관리자 추가·삭제는 콘솔에서만 할 수 있어요(앱이나 이 화면에서는 불가능).</p></section>`;
+}
+onAuthStateChanged(auth, async user => {
+  if (!user) { showLogin(); return; }
+  $('#me').innerHTML = `<span>${esc(user.email || '')}</span><button class="btn ghost" id="lo" style="padding:4px 10px">로그아웃</button>`;
+  $('#lo').onclick = () => signOut(auth);
+  try {
+    const a = await getDoc(doc(db, 'admins', user.uid));
+    if (!a.exists()) { showNotAdmin(user); return; }
+    A.user = user; await stationsReady; render();
+  } catch (e) { console.error(e); showNotAdmin(user); }
+});
+
+// ---------- 화면 틀 ----------
+const TABS = [['overview', '현황'], ['stuck', '막히는 역'], ['users', '가입자'], ['site', '시작 화면 글'], ['fb', '의견'], ['help', '도움말']];
+function render() {
+  const m = $('#main');
+  m.innerHTML = `<div class="tabs" role="tablist">${TABS.map(([k, n]) => `<button class="tab" role="tab" aria-pressed="${k === A.tab}" data-tab="${k}">${n}</button>`).join('')}</div><div id="pane"></div>`;
+  m.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { A.tab = b.dataset.tab; render(); });
+  ({ overview: paneOverview, stuck: paneStuck, users: paneUsers, site: paneSite, fb: paneFeedback, help: paneHelp }[A.tab])();
+}
+const pane = h => { $('#pane').innerHTML = h; };
+
+// ---------- 통계 불러오기 ----------
+async function loadStats(days) {
+  const keys = []; for (let i = days - 1; i >= 0; i--) keys.push(dayKey(kstDate(i)));
+  const per = await Promise.all(keys.map(async k => {
+    const s = await getDocs(collection(db, 'stats', k, 'c')); const o = {}; s.forEach(d => o[d.id] = d.data().n || 0); return o;
+  }));
+  const total = {}; per.forEach(o => Object.keys(o).forEach(k => total[k] = (total[k] || 0) + o[k]));
+  return { keys, per, total };
+}
+async function ensureStats() {
+  if (!A.stats || A.stats.days !== A.days) { pane('<div class="card"><p class="muted">통계를 불러오는 중…</p></div>'); A.stats = await loadStats(A.days); A.stats.days = A.days; }
+  return A.stats;
+}
+
+// ---------- 그리기: 세로 막대(한 계열) ----------
+function vbars(labels, values, unit, opts = {}) {
+  const W = 640, H = 200, L = 34, B = 24, T = 10, n = values.length, max = Math.max(1, ...values);
+  const step = niceStep(max), top = Math.ceil(max / step) * step, bw = (W - L) / n, gap = Math.min(6, bw * 0.25);
+  const y = v => T + (H - T - B) * (1 - v / top);
+  let g = '';
+  for (let v = 0; v <= top; v += step) g += `<line class="gl" x1="${L}" x2="${W}" y1="${y(v)}" y2="${y(v)}"/><text class="ax" x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${fmt(v)}</text>`;
+  const every = Math.ceil(n / (opts.maxLabels || 12));
+  values.forEach((v, i) => {
+    const x = L + i * bw + gap / 2, w = Math.max(1, bw - gap), h = (H - T - B) * (v / top), r = Math.min(4, w / 2, h);
+    const yy = H - B - h;
+    const path = h > 0 ? `M${x},${H - B}V${yy + r}Q${x},${yy} ${x + r},${yy}H${x + w - r}Q${x + w},${yy} ${x + w},${yy + r}V${H - B}Z` : '';
+    g += `<g class="b" data-tip="${esc(labels[i])} · ${fmt(v)}${unit}"><rect class="hit" x="${L + i * bw}" y="${T}" width="${bw}" height="${H - T - B}"/>${path ? `<path class="bar" d="${path}"/>` : ''}</g>`;
+    if (i % every === 0) g += `<text class="ax" x="${x + w / 2}" y="${H - 6}" text-anchor="middle">${esc(labels[i])}</text>`;
+  });
+  g += `<line class="base" x1="${L}" x2="${W}" y1="${H - B}" y2="${H - B}"/>`;
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(opts.label || '')}">${g}</svg>` +
+    `<details class="tbl"><summary>표로 보기</summary><table><tr><th>항목</th><th>${esc(unit.trim() || '값')}</th></tr>${labels.map((l, i) => `<tr><td>${esc(l)}</td><td>${fmt(values[i])}</td></tr>`).join('')}</table></details>`;
+}
+function niceStep(max) { const raw = max / 4, p = Math.pow(10, Math.floor(Math.log10(raw || 1))); const f = raw / p; return Math.max(1, (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p); }
+// 가로 막대 목록(비율)
+function hbars(rows, total, empty) {
+  const list = rows.filter(r => r[1] > 0);
+  if (!list.length) return `<p class="empty">${esc(empty || '아직 기록이 없어요.')}</p>`;
+  const max = Math.max(...list.map(r => r[1]));
+  return list.map(([name, v, extra]) => `<div class="hb"><span class="name" title="${esc(name)}">${esc(name)}</span><span class="track"><span class="fill" style="width:${v / max * 100}%"></span></span><span class="num">${fmt(v)}${total ? ' · ' + pct(v, total) : ''}${extra ? ' ' + esc(extra) : ''}</span></div>`).join('');
+}
+// 막대 위 말풍선
+document.addEventListener('pointermove', e => {
+  const g = e.target.closest && e.target.closest('[data-tip]'), tip = $('#tip');
+  if (!g) { tip.style.display = 'none'; return; }
+  tip.textContent = g.dataset.tip; tip.style.display = 'block';
+  const x = Math.min(window.innerWidth - tip.offsetWidth - 8, e.clientX + 12); tip.style.left = x + 'px'; tip.style.top = (e.clientY - 34) + 'px';
+});
+
+function stName(id) { const s = ST.byId[id]; return s ? `${id} ${s.name}` : id; }
+function rangeBar() {
+  return `<div class="row" style="justify-content:space-between"><div class="tabs" role="group" aria-label="기간">${[7, 30, 90].map(d => `<button class="tab" aria-pressed="${A.days === d}" data-days="${d}">최근 ${d}일</button>`).join('')}</div>
+    <div class="row"><button class="btn ghost" id="reload">새로고침</button><button class="btn ghost" id="csv">CSV 내려받기</button></div></div>`;
+}
+function bindRange() {
+  document.querySelectorAll('[data-days]').forEach(b => b.onclick = () => { A.days = +b.dataset.days; A.stats = null; render(); });
+  $('#reload').onclick = () => { A.stats = null; render(); };
+  $('#csv').onclick = () => {
+    const st = A.stats; if (!st) return;
+    const cols = [...new Set(st.per.flatMap(o => Object.keys(o)))].sort();
+    const lines = [['날짜', ...cols].join(',')].concat(st.keys.map((k, i) => [k, ...cols.map(c => st.per[i][c] || 0)].join(',')));
+    const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `수학시러여_통계_${st.keys[0]}-${st.keys[st.keys.length - 1]}.csv`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  };
+}
+
+// ---------- 현황 ----------
+async function paneOverview() {
+  let st; try { st = await ensureStats(); } catch (e) { pane(errBox(e)); return; }
+  const t = st.total, v = t.visit || 0;
+  const tiles = [
+    ['방문 기기', fmt(v), '하루에 한 번씩 센 기기 수의 합'],
+    ['화면 열기', fmt(t.pv), '앱을 연 횟수'],
+    ['새 가입', fmt(t.signup), '로그인 ' + fmt(t.login) + '회'],
+    ['학습지 열기', fmt(t.ws_open), '역 카드 열기 ' + fmt(t.st_open) + '회'],
+    ['진단 완료율', pct(t.diag_done || 0, t.diag_start || 0), '시작 ' + fmt(t.diag_start) + ' → 완료 ' + fmt(t.diag_done)]
+  ];
+  const hours = Array.from({ length: 24 }, (_, h) => t['h' + String(h).padStart(2, '0')] || 0);
+  const stations = Object.keys(t).filter(k => /^st_\d-\d\d$/.test(k)).map(k => [stName(k.slice(3)), t[k]]).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  const gates = [1, 2, 3, 4, 5, 6, 7].map(g => { const gate = ST.gates.find(x => x.no === g); return ['관문 ' + '①②③④⑤⑥⑦'[g - 1] + (gate ? ' ' + (ST.byId[gate.station] || {}).name : ''), t['ws_' + g] || 0]; });
+  pane(`${rangeBar()}
+  <div class="tiles" style="margin-top:12px">${tiles.map(([a, b, c]) => `<div class="tile"><div class="lab">${a}</div><div class="val">${b}</div><div class="sub">${esc(c)}</div></div>`).join('')}</div>
+  <div class="grid2" style="margin-top:16px">
+    <section class="card"><h2>날짜별 방문 기기</h2><p class="desc">같은 기기는 하루에 한 번만 세요.</p>${vbars(st.keys.map(dayLabel), st.per.map(o => o.visit || 0), '대', { label: '날짜별 방문 기기 수', maxLabels: 10 })}</section>
+    <section class="card"><h2>시간대별 사용</h2><p class="desc">앱을 연 시각(기기 시계 기준). 언제 공지를 올리면 좋을지 볼 수 있어요.</p>${vbars(hours.map((_, h) => h + '시'), hours, '회', { label: '시간대별 앱 열기', maxLabels: 8 })}</section>
+    <section class="card"><h2>어떤 기기로 오나요</h2><p class="desc">화면 크기와 터치 여부로 나눴어요.</p>${hbars([['휴대폰', t.d_phone || 0], ['태블릿', t.d_tablet || 0], ['PC', t.d_pc || 0]], v)}
+      <h3 style="margin-top:14px;font-size:1.05rem">홈 화면 앱으로 연 비율</h3>${hbars([['홈 화면 앱', t.pwa || 0]], v, '아직 홈 화면에 추가해서 쓴 기기가 없어요.')}</section>
+    <section class="card"><h2>국내·해외</h2><p class="desc">기기의 시간대 설정으로만 나눠요(위치·IP는 모으지 않아요). 정확한 지역은 ‘가입자’ 탭의 선택 응답을 보세요.</p>${hbars([['한국 시간대', t.tz_kr || 0], ['다른 시간대(해외)', t.tz_other || 0]], v)}
+      <h3 style="margin-top:14px;font-size:1.05rem">기기 언어</h3>${hbars([['한국어', t.lang_ko || 0], ['다른 언어', t.lang_other || 0]], v)}</section>
+    <section class="card"><h2>많이 연 역 TOP 10</h2><p class="desc">역 카드를 연 횟수. 학습지·콘텐츠를 먼저 보강할 곳이에요.</p>${hbars(stations, 0)}</section>
+    <section class="card"><h2>관문별 학습지 열기</h2><p class="desc">무료 학습지 PDF 버튼을 누른 횟수.</p>${hbars(gates, 0)}</section>
+    <section class="card"><h2>어느 화면을 보나요</h2><p class="desc">화면으로 이동한 횟수.</p>${hbars([['시작 화면', t.v_intro || 0], ['오늘', t.v_today || 0], ['진단', t.v_diag || 0], ['지도', t.v_map || 0], ['기록', t.v_record || 0]], 0)}</section>
+    <section class="card"><h2>시작 화면에서 고른 버튼</h2><p class="desc">처음 온 사람이 바로 시작했는지, 예시부터 봤는지.</p>${hbars([['우리 아이로 시작하기', t.intro_start || 0], ['예시 아이로 둘러보기', t.intro_sample || 0]], (t.intro_start || 0) + (t.intro_sample || 0))}
+      <h3 style="margin-top:14px;font-size:1.05rem">통과·막힘 누름</h3>${hbars([['통과했어요', t.mk_pass || 0], ['막혔어요', t.mk_stuck || 0]], (t.mk_pass || 0) + (t.mk_stuck || 0))}</section>
+  </div>`);
+  bindRange();
+}
+function errBox(e) {
+  const denied = e && e.code === 'permission-denied';
+  return `<div class="card"><p class="msg err">${denied ? '읽기 권한이 없어요. 보안 규칙 v0.3이 게시됐는지, admins 문서가 맞는지 확인해 주세요.' : '불러오지 못했어요: ' + esc((e && e.code) || e)}</p></div>`;
+}
+
+// ---------- 막히는 역 ----------
+async function paneStuck() {
+  let st; try { st = await ensureStats(); } catch (e) { pane(errBox(e)); return; }
+  const t = st.total, ids = new Set();
+  Object.keys(t).forEach(k => { const m = k.match(/^(sk|ps)_(\d-\d\d)$/); if (m) ids.add(m[2]); });
+  const rows = [...ids].map(id => { const sk = t['sk_' + id] || 0, ps = t['ps_' + id] || 0; return { id, sk, ps, n: sk + ps, rate: sk / ((sk + ps) || 1) }; })
+    .sort((a, b) => b.sk - a.sk || b.rate - a.rate);
+  const body = rows.length ? `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.9rem">
+      <tr><th style="text-align:left;padding:6px">역</th><th style="text-align:right;padding:6px">막힘</th><th style="text-align:right;padding:6px">통과</th><th style="padding:6px;min-width:140px">막힘 비율</th></tr>
+      ${rows.map(r => `<tr style="border-top:1px dashed var(--grid)"><td style="padding:6px">${esc(stName(r.id))}${ST.byId[r.id] && ST.byId[r.id].gate ? ' <span class="small muted">관문</span>' : ''}</td><td style="text-align:right;padding:6px;font-variant-numeric:tabular-nums">${fmt(r.sk)}</td><td style="text-align:right;padding:6px;font-variant-numeric:tabular-nums">${fmt(r.ps)}</td>
+      <td style="padding:6px"><div class="hb" style="grid-template-columns:1fr auto;margin:0"><span class="track"><span class="fill" style="width:${r.rate * 100}%;background:var(--red)"></span></span><span class="num" style="min-width:44px">${pct(r.sk, r.n)}${r.n < 5 ? ' ·적음' : ''}</span></div></td></tr>`).join('')}
+    </table></div>` : '<p class="empty">아직 ‘통과했어요/막혔어요’를 누른 기록이 없어요.</p>';
+  pane(`${rangeBar()}<section class="card" style="margin-top:12px"><h2>아이들이 많이 막히는 역</h2>
+    <p class="desc">부모님이 역 카드에서 ‘막혔어요’ / ‘통과했어요’를 누른 횟수예요(누가 눌렀는지는 모으지 않아요). 5번 미만은 ‘적음’으로 표시해요. 책의 예화, 학습지 보강, 새 생각 문제를 고를 때 쓰세요.</p>${body}</section>`);
+  bindRange();
+}
+
+// ---------- 가입자 ----------
+async function paneUsers() {
+  pane('<div class="card"><p class="muted">불러오는 중…</p></div>');
+  try {
+    const [us, ks] = await Promise.all([getDocs(collection(db, 'users')), getDocs(collectionGroup(db, 'children'))]);
+    const regions = {}, months = {}; let n = 0;
+    us.forEach(d => { n++; const v = d.data(); const r = v.region || '응답 안 함'; regions[r] = (regions[r] || 0) + 1;
+      if (v.createdAt) { const dt = v.createdAt.toDate(); const k = dt.getFullYear() + '.' + String(dt.getMonth() + 1).padStart(2, '0'); months[k] = (months[k] || 0) + 1; } });
+    const grades = {}; let kids = 0; ks.forEach(d => { kids++; const g = d.data().grade; grades[g] = (grades[g] || 0) + 1; });
+    const mk = Object.keys(months).sort();
+    pane(`<div class="tiles"><div class="tile"><div class="lab">가입한 부모</div><div class="val">${fmt(n)}</div></div>
+      <div class="tile"><div class="lab">등록된 아이</div><div class="val">${fmt(kids)}</div><div class="sub">가정당 ${n ? (kids / n).toFixed(1) : '–'}명</div></div></div>
+      <div class="grid2" style="margin-top:16px">
+      <section class="card"><h2>사는 지역 (선택 응답)</h2><p class="desc">가입할 때 부모님이 직접 고른 시·도예요. 고르지 않으면 ‘응답 안 함’.</p>${hbars(Object.entries(regions).sort((a, b) => b[1] - a[1]), n)}</section>
+      <section class="card"><h2>아이 학년</h2><p class="desc">이름·별명은 이 화면에 보이지 않아요.</p>${hbars([1, 2, 3, 4, 5, 6].map(g => [g + '학년', grades[g] || 0]), kids)}</section>
+      <section class="card"><h2>월별 가입</h2>${mk.length ? vbars(mk, mk.map(k => months[k]), '명', { label: '월별 가입 수' }) : '<p class="empty">아직 가입자가 없어요.</p>'}</section>
+      </div>`);
+  } catch (e) { pane(errBox(e)); }
+}
+
+// ---------- 시작 화면 글 ----------
+let draft = null;
+async function paneSite() {
+  if (!draft) {
+    pane('<div class="card"><p class="muted">불러오는 중…</p></div>');
+    try { const d = await getDoc(doc(db, 'site', 'intro')); draft = Object.assign({}, SITE_DEFAULT, d.exists() ? d.data() : {}); draft._saved = d.exists() && d.data().updatedAt ? d.data().updatedAt.toDate() : null; }
+    catch (e) { pane(errBox(e)); return; }
+  }
+  pane(`<div class="grid2">
+    <section class="card"><h2>시작 화면 글 고치기</h2><p class="desc"><b>**굵게**</b> 처럼 별표 두 개로 감싸면 굵게 보여요. <code>{역수}</code>는 역 개수(69)로 바뀌어요. 저장하면 앱을 새로 여는 사람부터 바로 보여요.</p>
+      <form id="sf">${FIELDS.map(([k, label, max, help]) => {
+        const v = draft[k] == null ? '' : draft[k];
+        const input = (k in LONG) ? `<textarea id="f_${k}" maxlength="${max}" class="${LONG[k]}">${esc(v)}</textarea>` : `<input id="f_${k}" maxlength="${max}" value="${esc(v)}">`;
+        return `<label class="field"><span>${esc(label)}${help ? ' — ' + esc(help) : ''}</span>${input}<span class="count" id="c_${k}">${v.length} / ${max}</span></label>`;
+      }).join('')}
+      <div class="row"><button class="btn" type="submit" id="save">저장하기</button><button class="btn ghost" type="button" id="def">기본 글로 채우기</button></div>
+      <p class="small muted" id="savedAt">${draft._saved ? '마지막 저장: ' + draft._saved.toLocaleString('ko-KR') : '아직 저장한 적 없어요. 지금 앱에는 기본 글이 보여요.'}</p>
+      <div id="smsg"></div></form></section>
+    <section class="card sticky"><h2>미리보기</h2><p class="desc">글자만 미리 봐요. 실제 모양은 저장 후 앱에서 확인하세요.</p><div class="preview" id="pv"></div></section></div>`);
+  const sync = () => { FIELDS.forEach(([k, , max]) => { const el = $('#f_' + k); draft[k] = el.value; $('#c_' + k).textContent = el.value.length + ' / ' + max; }); $('#pv').innerHTML = preview(draft); };
+  FIELDS.forEach(([k]) => $('#f_' + k).addEventListener('input', sync)); sync();
+  $('#def').onclick = () => { const keepNotice = draft.notice; draft = Object.assign({}, SITE_DEFAULT, { notice: keepNotice, _saved: draft._saved }); paneSite(); };
+  $('#sf').onsubmit = async e => {
+    e.preventDefault(); sync(); const btn = $('#save'); btn.disabled = true;
+    const out = {}; FIELDS.forEach(([k]) => out[k] = (draft[k] || '').replace(/\r/g, ''));
+    out.updatedAt = serverTimestamp(); out.updatedBy = A.user.uid;
+    try { await setDoc(doc(db, 'site', 'intro'), out); draft._saved = new Date(); $('#savedAt').textContent = '마지막 저장: ' + draft._saved.toLocaleString('ko-KR'); $('#smsg').innerHTML = '<p class="msg" role="status">저장했어요. 앱을 새로고침하면 바뀐 글이 보여요.</p>'; }
+    catch (err) { $('#smsg').innerHTML = `<p class="msg err" role="alert">저장하지 못했어요 (${esc(err.code || err)}). 글자 수 제한과 보안 규칙 v0.3 게시를 확인해 주세요.</p>`; }
+    btn.disabled = false;
+  };
+}
+function rich(t) { return esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\{역수\}/g, ST.stations.length || 69); }
+function preview(d) {
+  const story = (d.story || '').split(/\n\s*\n/).map(p => p.trim()).filter(Boolean).map(p => /^[“"].*[”"]$/.test(p) ? `<p class="say">${rich(p)}</p>` : `<p>${rich(p).replace(/\n/g, '<br>')}</p>`).join('');
+  return (d.notice && d.notice.trim() ? `<div class="p-notice"><b>알림</b> ${rich(d.notice)} <span class="small muted">(오늘 화면)</span></div>` : '') +
+    `<p class="p-sub">${rich(d.sub)}</p><p class="p-lead">${rich(d.lead)}</p>` +
+    [1, 2, 3].map(i => `<h3>${i}. ${rich(d['step' + i + 't'])}</h3><p class="small">${rich(d['step' + i])}</p>`).join('') +
+    `<h3>이 앱을 만든 이유</h3>${story}<p class="sign">${rich(d.sign)}</p>` +
+    `<h3>이런 부모님께</h3><ul>${(d.who || '').split('\n').filter(x => x.trim()).map(x => `<li>${rich(x.trim())}</li>`).join('')}</ul><p class="small muted" style="text-align:center">${rich(d.note)}</p>`;
+}
+
+// ---------- 의견 ----------
+async function paneFeedback() {
+  pane('<div class="card"><p class="muted">불러오는 중…</p></div>');
+  try {
+    const s = await getDocs(query(collection(db, 'feedback'), orderBy('createdAt', 'desc'), limit(100)));
+    const items = []; s.forEach(d => items.push(d.data()));
+    pane(`<section class="card"><h2>부모님 의견</h2><p class="desc">앱 ‘기록’ 탭에서 보낸 의견 최근 100개. 보낸 사람 정보는 보여 주지 않아요.</p>
+      ${items.length ? items.map(v => `<div class="fb"><div class="meta">${v.createdAt ? v.createdAt.toDate().toLocaleString('ko-KR') : ''}${v.stationId ? ' · ' + esc(stName(v.stationId)) : ''}</div><p>${esc(v.text)}</p></div>`).join('') : '<p class="empty">아직 받은 의견이 없어요.</p>'}</section>`);
+  } catch (e) { pane(errBox(e)); }
+}
+
+// ---------- 도움말 ----------
+function paneHelp() {
+  pane(`<div class="grid2">
+  <section class="card"><h2>무엇을 모으나요</h2><ul class="small">
+    <li><b>이용 통계(누구인지 알 수 없음)</b>: 날짜별로 숫자만 +1. 방문 기기 수, 화면 열기, 시간대, 기기 종류(휴대폰·태블릿·PC), 기기 시간대가 한국인지, 기기 언어, 연 역, 학습지, 진단 시작·완료, 통과·막힘 누름.</li>
+    <li>아이디·이메일·IP·위치·쿠키 식별자는 보내지 않아요. 같은 기기를 하루에 한 번 세려고 그 기기 안에만 ‘오늘 왔음’ 표시를 남겨요(서버로 가지 않음).</li>
+    <li>부모님은 앱 ‘기록’ 탭에서 <b>보내지 않기</b>로 끌 수 있어요.</li>
+    <li><b>사는 지역(선택)</b>: 가입할 때 시·도만 골라요. 고르지 않아도 돼요. 계정에 붙는 정보라 개인정보 처리방침에 ‘선택 항목’으로 적어 두었어요.</li>
+    <li><b>의견</b>: 로그인한 부모님이 직접 쓴 글. 아이 실명은 쓰지 말라고 안내해요.</li></ul></section>
+  <section class="card"><h2>법적으로 괜찮은가요</h2><ul class="small">
+    <li>누구인지 알아볼 수 없는 집계 숫자는 개인정보가 아니라서 동의를 받지 않아도 돼요. 다만 처리방침에 ‘이런 통계를 모은다’고 적고, 끌 수 있게 해 두었어요.</li>
+    <li>지역은 계정과 함께 저장되니 개인정보예요. 그래서 <b>선택 항목</b>으로 받고, 안 골라도 가입할 수 있어요.</li>
+    <li>IP로 지역을 알아내는 도구(구글 애널리틱스 등)는 지금 쓰지 않아요. 쓰려면 처리방침에 ‘자동 수집 장치’와 ‘국외 이전(구글, 미국)’을 추가해야 해요.</li>
+    <li>저는 변호사가 아니에요. 유료 출시 전에 처리방침은 한 번 전문가 검토를 권해요.</li></ul></section>
+  <section class="card"><h2>관리자 추가·삭제</h2><ol class="small">
+    <li>추가할 사람이 앱에서 한 번 로그인하고 이 주소(admin.html)에 들어오면 UID가 보여요.</li>
+    <li>Firebase 콘솔 → Firestore → <code>admins</code> 컬렉션 → 문서 ID에 그 UID, 필드 <code>role</code> = <code>admin</code>.</li>
+    <li>삭제는 그 문서를 지우면 끝이에요.</li></ol></section>
+  <section class="card"><h2>숫자 읽을 때 주의</h2><ul class="small">
+    <li>‘방문 기기’는 같은 기기·브라우저를 하루 한 번 센 합이에요. 7일 동안 매일 온 한 사람은 7로 세져요.</li>
+    <li>통계 끄기를 한 기기, 인터넷이 끊긴 순간은 빠져요.</li>
+    <li>누구나 숫자를 올릴 수는 있어서(내리지는 못함) 이상하게 튀는 날은 걸러 보세요. 앱 출시 때 App Check를 켜면 줄어요.</li></ul></section>
+  </div>`);
+}
+</script>
+</body>
+</html>

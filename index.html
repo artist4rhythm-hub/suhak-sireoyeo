@@ -122,6 +122,10 @@ table.rec td,table.rec th{padding:6px 4px;border-bottom:1.5px dashed var(--grid)
 table.rec th{font-weight:400;color:var(--muted);font-size:0.8125rem}
 
 
+/* ---------- 알림·의견·통계 ---------- */
+.notice-card{border-color:var(--green);box-shadow:3px 3px 0 var(--green)}
+.notice-card b{font-family:var(--title);font-weight:400;color:var(--green);margin-right:4px}
+.field textarea{font:inherit;border:2px solid var(--edge);border-radius:10px;padding:8px 10px;background:var(--card);color:var(--ink);min-height:96px;resize:vertical}
 /* ---------- 시작 화면 ---------- */
 button.logo{background:none;border:0;padding:0;text-align:left;line-height:1.15}
 .rail button.logo{text-align:center}
@@ -283,11 +287,12 @@ function routeSVG(hereId){
 // ---------- 화면 ----------
 function chip(){document.getElementById('childChip').innerHTML=(cloudOn()?'<span title="로그인됨">☁ </span>':'')+esc(S.child.nickname)+' · '+S.child.grade+'학년'+(S.sample?'<span class="example">예시</span>':'');}
 
+function noticeCard(){var n=site('notice');return n&&n.trim()?'<div class="card small notice-card" role="note"><b>알림</b> '+rich(n.trim())+'</div>':'';}
 function viewToday(){
   var r=diagResult(), passed=Object.values(S.progress).filter(function(p){return p.s==='passed';}).length;
   var gradeSt=DATA.stations.filter(function(s){return s.grade===S.child.grade;});
   var gp=gradeSt.filter(function(s){return S.progress[s.id]&&S.progress[s.id].s==='passed';}).length;
-  var h='<div class="col">';
+  var h='<div class="col">'+noticeCard();
   if(S.sample)h+='<div class="card small"><b>예시 데이터로 보고 있어요.</b> 3학년 ‘새싹’이 관문 ④에서 막힌 상황입니다. <button class="btn ghost" data-act="setup" style="margin-left:4px">우리 아이로 시작하기</button></div>';
   if(r){var st=r.start;
     h+='<section class="card tape"><div class="eyebrow">오늘의 출발역</div><h2 class="big">'+st.id+' '+esc(st.name)+'</h2>'+
@@ -351,14 +356,14 @@ function viewRecord(){
     '<section class="card"><h3>아이 프로필</h3><p class="small muted">별명과 학년만 저장해요. 실명·생년월일·사진은 받지 않아요.</p>'+
     '<form id="profile" class="row" style="align-items:end"><label class="field" for="nick">별명<input id="nick" maxlength="12" required value="'+esc(S.child.nickname)+'"></label>'+
     '<label class="field" for="grade">학년<select id="grade">'+[1,2,3,4,5,6].map(function(i){return '<option value="'+i+'"'+(i===S.child.grade?' selected':'')+'>'+i+'학년</option>';}).join('')+'</select></label><button class="btn" type="submit">저장</button></form></section>'+
-    sizeCard()+purchaseCard()+
+    feedbackCard()+sizeCard()+purchaseCard()+
     (cloudOn()?'':'<section class="card"><button class="btn ghost" data-act="reset">예시 데이터로 되돌리기</button><p class="notice">로그인하지 않으면 기록은 이 기기의 브라우저에만 남아요.</p></section>')+'</div>';
   return h;
 }
 
 // ---------- 계정(로그인·저장) ----------
 function accountCard(){
-  var c=S.cloud||{status:'loading'}, msg=c.msg?'<p class="notice" role="status" style="color:var(--red)">'+esc(c.msg)+'</p>':'';
+  var c=S.cloud||{status:'loading'}, msg=c.msg?'<p class="notice" role="status" style="color:'+(c.msgOk?'var(--green)':'var(--red)')+'">'+esc(c.msg)+'</p>':'';
   var h='<section class="card tape" id="account"><h3>계정</h3>';
   if(c.status==='loading'){h+='<p class="small muted">로그인 상태를 확인하고 있어요…</p>';}
   else if(c.status==='unavailable'){h+='<p class="small">로그인은 실제 주소(GitHub Pages)에서만 동작해요. 지금은 이 기기에만 저장돼요.</p>';}
@@ -373,6 +378,7 @@ function accountCard(){
   else if(c.status==='consent'){
     h+='<p class="small">'+esc(c.email||'')+' 계정으로 처음 오셨어요.</p>'+
       '<label class="small" for="over14" style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" id="over14" style="margin-top:5px;accent-color:var(--green)"> <span>만 14세 이상의 부모(보호자)입니다. 아이 정보는 별명과 학년만 입력하겠습니다.</span></label>'+
+      regionField('')+
       '<p class="notice">가입하면 이용약관과 개인정보 처리방침에 따라 정보가 처리돼요.</p>'+
       '<div class="row"><button class="btn" data-act="consent">시작하기</button><button class="btn ghost" data-act="logout">로그아웃</button></div>';
   }
@@ -382,10 +388,16 @@ function accountCard(){
       '<p class="small muted" style="margin-bottom:4px">아이 고르기</p><div class="tabs" role="group" aria-label="아이" style="flex-wrap:wrap">'+
       kids.map(function(k){return '<button class="tab" aria-pressed="'+(k.id===c.childId)+'" data-child="'+k.id+'">'+esc(k.nickname)+' · '+k.grade+'학년</button>';}).join('')+
       (kids.length<4?'<button class="tab" data-act="add-child">＋ 아이 추가</button>':'')+'</div>'+
+      '<div style="margin-top:12px">'+regionField(c.region||'')+'</div>'+
       '<div class="row" style="margin-top:12px"><button class="btn ghost" data-act="logout">로그아웃</button><button class="back" data-act="delete-ask" style="color:var(--red)">계정 삭제</button></div>';
     if(c.confirmDelete)h+='<div class="card" style="box-shadow:none;border-color:var(--red);margin-top:10px"><p class="small"><b>정말 삭제할까요?</b> 아이 프로필과 모든 기록이 지워지고 되돌릴 수 없어요.</p><div class="row"><button class="btn red" data-act="delete-yes">삭제합니다</button><button class="btn ghost" data-act="delete-no">취소</button></div></div>';
   }
   return h+msg+'</section>';
+}
+var REGIONS=['서울','부산','대구','인천','광주','대전','울산','세종','경기','강원','충북','충남','전북','전남','경북','경남','제주','해외'];
+function regionField(v){
+  return '<label class="field small" for="region" style="max-width:320px">사는 지역 (선택)<span class="muted" style="display:block;font-size:.8125rem">어느 지역 가정이 쓰는지 시·도 단위로만 봐요. 안 골라도 돼요.</span><select id="region" data-region="1"><option value="">말하지 않을래요</option>'+
+    REGIONS.map(function(r){return '<option'+(r===v?' selected':'')+'>'+r+'</option>';}).join('')+'</select></label>';
 }
 function cloudCall(fn){if(window.Cloud&&window.Cloud[fn])return window.Cloud[fn].apply(null,[].slice.call(arguments,1));}
 
@@ -414,6 +426,9 @@ function purchaseCard(){
 var SELF_TEST=[
   ['first','휴대폰 첫 화면만 보고 무엇을 하는 앱인지 알 수 있다'],
   ['login','기록 탭에서 가입·로그인하고, 다른 기기에서 같은 계정으로 기록이 보인다'],
+  ['admin','admin.html에서 시작 화면 글을 고치면 앱 시작 화면에 바로 반영된다'],
+  ['stats','관리자 화면 ‘현황’에 오늘 방문·화면 보기 숫자가 올라간다'],
+  ['feedback','기록 탭에서 의견을 보내면 관리자 화면 ‘의견’에 보인다'],
   ['intro','처음 열면 시작 화면(로고·만든 이유)이 보이고, 왼쪽 위 로고를 누르면 다시 열린다'],
   ['setup','‘우리 아이로 시작하기’로 별명·학년을 바꿀 수 있다'],
   ['diag','관문 진단을 끝까지 해 본다(통과·막힘 둘 다 눌러 보기)'],
@@ -430,8 +445,16 @@ var SELF_TEST=[
   ['words','확인 질문·생각 문제 문장이 소리 내어 읽기에 자연스럽다']
 ];
 function sizeCard(){
-  var lg=S.size==='lg';
-  return '<section class="card"><h3>글자 크기</h3><p class="small muted">소리 내어 읽어 줄 때 크게 하면 편해요.</p><div class="tabs" role="group" aria-label="글자 크기"><button class="tab" aria-pressed="'+(!lg)+'" data-size="md">보통</button><button class="tab" aria-pressed="'+lg+'" data-size="lg">크게</button></div></section>';
+  var lg=S.size==='lg', off=statsOff();
+  return '<section class="card"><h3>글자 크기</h3><p class="small muted">소리 내어 읽어 줄 때 크게 하면 편해요.</p><div class="tabs" role="group" aria-label="글자 크기"><button class="tab" aria-pressed="'+(!lg)+'" data-size="md">보통</button><button class="tab" aria-pressed="'+lg+'" data-size="lg">크게</button></div>'+
+    '<h3 style="margin-top:16px">이용 통계 보내기</h3><p class="small muted">앱을 더 낫게 만들려고 <b>누가 썼는지 알 수 없는 숫자</b>만 모아요. 예: 오늘 몇 대의 기기가 들어왔는지, 어느 역이 많이 열렸는지, 휴대폰인지 PC인지. 이름·이메일·위치·IP는 보내지 않아요.</p>'+
+    '<div class="tabs" role="group" aria-label="이용 통계"><button class="tab" aria-pressed="'+(!off)+'" data-act="stats-on">보내기</button><button class="tab" aria-pressed="'+off+'" data-act="stats-off">보내지 않기</button></div></section>';
+}
+function feedbackCard(){
+  var c=S.cloud||{}, h='<section class="card" id="feedback"><h3>만든 사람에게 의견 보내기</h3>';
+  if(c.status!=='on')return h+'<p class="small muted">로그인하면 의견을 보낼 수 있어요. 어색한 문장, 아이가 헷갈려한 문제, 있었으면 하는 기능 무엇이든 좋아요.</p></section>';
+  if(c.fbSent)h+='<p class="small" role="status" style="color:var(--green)">고마워요! 의견이 잘 전달됐어요.</p>';
+  return h+'<form id="fbForm" class="list"><label class="field" for="fbText">어색한 문장, 아이가 헷갈려한 문제, 있었으면 하는 기능 무엇이든 좋아요'+(S.sel?' (지금 보던 역 '+esc(S.sel)+'도 함께 보내져요)':'')+'<textarea id="fbText" maxlength="1000" required></textarea></label><div class="row"><button class="btn" type="submit">보내기</button><span class="small muted">아이 실명이나 연락처는 적지 말아 주세요.</span></div></form></section>';
 }
 function selfTestCard(){
   var st=S.selftest||{}, done=SELF_TEST.filter(function(t){return st[t[0]];}).length;
@@ -442,7 +465,7 @@ function selfTestCard(){
 // ---------- 역 카드 ----------
 // 무료 학습지(PDF): 관문역부터 하나씩 추가
 var WS={'1-07':'worksheets/gate1-ten.pdf','2-01':'worksheets/gate2-place-value.pdf','2-06':'worksheets/gate3-multiplication.pdf'};
-function wsLink(id){return WS[id]?'<div class="wsbox"><a class="btn" href="'+WS[id]+'" target="_blank" rel="noopener">무료 학습지 열기 (PDF)</a><span class="small muted">A4 · 41문항 + 부모용 정답. PC에서 열면 바로 출력할 수 있어요.</span></div>':'';}
+function wsLink(id){return WS[id]?'<div class="wsbox"><a class="btn" data-ws="'+(byId[id].gate||'')+'" href="'+WS[id]+'" target="_blank" rel="noopener">무료 학습지 열기 (PDF)</a><span class="small muted">A4 · 41문항 + 부모용 정답. PC에서 열면 바로 출력할 수 있어요.</span></div>':'';}
 function stationCard(id){
   var s=byId[id]; if(!s)return '';
   var p=S.progress[id], open=unlocked(s);
@@ -465,16 +488,47 @@ function stationCard(id){
     '</div></section>';
 }
 
+// ---------- 이용 통계 ----------
+// 사람을 알아볼 수 없는 '숫자 +1'만 보냅니다(아이디·이메일·IP 저장 없음). 기록 탭에서 끌 수 있어요.
+var STATS_OFF_KEY='suhak-nostats';
+function statsOff(){try{return localStorage.getItem(STATS_OFF_KEY)==='1';}catch(e){return false;}}
+window.__tq=window.__tq||[];
+function track(){var ks=[].slice.call(arguments).filter(Boolean);if(!ks.length||statsOff())return;
+  if(window.Track)window.Track(ks);else window.__tq.push(ks);}
+function trackVisit(){
+  var day=today(),first=false;
+  try{first=localStorage.getItem('suhak-lastday')!==day;localStorage.setItem('suhak-lastday',day);}catch(e){}
+  var ks=['pv','h'+String(new Date().getHours()).padStart(2,'0')];
+  if(first){
+    var w=Math.min(screen.width,screen.height),touch=('ontouchstart' in window)||navigator.maxTouchPoints>0;
+    var tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||'';}catch(e){}
+    ks.push('visit',!touch?'d_pc':w<600?'d_phone':'d_tablet',tz==='Asia/Seoul'?'tz_kr':'tz_other',/^ko/i.test(navigator.language||'')?'lang_ko':'lang_other');
+    if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone)ks.push('pwa');
+  }
+  track.apply(null,ks);
+}
+var lastView='';
+function trackView(){var v=introOpen?'intro':S.view;if(v!==lastView){lastView=v;track('v_'+v);}}
+
 // ---------- 시작 화면 ----------
-// ※ '이 앱을 만든 이유' 글은 아래 STORY만 고치면 됩니다. 한 줄 = 한 문단.
-var STORY=[
-  '저는 수학을 잘하던 사람이 아닙니다. 고졸 아빠예요.',
-  '첫째는 저학년 때 어느 수가 더 큰지 가늠하는 감각이 자리 잡기까지 오래 걸렸습니다. 둘째는 수 감각은 있는데, 오래 붙잡고 생각해야 하는 계산 앞에서는 몸부터 들썩였지요. 그리고 둘 다 같은 말을 했습니다.',
-  '“아빠, 수학하기 시러여!”',
-  '문제집을 한 권 더 푼다고 달라지지 않았습니다. 필요한 건 빨리 푸는 요령이 아니라, 아이가 지금 어느 역에서 멈춰 섰는지 아는 일이었어요. 그래서 초등 6년 수학을 하나의 노선도로 펼쳐 놓고, 막힌 역으로 돌아가 손으로 만지고 말로 설명하게 했습니다.',
-  '이 앱은 그 길을 정리한 길안내입니다. 수학 전문가가 아니어도, 부모가 아이 옆에서 같이 걸을 수 있도록요.'
-];
-var STORY_SIGN='— 두 아이의 아빠, 현우';
+// 시작 화면 글: 아래는 기본값. 관리자 화면(admin.html)에서 고치면 그 글이 우선합니다.
+var SITE_DEFAULT={
+  sub:'빨리 푸는 수학 말고, 고민하고 깊게 생각하는 수학',
+  lead:'초등 6년 수학을 지하철 노선도처럼 펼쳐 놓고, 우리 아이가 막힌 역을 찾아 함께 다시 걷는 **부모용 길안내 앱**이에요.',
+  step1t:'관문 진단', step1:'질문 5개, 10분이면 돼요. 정답보다 아이가 **어떻게 설명하는지**를 들어요.',
+  step2t:'노선도', step2:'초등 수학 {역수}개 역을 네 노선으로 이었어요. 막힌 역과, 그 앞에서 돌아갈 역이 보여요.',
+  step3t:'역 카드', step3:'확인 질문, 생각 문제(입구·가운데·도전), 흔한 오개념, 출력용 학습지까지 한 장에 담았어요.',
+  story:'저는 수학을 잘하던 사람이 아닙니다. 고졸 아빠예요.\n\n첫째는 저학년 때 어느 수가 더 큰지 가늠하는 감각이 자리 잡기까지 오래 걸렸습니다. 둘째는 수 감각은 있는데, 오래 붙잡고 생각해야 하는 계산 앞에서는 몸부터 들썩였지요. 그리고 둘 다 같은 말을 했습니다.\n\n“아빠, 수학하기 시러여!”\n\n문제집을 한 권 더 푼다고 달라지지 않았습니다. 필요한 건 빨리 푸는 요령이 아니라, 아이가 지금 어느 역에서 멈춰 섰는지 아는 일이었어요. 그래서 초등 6년 수학을 하나의 노선도로 펼쳐 놓고, 막힌 역으로 돌아가 손으로 만지고 말로 설명하게 했습니다.\n\n이 앱은 그 길을 정리한 길안내입니다. 수학 전문가가 아니어도, 부모가 아이 옆에서 같이 걸을 수 있도록요.',
+  sign:'— 두 아이의 아빠, 현우',
+  who:'홈스쿨·대안학교처럼 다른 길을 택했지만, 수학적 사고력은 놓치고 싶지 않은 부모님\n빠른 문제 풀이에 지쳐 “수학 싫어”가 입에 붙은 아이를 둔 부모님\n우리 아이가 어디서 막혔는지, 어디로 돌아가야 하는지 알고 싶은 부모님',
+  note:'부모님이 가입하고 쓰는 앱이에요. 아이 정보는 별명과 학년만 받아요. · 지금은 무료 베타예요.',
+  notice:''
+};
+var SITE_KEY='suhak-site-v1', SITE={};
+try{SITE=JSON.parse(localStorage.getItem(SITE_KEY)||'{}')||{};}catch(e){SITE={};}
+function site(k){var v=SITE[k];return (typeof v==='string'&&(v.trim()||k==='notice'))?v:SITE_DEFAULT[k];}
+// **굵게** 와 {역수} 만 지원하는 아주 작은 서식
+function rich(t){return esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/\{역수\}/g,DATA?DATA.stations.length:69);}
 var INTRO_KEY='suhak-intro-v1';
 var introOpen=false;
 try{introOpen=!localStorage.getItem(INTRO_KEY);}catch(e){introOpen=true;}
@@ -489,27 +543,22 @@ function brandRoute(){
   return h;
 }
 function viewIntro(){
-  var cnt=DATA?DATA.stations.length:69, fresh=S.sample&&!cloudOn();
+  var fresh=S.sample&&!cloudOn();
   var startBtn=fresh?'<button class="btn lg" data-act="intro-start">우리 아이로 시작하기</button>':'<button class="btn lg" data-act="intro-start">앱으로 돌아가기</button>';
   var sampleBtn=fresh?'<button class="btn ghost lg" data-act="intro-sample">예시 아이로 먼저 둘러보기</button>':'';
   var h='<div class="intro">';
   h+='<section class="hero"><h1 class="brandmark"><span class="bm-top">수학하기</span><span class="bm-main">시러여<span class="bm-bang">!</span></span></h1>'+brandRoute()
-    +'<p class="sub">빨리 푸는 수학 말고, 고민하고 깊게 생각하는 수학</p>'
-    +'<p class="lead">초등 6년 수학을 지하철 노선도처럼 펼쳐 놓고, 우리 아이가 막힌 역을 찾아 함께 다시 걷는 <b>부모용 길안내 앱</b>이에요.</p>'
+    +'<p class="sub">'+rich(site('sub'))+'</p>'
+    +'<p class="lead">'+rich(site('lead'))+'</p>'
     +'<div class="row">'+startBtn+sampleBtn+'</div></section>';
   h+='<section class="card tape"><h2>이렇게 써요</h2><div class="steps">'
-    +'<div class="step"><span class="n">1</span><div><h3>관문 진단</h3><p>질문 5개, 10분이면 돼요. 정답보다 아이가 <span class="mark">어떻게 설명하는지</span>를 들어요.</p></div></div>'
-    +'<div class="step"><span class="n">2</span><div><h3>노선도</h3><p>초등 수학 '+cnt+'개 역을 네 노선으로 이었어요. 막힌 역과, 그 앞에서 돌아갈 역이 보여요.</p></div></div>'
-    +'<div class="step"><span class="n">3</span><div><h3>역 카드</h3><p>확인 질문, 생각 문제(입구·가운데·도전), 흔한 오개념, 출력용 학습지까지 한 장에 담았어요.</p></div></div>'
+    +[1,2,3].map(function(i){return '<div class="step"><span class="n">'+i+'</span><div><h3>'+rich(site('step'+i+'t'))+'</h3><p>'+rich(site('step'+i))+'</p></div></div>';}).join('')
     +'</div></section>';
-  h+='<section class="card story"><h2>이 앱을 만든 이유</h2>'+STORY.map(function(p){return /^“.*”$/.test(p)?'<p class="say">'+esc(p)+'</p>':'<p>'+esc(p)+'</p>';}).join('')
-    +'<p class="sign">'+esc(STORY_SIGN)+'</p></section>';
-  h+='<section class="card"><h2>이런 부모님께</h2><ul class="who">'
-    +'<li>홈스쿨·대안학교처럼 다른 길을 택했지만, 수학적 사고력은 놓치고 싶지 않은 부모님</li>'
-    +'<li>빠른 문제 풀이에 지쳐 “수학 싫어”가 입에 붙은 아이를 둔 부모님</li>'
-    +'<li>우리 아이가 어디서 막혔는지, 어디로 돌아가야 하는지 알고 싶은 부모님</li></ul></section>';
+  h+='<section class="card story"><h2>이 앱을 만든 이유</h2>'+site('story').split(/\n\s*\n/).map(function(p){p=p.trim();if(!p)return '';return /^[“"].*[”"]$/.test(p)?'<p class="say">'+rich(p)+'</p>':'<p>'+rich(p).replace(/\n/g,'<br>')+'</p>';}).join('')
+    +'<p class="sign">'+rich(site('sign'))+'</p></section>';
+  h+='<section class="card"><h2>이런 부모님께</h2><ul class="who">'+site('who').split('\n').filter(function(x){return x.trim();}).map(function(x){return '<li>'+rich(x.trim())+'</li>';}).join('')+'</ul></section>';
   h+='<div class="hero" style="padding-top:0"><div class="row">'+startBtn+sampleBtn+'</div></div>';
-  h+='<p class="foot-note">부모님이 가입하고 쓰는 앱이에요. 아이 정보는 별명과 학년만 받아요. · 지금은 무료 베타예요.</p>';
+  h+='<p class="foot-note">'+rich(site('note'))+'</p>';
   h+='<p class="foot-note">© 2026 수학하기 시러여! 모든 확인 질문과 생각 문제는 자체 제작했습니다.</p></div>';
   return h;
 }
@@ -520,7 +569,7 @@ function render(){
   document.documentElement.setAttribute('data-size',S.size==='lg'?'lg':'md');
   document.body.classList.toggle('intro-on',introOpen);
   var ib=document.getElementById('intro');
-  if(introOpen){ib.innerHTML=viewIntro();save();return;}
+  if(introOpen){ib.innerHTML=viewIntro();save();trackView();return;}
   ib.innerHTML='';
   chip();
   document.querySelectorAll('[data-nav]').forEach(function(b){b.setAttribute('aria-current',b.dataset.nav===S.view?'page':'false');});
@@ -529,37 +578,40 @@ function render(){
   if(!wide && S.detailOpen && S.sel){m.innerHTML='<div class="col">'+stationCard(S.sel)+'</div>';}
   else m.innerHTML=({today:viewToday,diag:viewDiag,map:viewMap,record:viewRecord}[S.view]||viewToday)();
   m.classList.toggle('single',S.view==='record');
-  save();
+  save();trackView();
 }
 
 document.addEventListener('click',function(e){
+  var w=e.target.closest('a[data-ws]'); if(w){track('ws_open','ws_'+w.dataset.ws);return;}
   var t=e.target.closest('button'); if(!t)return;
   if(t.dataset.nav){S.view=t.dataset.nav;S.detailOpen=false;if(S.view==='diag')S.diagStep=null;render();window.scrollTo(0,0);return;}
-  if(t.dataset.open){S.sel=t.dataset.open;S.detailOpen=true;S.mapGrade=byId[S.sel].grade;render();if(!window.matchMedia('(min-width:600px)').matches)window.scrollTo(0,0);return;}
+  if(t.dataset.open){track('st_open','st_'+t.dataset.open);S.sel=t.dataset.open;S.detailOpen=true;S.mapGrade=byId[S.sel].grade;render();if(!window.matchMedia('(min-width:600px)').matches)window.scrollTo(0,0);return;}
   if(t.dataset.grade){S.mapGrade=+t.dataset.grade;render();return;}
   if(t.dataset.size){S.size=t.dataset.size;render();return;}
   if(t.dataset.plat){S.platform=t.dataset.plat;S.storeSheet=false;render();return;}
-  if(t.dataset.mark){S.progress[t.dataset.id]={s:t.dataset.mark,at:today()};syncDiag();if(cloudOn())cloudCall('saveProgress',t.dataset.id,t.dataset.mark);render();return;}
+  if(t.dataset.mark){track(t.dataset.mark==='passed'?'mk_pass':'mk_stuck',(t.dataset.mark==='passed'?'ps_':'sk_')+t.dataset.id);S.progress[t.dataset.id]={s:t.dataset.mark,at:today()};syncDiag();if(cloudOn())cloudCall('saveProgress',t.dataset.id,t.dataset.mark);render();return;}
   if(t.dataset.child){cloudCall('selectChild',t.dataset.child);return;}
   if(t.dataset.diag){var gs=gatesFor(S.child.grade),g=gs[S.diagStep];
     if(t.dataset.diag==='prev'){S.diagStep=Math.max(0,S.diagStep-1);render();return;}
     S.diag[g.no]=t.dataset.diag; S.progress[g.station]={s:t.dataset.diag==='pass'?'passed':'stuck',at:today()}; if(cloudOn())cloudCall('saveProgress',g.station,S.progress[g.station].s);
-    S.diagStep=t.dataset.diag==='stuck'?gs.length:S.diagStep+1; if(S.diagStep>=gs.length)S.sel=diagResult().start.id; render();return;}
+    S.diagStep=t.dataset.diag==='stuck'?gs.length:S.diagStep+1; if(S.diagStep>=gs.length){S.sel=diagResult().start.id;track('diag_done');} render();return;}
   var a=t.dataset.act;
   if(a==='intro-open'){introOpen=true;render();window.scrollTo(0,0);return;}
-  if(a==='intro-sample'){closeIntro();S.view='today';render();window.scrollTo(0,0);return;}
-  if(a==='intro-start'){closeIntro();if(S.sample&&!cloudOn()){a='setup';window.scrollTo(0,0);}else{S.view='today';render();window.scrollTo(0,0);return;}}
-  if(a==='diag-start'){S.diagStep=0;render();}
+  if(a==='intro-sample'){track('intro_sample');closeIntro();S.view='today';render();window.scrollTo(0,0);return;}
+  if(a==='intro-start'){if(S.sample&&!cloudOn())track('intro_start');closeIntro();if(S.sample&&!cloudOn()){a='setup';window.scrollTo(0,0);}else{S.view='today';render();window.scrollTo(0,0);return;}}
+  if(a==='diag-start'){track('diag_start');S.diagStep=0;render();}
   else if(a==='diag-reset'){S.diag={};S.diagStep=0;render();}
   else if(a==='login-google'){cloudCall('loginGoogle');}
   else if(a==='reset-pw'){var em=document.getElementById('em');cloudCall('resetPassword',em?em.value.trim():'');}
-  else if(a==='consent'){var ok=document.getElementById('over14');if(!ok||!ok.checked){S.cloud.msg='만 14세 이상 부모(보호자) 확인에 체크해 주세요.';render();}else cloudCall('consent');}
+  else if(a==='consent'){var ok=document.getElementById('over14'),rg=document.getElementById('region');if(!ok||!ok.checked){S.cloud.msg='만 14세 이상 부모(보호자) 확인에 체크해 주세요.';render();}else cloudCall('consent',rg?rg.value:'');}
   else if(a==='logout'){cloudCall('logout');}
   else if(a==='add-child'){cloudCall('addChild');}
   else if(a==='delete-ask'){S.cloud.confirmDelete=true;render();}
   else if(a==='delete-no'){S.cloud.confirmDelete=false;render();}
   else if(a==='delete-yes'){cloudCall('deleteAccount');}
   else if(a==='close'){S.detailOpen=false;render();}
+  else if(a==='stats-on'){try{localStorage.removeItem(STATS_OFF_KEY);}catch(e){}render();}
+  else if(a==='stats-off'){try{localStorage.setItem(STATS_OFF_KEY,'1');}catch(e){}render();}
   else if(a==='pass'){S.pass=!S.pass;S.passSource=null;S.couponMsg='';render();}
   else if(a==='subscribe'){S.storeSheet=true;render();}
   else if(a==='cancelSheet'){S.storeSheet=false;render();}
@@ -569,6 +621,7 @@ document.addEventListener('click',function(e){
   else if(a==='setup'){S={sample:false,child:{nickname:'우리 아이',grade:S.child.grade},progress:{},diag:{},pass:false,view:'record',sel:null,mapGrade:S.child.grade,diagStep:null,detailOpen:false,selftest:S.selftest||{},size:S.size,cloud:S.cloud};render();var n=document.getElementById('nick');if(n){n.focus();n.select();}}
 });
 document.addEventListener('change',function(e){
+  if(e.target.dataset&&e.target.dataset.region&&cloudOn()){cloudCall('saveRegion',e.target.value);return;}
   var k=e.target.dataset&&e.target.dataset.st; if(!k)return;
   S.selftest=S.selftest||{}; S.selftest[k]=e.target.checked; render();
   var el=document.getElementById('st-'+k); if(el)el.focus();
@@ -579,6 +632,9 @@ document.addEventListener('submit',function(e){
     if(code==='DONGARI-2027'||code==='DONGARI2027'){S.pass=true;S.passSource='coupon';S.couponMsg='동아리 쿠폰이 적용됐어요. 1년 동안 모든 역이 열립니다.';}
     else S.couponMsg=code?'이 코드는 쓸 수 없어요. 철자를 확인하거나, 이미 쓴 코드인지 확인해 주세요.':'쿠폰 코드를 넣어 주세요.';
     render();return;}
+  if(e.target.id==='fbForm'){e.preventDefault();
+    var tx=document.getElementById('fbText').value.trim().slice(0,1000); if(!tx)return;
+    cloudCall('sendFeedback',tx,S.sel||'');return;}
   if(e.target.id==='emailForm'){e.preventDefault();
     var mode=(e.submitter&&e.submitter.dataset.mode)||'in';
     cloudCall(mode==='up'?'signUpEmail':'loginEmail',document.getElementById('em').value.trim(),document.getElementById('pw').value);return;}
@@ -595,13 +651,15 @@ window.SUHAK={
   get:function(){return S;},
   set:function(fn){fn(S);syncDiag();if(DATA)render();},
   local:function(){var c=S.cloud;S=localState();S.cloud=c;},
+  site:function(d){SITE=d||{};try{localStorage.setItem(SITE_KEY,JSON.stringify(SITE));}catch(e){}if(DATA)render();},
+  track:track,
   today:today
 };
 S.cloud={status:'loading'};
 setTimeout(function(){if(!window.Cloud&&S.cloud.status==='loading'){S.cloud={status:'unavailable'};if(DATA)render();}},6000);
 
 fetch('stations.json').then(function(r){if(!r.ok)throw new Error(r.status);return r.json();}).then(function(d){
-  DATA=d; d.stations.forEach(function(s){byId[s.id]=s;}); if(S.sel&&!byId[S.sel])S.sel=null; render();
+  DATA=d; d.stations.forEach(function(s){byId[s.id]=s;}); if(S.sel&&!byId[S.sel])S.sel=null; render(); trackVisit();
 }).catch(function(){document.getElementById('main').innerHTML='<div class="col"><div class="card">역 데이터(stations.json)를 불러오지 못했어요. 같은 폴더에 파일이 있는지 확인해 주세요.</div></div>';});
 })();
 </script>
@@ -612,7 +670,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithRedirect,
   signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, signOut, deleteUser
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, addDoc, deleteDoc, collection, getDocs, serverTimestamp, writeBatch
+import { getFirestore, doc, getDoc, setDoc, addDoc, deleteDoc, collection, getDocs, serverTimestamp, writeBatch, increment
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -628,6 +686,18 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const H = window.SUHAK;
 
+// 이용 통계: stats/{오늘}/c/{항목} 의 n 을 +1 (같은 항목은 한 번에 한 번만)
+function kstDay(){ const t = new Date(Date.now() + 9 * 3600 * 1000); return t.getUTCFullYear() + String(t.getUTCMonth() + 1).padStart(2, '0') + String(t.getUTCDate()).padStart(2, '0'); }
+window.Track = function(keys){
+  const day = kstDay(), uniq = [...new Set(keys)];
+  // 항목마다 따로 저장: 하나가 거절돼도 나머지는 기록됨
+  uniq.forEach(k => setDoc(doc(db, 'stats', day, 'c', k), { n: increment(1) }, { merge: true }).catch(e => console.warn('stats', k, e.code)));
+};
+(window.__tq || []).splice(0).forEach(ks => window.Track(ks));
+
+// 시작 화면 글(관리자가 고친 것)
+getDoc(doc(db, 'site', 'intro')).then(d => { if (d.exists()) { const v = d.data(); delete v.updatedAt; delete v.updatedBy; H.site(v); } }).catch(e => console.warn('site', e.code));
+
 const MSG = {
   'auth/invalid-credential':'이메일 또는 비밀번호가 맞지 않아요.',
   'auth/wrong-password':'이메일 또는 비밀번호가 맞지 않아요.',
@@ -642,18 +712,19 @@ const MSG = {
   'auth/too-many-requests':'시도가 너무 많아요. 잠시 뒤 다시 해 주세요.',
   'permission-denied':'저장 권한이 없어요. 보안 규칙이 게시됐는지 확인해 주세요.'
 };
-function fail(e){ console.error(e); H.set(S => { S.cloud = Object.assign({}, S.cloud, { msg: MSG[e && e.code] || '문제가 생겼어요. 잠시 뒤 다시 해 주세요. (' + ((e && e.code) || '알 수 없음') + ')' }); }); }
+function fail(e){ console.error(e); H.set(S => { S.cloud = Object.assign({}, S.cloud, { msgOk: false, msg: MSG[e && e.code] || '문제가 생겼어요. 잠시 뒤 다시 해 주세요. (' + ((e && e.code) || '알 수 없음') + ')' }); }); }
 function ymd(ts){ const d = ts && ts.toDate ? ts.toDate() : new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 const kidsRef = uid => collection(db, 'users', uid, 'children');
 const progRef = (uid, cid) => collection(db, 'users', uid, 'children', cid, 'progress');
 
-async function loadChild(uid, child, children, email){
+let loginCounted = false;
+async function loadChild(uid, child, children, email, region){
   const snap = await getDocs(progRef(uid, child.id));
   const progress = {};
   snap.forEach(d => { const v = d.data(); if (v.status === 'passed' || v.status === 'stuck') progress[d.id] = { s: v.status, at: ymd(v.updatedAt) }; });
   try { localStorage.setItem('suhak-child-' + uid, child.id); } catch (e) {}
   H.set(S => {
-    S.cloud = { status: 'on', uid, email, children, childId: child.id };
+    S.cloud = { status: 'on', uid, email, children, childId: child.id, region: region !== undefined ? region : ((S.cloud && S.cloud.region) || '') };
     S.sample = false; S.child = { nickname: child.nickname, grade: child.grade };
     S.progress = progress; S.diag = {}; S.diagStep = null; S.mapGrade = child.grade;
     if (S.sel && !S.progress[S.sel]) S.sel = null;
@@ -664,6 +735,7 @@ async function openAccount(user){
   const uid = user.uid, email = user.email || '';
   const u = await getDoc(doc(db, 'users', uid));
   if (!u.exists()) { H.set(S => { S.cloud = { status: 'consent', uid, email }; S.view = 'record'; }); return; }
+  const region = u.data().region || '';
   const ks = await getDocs(kidsRef(uid));
   let children = [];
   ks.forEach(d => { const v = d.data(); children.push({ id: d.id, nickname: v.nickname, grade: v.grade, t: v.createdAt ? v.createdAt.toMillis() : 0 }); });
@@ -682,7 +754,8 @@ async function openAccount(user){
   }
   let pick = null; try { pick = localStorage.getItem('suhak-child-' + uid); } catch (e) {}
   const child = children.find(k => k.id === pick) || children[0];
-  await loadChild(uid, child, children, email);
+  await loadChild(uid, child, children, email, region);
+  if (!loginCounted) { loginCounted = true; H.track('login'); }
 }
 
 onAuthStateChanged(auth, user => {
@@ -699,13 +772,14 @@ window.Cloud = {
   async loginEmail(em, pw){ try { await signInWithEmailAndPassword(auth, em, pw); } catch (e) { fail(e); } },
   async signUpEmail(em, pw){ try { await createUserWithEmailAndPassword(auth, em, pw); } catch (e) { fail(e); } },
   async resetPassword(em){
-    try { await sendPasswordResetEmail(auth, em); H.set(S => { S.cloud = Object.assign({}, S.cloud, { msg: em + ' 로 비밀번호 재설정 메일을 보냈어요.' }); }); }
+    try { await sendPasswordResetEmail(auth, em); H.set(S => { S.cloud = Object.assign({}, S.cloud, { msg: em + ' 로 비밀번호 재설정 메일을 보냈어요.', msgOk: true }); }); }
     catch (e) { fail(e); }
   },
-  async consent(){
+  async consent(region){
     const user = auth.currentUser; if (!user) return;
     try {
-      await setDoc(doc(db, 'users', user.uid), { displayName: user.displayName || '', over14: true, createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+      await setDoc(doc(db, 'users', user.uid), { displayName: user.displayName || '', over14: true, region: region || '', createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+      H.track('signup');
       await openAccount(user);
     } catch (e) { fail(e); }
   },
@@ -726,6 +800,7 @@ window.Cloud = {
     const c = H.get().cloud; if (!c || c.status !== 'on' || c.children.length >= 4) return;
     try {
       const ref = await addDoc(kidsRef(c.uid), { nickname: '아이 ' + (c.children.length + 1), grade: 1, createdAt: serverTimestamp() });
+      H.track('child_add');
       const children = c.children.concat([{ id: ref.id, nickname: '아이 ' + (c.children.length + 1), grade: 1 }]);
       await loadChild(c.uid, children[children.length - 1], children, c.email);
       H.set(S => { S.view = 'record'; });
@@ -736,6 +811,21 @@ window.Cloud = {
     const c = H.get().cloud; if (!c || c.status !== 'on') return;
     const child = c.children.find(k => k.id === id); if (!child) return;
     try { await loadChild(c.uid, child, c.children, c.email); } catch (e) { fail(e); }
+  },
+  async saveRegion(region){
+    const c = H.get().cloud; if (!c || c.status !== 'on') return;
+    try {
+      await setDoc(doc(db, 'users', c.uid), { region: region || '', updatedAt: serverTimestamp() }, { merge: true });
+      H.set(S => { S.cloud.region = region || ''; S.cloud.msg = '지역을 저장했어요.'; S.cloud.msgOk = true; });
+    } catch (e) { fail(e); }
+  },
+  async sendFeedback(text, stationId){
+    const c = H.get().cloud; if (!c || c.status !== 'on') return;
+    try {
+      await addDoc(collection(db, 'feedback'), { uid: c.uid, text, stationId: stationId || '', createdAt: serverTimestamp() });
+      H.track('fb');
+      H.set(S => { S.cloud.fbSent = true; });
+    } catch (e) { fail(e); }
   },
   async deleteAccount(){
     const user = auth.currentUser; const c = H.get().cloud; if (!user || !c) return;
