@@ -1,0 +1,89 @@
+rules_version = '2';
+// 수학하기 시러여! Firestore 보안 규칙 (2026-11-18)
+// 붙여 넣는 곳: Firebase 콘솔 → suhak-sireoyeo → Firestore Database → 규칙
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function isAdmin() {
+      return signedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    function onlyKeys(ks) { return request.resource.data.keys().hasOnly(ks); }
+    function shortStr(v, n) { return v is string && v.size() <= n; }
+
+    // 관리자 명단: 본인 확인용 읽기만. 추가·삭제는 콘솔에서만
+    match /admins/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow write: if false;
+    }
+
+    // 시작 화면 글: 누구나 읽기, 관리자만 저장
+    match /site/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 이용 통계: stats/{YYYYMMDD}/c/{항목} 의 n 을 1씩만 올릴 수 있음 (로그인 없이도)
+    // 항목 이름 예: pv, v_print, st_2-01, pr_open, pr_ga, ws_gate1, ps_3-04
+    match /stats/{day}/c/{key} {
+      allow read: if isAdmin();
+      allow create: if day.matches('^20[0-9]{6}$')
+                    && key.matches('^[A-Za-z0-9_-]{1,40}$')
+                    && onlyKeys(['n']) && request.resource.data.n == 1;
+      allow update: if day.matches('^20[0-9]{6}$')
+                    && onlyKeys(['n']) && request.resource.data.n == resource.data.n + 1;
+      allow delete: if false;
+    }
+
+    // 부모 계정
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow delete: if isOwner(uid);
+      allow create, update: if isOwner(uid)
+        && onlyKeys(['displayName', 'over14', 'region', 'createdAt', 'updatedAt'])
+        && (!('region' in request.resource.data) || shortStr(request.resource.data.region, 40))
+        && (!('displayName' in request.resource.data) || shortStr(request.resource.data.displayName, 80));
+
+      // 아이: 별명, 학년(1~6)
+      match /children/{cid} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+          && onlyKeys(['nickname', 'grade', 'createdAt'])
+          && shortStr(request.resource.data.nickname, 30)
+          && request.resource.data.grade is int
+          && request.resource.data.grade >= 1 && request.resource.data.grade <= 6;
+
+        // 역별 진행 상황: progress/{역 id} = { status, updatedAt }
+        match /progress/{sid} {
+          allow read, delete: if isOwner(uid);
+          allow create, update: if isOwner(uid)
+            && sid.matches('^[1-6]-[0-9]{2}$')
+            && onlyKeys(['status', 'updatedAt'])
+            && shortStr(request.resource.data.status, 12);
+        }
+      }
+    }
+
+    // 관리자 화면의 가입자 수(아이 전체 모아 읽기)
+    match /{path=**}/children/{cid} {
+      allow read: if isAdmin();
+    }
+
+    // 의견 보내기: 로그인한 부모가 자기 이름으로만 남김, 읽기는 관리자만
+    match /feedback/{fid} {
+      allow create: if signedIn()
+        && onlyKeys(['uid', 'text', 'stationId', 'createdAt'])
+        && request.resource.data.uid == request.auth.uid
+        && shortStr(request.resource.data.text, 2000)
+        && shortStr(request.resource.data.stationId, 10);
+      allow read, delete: if isAdmin();
+      allow update: if false;
+    }
+
+    // 그 밖의 경로는 모두 막음
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
