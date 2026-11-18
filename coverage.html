@@ -1,0 +1,367 @@
+<title>정류장 채움 지도</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Do+Hyeon&display=swap">
+<style>
+/* layout: 노선(행) × 학년(열) 격자 노선도 — 역마다 채움 정도를 칠한 원 */
+:root{
+  --bg:#F5F8F3; --card:#FFFFFF; --ink:#1F3528; --muted:#5E7364; --edge:#C9D8CC; --line:#2E6B45;
+  --l4:#1E5A37; --l3:#3F8A5C; --l2:#9CCAA9; --l1:#F2C94C; --l0:#FFFFFF; --miss:#C0392B; --on:#FFFFFF;
+  --title:'Do Hyeon','Gowun Dodum',system-ui,sans-serif; --body:'Gowun Dodum',system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#101A14; --card:#17241C; --ink:#E4EEE6; --muted:#9DB3A3; --edge:#2E4536; --line:#5FAF7E;
+  --l4:#6FCB92; --l3:#3E9461; --l2:#2B5A3C; --l1:#C9A43A; --l0:#17241C; --miss:#F07A6A; --on:#0D1A12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101A14; --card:#17241C; --ink:#E4EEE6; --muted:#9DB3A3; --edge:#2E4536; --line:#5FAF7E;
+  --l4:#6FCB92; --l3:#3E9461; --l2:#2B5A3C; --l1:#C9A43A; --l0:#17241C; --miss:#F07A6A; --on:#0D1A12; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+h1{font-family:var(--title);font-weight:400;font-size:2.1rem;margin:0;text-wrap:balance}
+h2{font-family:var(--title);font-weight:400;font-size:1.35rem;margin:0 0 8px}
+.sub{color:var(--muted);margin:4px 0 0}
+.kpis{display:flex;flex-wrap:wrap;gap:10px 28px;font-variant-numeric:tabular-nums}
+.kpis div{display:grid}.kpis b{font-family:var(--title);font-weight:400;font-size:1.7rem;line-height:1.1}.kpis span{color:var(--muted);font-size:.85rem}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;font-size:.9rem}
+.lg{display:inline-flex;align-items:center;gap:6px}.lg b{font-variant-numeric:tabular-nums}
+.scroll{overflow-x:auto;border:1.5px solid var(--edge);border-radius:14px;background:var(--card)}
+.grid{display:grid;grid-template-columns:7.5em repeat(6,minmax(150px,1fr));min-width:1000px}
+.hd{font-family:var(--title);font-size:1.05rem;padding:10px 12px;border-bottom:2px solid var(--line);text-align:center}
+.ln{padding:12px;border-top:1px solid var(--edge);font-family:var(--title);display:flex;align-items:flex-start}
+.ln span{writing-mode:horizontal-tb}
+.cell{padding:10px 8px 12px;border-top:1px solid var(--edge);border-left:1px dashed var(--edge);display:flex;flex-direction:column;gap:6px;position:relative}
+.cell::before{content:"";position:absolute;left:21px;top:18px;bottom:18px;width:3px;background:var(--line);opacity:.35;border-radius:2px}
+.none{color:var(--muted);font-size:.8rem}
+.cell.empty::before{display:none}
+.st{all:unset;display:flex;align-items:center;gap:8px;cursor:default;position:relative;font-size:.85rem;line-height:1.25}
+.st i{flex:0 0 auto;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:2.5px solid var(--line);font-style:normal;font-family:var(--title);font-size:.85rem;font-variant-numeric:tabular-nums;background:var(--l0);color:var(--ink);z-index:1}
+.l4 i{background:var(--l4);color:var(--on);border-color:var(--l4)}
+.l3 i{background:var(--l3);color:var(--on);border-color:var(--l3)}
+.l2 i{background:var(--l2);color:var(--ink)}
+.l1 i{background:var(--l1);color:#2a2100;border-color:var(--l1)}
+.l0 i{border-style:dashed;border-color:var(--miss);color:var(--miss)}
+.st .nm{display:grid;min-width:0}.st em{font-style:normal;color:var(--muted);font-size:.72rem;font-variant-numeric:tabular-nums}
+.st:focus-visible{outline:2px solid var(--line);outline-offset:3px;border-radius:6px}
+.gt{font-weight:400;font-size:.68rem;border:1.5px solid var(--line);border-radius:999px;padding:0 6px;margin-left:auto;white-space:nowrap;color:var(--line)}
+.gt.no{border-style:dashed;border-color:var(--miss);color:var(--miss)}
+.sw{pointer-events:none}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:22px}
+.panel{background:var(--card);border:1.5px solid var(--edge);border-radius:14px;padding:16px 18px;min-width:0}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+td,th{text-align:left;padding:6px 6px;border-top:1px solid var(--edge);vertical-align:top}
+th{font-weight:400;color:var(--muted);font-size:.8rem;border-top:0}
+td.id{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted)} td.n{font-variant-numeric:tabular-nums;text-align:center}
+.ok{color:var(--l3)}.miss{color:var(--miss)}
+.note{color:var(--muted);font-size:.88rem;margin:8px 0 0}
+#tip{position:fixed;z-index:20;max-width:320px;background:var(--ink);color:var(--bg);padding:8px 10px;border-radius:8px;font-size:.8rem;white-space:pre-line;pointer-events:none}
+@media (prefers-reduced-motion:no-preference){.st i{transition:transform .15s}.st:hover i{transform:scale(1.12)}}
+</style>
+<div class="wrap">
+  <header>
+    <h1>정류장 채움 지도</h1>
+    <p class="sub">수학하기 시러여! 69개 역 가운데 출력용 자료가 얼마나 채워졌는지 · 기준 2026-11-18</p>
+  </header>
+  <div class="kpis">
+    <div><b>69 / 69</b><span>도움지가 있는 역</span></div>
+    <div><b>9</b><span>얇은 역 (도움지 정류장 1개)</span></div>
+    <div><b>3 / 7</b><span>관문 학습지</span></div>
+    <div><b>726</b><span>앱에서 출력 가능한 파일</span></div>
+  </div>
+  <div class="legend"><span class="lg"><span class="st l4 sw"><i>3+</i></span>탄탄 + 문제집 <b>8</b></span><span class="lg"><span class="st l3 sw"><i>3+</i></span>탄탄 <b>25</b></span><span class="lg"><span class="st l2 sw"><i>2</i></span>기본 <b>27</b></span><span class="lg"><span class="st l1 sw"><i>1</i></span>얇음 <b>9</b></span><span class="lg"><span class="st l0 sw"><i>0</i></span>비어 있음 <b>0</b></span><span class="lg"><b class="gt">관문</b>관문 학습지 있음</span><span class="lg"><b class="gt no">관문</b>관문 학습지 없음</span></div>
+  <div class="scroll"><div class="grid">
+    <div class="hd"></div><div class="hd">1학년</div><div class="hd">2학년</div><div class="hd">3학년</div><div class="hd">4학년</div><div class="hd">5학년</div><div class="hd">6학년</div>
+    <div class="ln"><span>수와 연산</span></div><div class="cell"><button class="st l3" title="1-01 9까지의 수
+정류장 도움지 3개 정류장 · 23쪽
+ · 1학년 수 1. 9까지 세기
+ · 1학년 수 2. 몇째와 순서
+ · 1학년 수 3. 1 큰 수·1 작은 수" data-id="1-01"><i>3</i><span class="nm"><em>1-01</em>9까지의 수</span></button><button class="st l3" title="1-03 덧셈과 뺄셈 (가르기와 모으기)
+정류장 도움지 3개 정류장 · 23쪽
+ · 1학년 덧셈과 뺄셈 1. 가르기와 모으기
+ · 1학년 덧셈과 뺄셈 2. 덧셈 이야기와 식
+ · 1학년 덧셈과 뺄셈 3. 뺄셈 이야기와 식" data-id="1-03"><i>3</i><span class="nm"><em>1-03</em>덧셈과 뺄셈 (가르기와 모으기)</span></button><button class="st l1" title="1-05 50까지의 수
+정류장 도움지 1개 정류장 · 9쪽
+ · 1학년 수 4. 10개씩 묶음" data-id="1-05"><i>1</i><span class="nm"><em>1-05</em>50까지의 수</span></button><button class="st l2" title="1-06 100까지의 수
+정류장 도움지 2개 정류장 · 16쪽
+ · 1학년 수 5. 100까지의 수
+ · 1학년 수 6. 짝수와 홀수" data-id="1-06"><i>2</i><span class="nm"><em>1-06</em>100까지의 수</span></button><button class="st l3" title="1-07 덧셈과 뺄셈 (10 만들기)
+정류장 도움지 3개 정류장 · 23쪽
+ · 1학년 덧셈과 뺄셈 4. 10 만들기
+ · 1학년 덧셈과 뺄셈 5. 10을 넘는 셈
+ · 1학년 덧셈과 뺄셈 6. 두 자리 수 셈
+＋ 관문 학습지 · 1-07" data-id="1-07"><i>3</i><span class="nm"><em>1-07</em>덧셈과 뺄셈 (10 만들기)</span><b class="gt">관문1</b></button></div><div class="cell"><button class="st l4" title="2-01 세 자리 수
+정류장 도움지 5개 정류장 · 37쪽
+ · 2학년 수와 자릿값 1. 100 알기
+ · 2학년 수와 자릿값 2. 몇백과 세 자리 수
+ · 2학년 수와 자릿값 3. 세 자리 수 읽고 쓰기
+ · 2학년 수와 자릿값 4. 자리 숫자의 값
+ · 2학년 수와 자릿값 5. 크기 비교와 0이 있는 수
+＋ 뛰어 세기 탄탄 다지기
+＋ 자릿값 탄탄 다지기
+＋ 관문 학습지 · 2-01" data-id="2-01"><i>5</i><span class="nm"><em>2-01</em>세 자리 수</span><b class="gt">관문2</b></button><button class="st l4" title="2-03 덧셈과 뺄셈 (받아올림·받아내림)
+정류장 도움지 7개 정류장 · 56쪽
+ · 2학년 덧셈과 뺄셈 1. 10 만들기 다시 보기
+ · 2학년 덧셈과 뺄셈 2. (두 자리) + (한 자리)
+ · 2학년 덧셈과 뺄셈 3. (두 자리) + (두 자리)
+ · 2학년 덧셈과 뺄셈 4. 받아내림
+ · 2학년 덧셈과 뺄셈 5. (두 자리) − (두 자리)
+ · 2학년 덧셈과 뺄셈 6. 세 수의 계산
+ · 2학년 덧셈과 뺄셈 7. 덧셈과 뺄셈의 관계
+＋ 답 찾아 빙고 (게임 세트)" data-id="2-03"><i>7</i><span class="nm"><em>2-03</em>덧셈과 뺄셈 (받아올림·받아내림)</span></button><button class="st l3" title="2-06 묶어 세기와 곱셈
+정류장 도움지 3개 정류장 · 24쪽
+ · 2학년 곱셈 1. 묶어 세기
+ · 2학년 곱셈 2. 몇의 몇 배
+ · 2학년 곱셈 3. 곱셈식
+＋ 관문 학습지 · 2-06" data-id="2-06"><i>3</i><span class="nm"><em>2-06</em>묶어 세기와 곱셈</span><b class="gt">관문3</b></button><button class="st l2" title="2-07 네 자리 수
+정류장 도움지 2개 정류장 · 16쪽
+ · 2학년 수와 자릿값 6. 천과 네 자리 수
+ · 2학년 수와 자릿값 7. 네 자리 수 뛰어 세기와 비교
+＋ 뛰어 세기 탄탄 다지기
+＋ 자릿값 탄탄 다지기
+＋ HME 대비 모의 학력평가 (A3 시험지)" data-id="2-07"><i>2</i><span class="nm"><em>2-07</em>네 자리 수</span></button><button class="st l4" title="2-08 곱셈구구
+정류장 도움지 6개 정류장 · 50쪽
+ · 2학년 곱셈 4. 2단과 5단
+ · 2학년 곱셈 5. 3단과 6단
+ · 2학년 곱셈 6. 4단과 8단
+ · 2학년 곱셈 7. 7단과 9단
+ · 2학년 곱셈 8. 1단, 0, 곱셈표
+ · 3학년 곱셈 1. 곱셈구구 다시 보기
+＋ HME 대비 모의 학력평가 (A3 시험지)
+＋ 답 찾아 빙고 (게임 세트)" data-id="2-08"><i>6</i><span class="nm"><em>2-08</em>곱셈구구</span></button></div><div class="cell"><button class="st l3" title="3-01 세 자리 수의 덧셈과 뺄셈
+정류장 도움지 5개 정류장 · 44쪽
+ · 3학년 덧셈과 뺄셈 1. 세 자리 수 다시 보기
+ · 3학년 덧셈과 뺄셈 2. 받아올림 덧셈
+ · 3학년 덧셈과 뺄셈 3. 받아내림 뺄셈
+ · 3학년 덧셈과 뺄셈 4. 어림하고 확인하기
+ · 3학년 덧셈과 뺄셈 5. 이야기 문제" data-id="3-01"><i>5</i><span class="nm"><em>3-01</em>세 자리 수의 덧셈과 뺄셈</span></button><button class="st l3" title="3-03 나눗셈
+정류장 도움지 3개 정류장 · 27쪽
+ · 3학년 나눗셈 1. 똑같이 나누기
+ · 3학년 나눗셈 2. 곱셈과 나눗셈
+ · 3학년 나눗셈 3. 몫을 구구로" data-id="3-03"><i>3</i><span class="nm"><em>3-03</em>나눗셈</span><b class="gt no">관문4</b></button><button class="st l2" title="3-04 곱셈 (두 자리 × 한 자리)
+정류장 도움지 2개 정류장 · 15쪽
+ · 3학년 곱셈 2. (몇십 몇)×(몇)
+ · 3학년 곱셈 3. 올림 있는 곱셈" data-id="3-04"><i>2</i><span class="nm"><em>3-04</em>곱셈 (두 자리 × 한 자리)</span></button><button class="st l3" title="3-06 분수와 소수
+정류장 도움지 4개 정류장 · 34쪽
+ · 3학년 분수와 소수 1. 분수의 뜻
+ · 3학년 분수와 소수 2. 단위분수 비교
+ · 3학년 분수와 소수 5. 0.1과 소수 한 자리
+ · 3학년 분수와 소수 6. 소수 비교" data-id="3-06"><i>4</i><span class="nm"><em>3-06</em>분수와 소수</span><b class="gt no">관문5</b></button><button class="st l2" title="3-07 곱셈 (세 자리 × 한 자리, 두 자리 × 두 자리)
+정류장 도움지 2개 정류장 · 16쪽
+ · 3학년 곱셈 4. (세 자리)×(한 자리)
+ · 3학년 곱셈 5. (두 자리)×(두 자리)" data-id="3-07"><i>2</i><span class="nm"><em>3-07</em>곱셈 (세 자리 × 한 자리, 두 자리 × 두 자리)</span></button><button class="st l2" title="3-08 나눗셈 (몫과 나머지)
+정류장 도움지 2개 정류장 · 19쪽
+ · 3학년 나눗셈 4. 두 자리 ÷ 한 자리
+ · 3학년 나눗셈 5. 나머지와 확인" data-id="3-08"><i>2</i><span class="nm"><em>3-08</em>나눗셈 (몫과 나머지)</span></button><button class="st l2" title="3-10 분수
+정류장 도움지 2개 정류장 · 18쪽
+ · 3학년 분수와 소수 3. 분수만큼은 얼마
+ · 3학년 분수와 소수 4. 진분수·가분수·대분수" data-id="3-10"><i>2</i><span class="nm"><em>3-10</em>분수</span></button></div><div class="cell"><button class="st l3" title="4-01 큰 수
+정류장 도움지 4개 정류장 · 35쪽
+ · 4학년 큰 수 1. 10000과 다섯 자리 수
+ · 4학년 큰 수 2. 십만·백만·천만
+ · 4학년 큰 수 3. 억과 조
+ · 4학년 큰 수 4. 뛰어 세기와 크기 비교" data-id="4-01"><i>4</i><span class="nm"><em>4-01</em>큰 수</span></button><button class="st l3" title="4-03 곱셈과 나눗셈 (+ 어림셈)
+정류장 도움지 5개 정류장 · 44쪽
+ · 4학년 곱셈과 나눗셈 1. (몇백)×(몇십)
+ · 4학년 곱셈과 나눗셈 2. (세 자리)×(두 자리)
+ · 4학년 곱셈과 나눗셈 3. 몇십으로 나누기
+ · 4학년 곱셈과 나눗셈 4. (세 자리)÷(두 자리)
+ · 4학년 곱셈과 나눗셈 5. 나머지 이야기" data-id="4-03"><i>5</i><span class="nm"><em>4-03</em>곱셈과 나눗셈 (+ 어림셈)</span></button><button class="st l3" title="4-07 분수의 덧셈과 뺄셈
+정류장 도움지 3개 정류장 · 29쪽
+ · 4학년 분수와 소수의 덧셈과 뺄셈 1. 같은 분모 분수의 덧셈
+ · 4학년 분수와 소수의 덧셈과 뺄셈 2. 대분수의 덧셈
+ · 4학년 분수와 소수의 덧셈과 뺄셈 3. 대분수의 뺄셈" data-id="4-07"><i>3</i><span class="nm"><em>4-07</em>분수의 덧셈과 뺄셈</span></button><button class="st l3" title="4-09 소수의 덧셈과 뺄셈
+정류장 도움지 3개 정류장 · 23쪽
+ · 4학년 분수와 소수의 덧셈과 뺄셈 4. 소수 두·세 자리
+ · 4학년 분수와 소수의 덧셈과 뺄셈 5. 소수 크기 비교
+ · 4학년 분수와 소수의 덧셈과 뺄셈 6. 소수의 덧셈과 뺄셈" data-id="4-09"><i>3</i><span class="nm"><em>4-09</em>소수의 덧셈과 뺄셈</span></button></div><div class="cell"><button class="st l3" title="5-01 자연수의 혼합 계산
+정류장 도움지 3개 정류장 · 29쪽
+ · 5학년 자연수의 혼합 계산 1. 계산 순서의 약속
+ · 5학년 자연수의 혼합 계산 2. 괄호가 있는 식
+ · 5학년 자연수의 혼합 계산 3. 이야기를 하나의 식으로" data-id="5-01"><i>3</i><span class="nm"><em>5-01</em>자연수의 혼합 계산</span></button><button class="st l3" title="5-02 약수와 배수
+정류장 도움지 4개 정류장 · 30쪽
+ · 5학년 약수와 배수 1. 약수
+ · 5학년 약수와 배수 2. 약수와 배수의 관계
+ · 5학년 약수와 배수 3. 공약수와 최대공약수
+ · 5학년 약수와 배수 4. 공배수와 최소공배수" data-id="5-02"><i>4</i><span class="nm"><em>5-02</em>약수와 배수</span></button><button class="st l3" title="5-04 약분과 통분
+정류장 도움지 3개 정류장 · 27쪽
+ · 5학년 분수 1. 크기가 같은 분수
+ · 5학년 분수 2. 약분과 기약분수
+ · 5학년 분수 3. 통분과 크기 비교" data-id="5-04"><i>3</i><span class="nm"><em>5-04</em>약분과 통분</span><b class="gt no">관문6</b></button><button class="st l2" title="5-05 분수의 덧셈과 뺄셈
+정류장 도움지 2개 정류장 · 17쪽
+ · 5학년 분수 4. 분모가 다른 덧셈
+ · 5학년 분수 5. 분모가 다른 뺄셈" data-id="5-05"><i>2</i><span class="nm"><em>5-05</em>분수의 덧셈과 뺄셈</span></button><button class="st l2" title="5-07 수의 범위와 어림하기
+정류장 도움지 2개 정류장 · 16쪽
+ · 5학년 수의 범위와 어림하기 1. 이상·이하·초과·미만
+ · 5학년 수의 범위와 어림하기 2. 올림·버림·반올림" data-id="5-07"><i>2</i><span class="nm"><em>5-07</em>수의 범위와 어림하기</span></button><button class="st l2" title="5-08 분수의 곱셈
+정류장 도움지 2개 정류장 · 15쪽
+ · 5학년 분수 6. 분수 × 자연수
+ · 5학년 분수 7. 분수 × 분수" data-id="5-08"><i>2</i><span class="nm"><em>5-08</em>분수의 곱셈</span></button><button class="st l3" title="5-10 소수의 곱셈
+정류장 도움지 3개 정류장 · 25쪽
+ · 5학년 소수의 곱셈 1. (소수) × (자연수)
+ · 5학년 소수의 곱셈 2. (소수) × (소수)
+ · 5학년 소수의 곱셈 3. 곱의 크기 어림" data-id="5-10"><i>3</i><span class="nm"><em>5-10</em>소수의 곱셈</span></button></div><div class="cell"><button class="st l1" title="6-01 분수의 나눗셈 (분수 ÷ 자연수)
+정류장 도움지 1개 정류장 · 10쪽
+ · 6학년 분수와 소수의 나눗셈 1. (분수) ÷ (자연수)" data-id="6-01"><i>1</i><span class="nm"><em>6-01</em>분수의 나눗셈 (분수 ÷ 자연수)</span></button><button class="st l1" title="6-03 소수의 나눗셈 (소수 ÷ 자연수)
+정류장 도움지 1개 정류장 · 7쪽
+ · 6학년 분수와 소수의 나눗셈 4. (소수) ÷ (자연수)" data-id="6-03"><i>1</i><span class="nm"><em>6-03</em>소수의 나눗셈 (소수 ÷ 자연수)</span></button><button class="st l2" title="6-07 분수의 나눗셈 (분수 ÷ 분수)
+정류장 도움지 2개 정류장 · 17쪽
+ · 6학년 분수와 소수의 나눗셈 2. 분모가 같은 나눗셈
+ · 6학년 분수와 소수의 나눗셈 3. 분모가 다른 나눗셈" data-id="6-07"><i>2</i><span class="nm"><em>6-07</em>분수의 나눗셈 (분수 ÷ 분수)</span></button><button class="st l2" title="6-08 소수의 나눗셈 (소수 ÷ 소수)
+정류장 도움지 2개 정류장 · 17쪽
+ · 6학년 분수와 소수의 나눗셈 5. (소수) ÷ (소수)
+ · 6학년 분수와 소수의 나눗셈 6. 몫 반올림·남는 양" data-id="6-08"><i>2</i><span class="nm"><em>6-08</em>소수의 나눗셈 (소수 ÷ 소수)</span></button></div><div class="ln"><span>변화와 관계</span></div><div class="cell"><button class="st l2" title="1-10 규칙 찾기
+정류장 도움지 2개 정류장 · 17쪽
+ · 1학년 규칙 찾기 1. 반복 무늬
+ · 1학년 규칙 찾기 2. 수 배열의 규칙" data-id="1-10"><i>2</i><span class="nm"><em>1-10</em>규칙 찾기</span></button></div><div class="cell"><button class="st l4" title="2-11 규칙 찾기
+정류장 도움지 4개 정류장 · 37쪽
+ · 2학년 규칙 찾기 1. 무늬의 규칙
+ · 2학년 규칙 찾기 2. 쌓은 모양의 규칙
+ · 2학년 규칙 찾기 3. 덧셈표의 규칙
+ · 2학년 규칙 찾기 4. 곱셈표와 생활 속 규칙
+＋ HME 대비 모의 학력평가 (A3 시험지)" data-id="2-11"><i>4</i><span class="nm"><em>2-11</em>규칙 찾기</span></button></div><div class="cell empty"><span class="none">이 학년엔 이 노선 역이 없어요</span></div><div class="cell"><button class="st l2" title="4-06 규칙 찾기 · 등호와 동치
+정류장 도움지 2개 정류장 · 20쪽
+ · 4학년 규칙 찾기 1. 수 배열의 규칙
+ · 4학년 규칙 찾기 2. 계산식의 규칙" data-id="4-06"><i>2</i><span class="nm"><em>4-06</em>규칙 찾기 · 등호와 동치</span></button></div><div class="cell"><button class="st l2" title="5-03 규칙과 대응
+정류장 도움지 2개 정류장 · 16쪽
+ · 5학년 규칙과 대응 1. 대응 관계를 표로
+ · 5학년 규칙과 대응 2. □, △로 식 쓰기" data-id="5-03"><i>2</i><span class="nm"><em>5-03</em>규칙과 대응</span></button></div><div class="cell"><button class="st l3" title="6-04 비와 비율
+정류장 도움지 3개 정류장 · 30쪽
+ · 6학년 비와 비율, 비례식과 비례배분 1. 비
+ · 6학년 비와 비율, 비례식과 비례배분 2. 비율
+ · 6학년 비와 비율, 비례식과 비례배분 3. 백분율" data-id="6-04"><i>3</i><span class="nm"><em>6-04</em>비와 비율</span><b class="gt no">관문7</b></button><button class="st l2" title="6-10 비례식과 비례배분
+정류장 도움지 2개 정류장 · 20쪽
+ · 6학년 비와 비율, 비례식과 비례배분 4. 비의 성질과 비례식
+ · 6학년 비와 비율, 비례식과 비례배분 5. 비례배분" data-id="6-10"><i>2</i><span class="nm"><em>6-10</em>비례식과 비례배분</span></button></div><div class="ln"><span>도형과 측정</span></div><div class="cell"><button class="st l2" title="1-02 여러 가지 모양 (입체)
+정류장 도움지 2개 정류장 · 18쪽
+ · 1학년 모양 1. 상자·둥근기둥·공
+ · 1학년 모양 2. 쌓기와 굴리기" data-id="1-02"><i>2</i><span class="nm"><em>1-02</em>여러 가지 모양 (입체)</span></button><button class="st l3" title="1-04 비교하기
+정류장 도움지 3개 정류장 · 25쪽
+ · 1학년 비교하기 1. 길이
+ · 1학년 비교하기 2. 무게
+ · 1학년 비교하기 3. 넓이와 들이" data-id="1-04"><i>3</i><span class="nm"><em>1-04</em>비교하기</span></button><button class="st l2" title="1-08 여러 가지 모양 (평면)
+정류장 도움지 2개 정류장 · 17쪽
+ · 1학년 모양 3. ■▲● 모양
+ · 1학년 모양 4. 모양으로 꾸미기" data-id="1-08"><i>2</i><span class="nm"><em>1-08</em>여러 가지 모양 (평면)</span></button><button class="st l2" title="1-09 시각 읽기
+정류장 도움지 2개 정류장 · 16쪽
+ · 1학년 시각 1. 몇 시
+ · 1학년 시각 2. 몇 시 30분" data-id="1-09"><i>2</i><span class="nm"><em>1-09</em>시각 읽기</span></button></div><div class="cell"><button class="st l3" title="2-02 여러 가지 도형
+정류장 도움지 6개 정류장 · 53쪽
+ · 2학년 도형 1. 삼각형과 사각형
+ · 2학년 도형 2. 원
+ · 2학년 도형 3. 오각형과 육각형
+ · 2학년 도형 4. 도형 만들고 나누기
+ · 2학년 도형 5. 쌓기나무와 위치
+ · 2학년 도형 6. 쌓기나무 개수 세기" data-id="2-02"><i>6</i><span class="nm"><em>2-02</em>여러 가지 도형</span></button><button class="st l4" title="2-04 길이 재기
+정류장 도움지 5개 정류장 · 41쪽
+ · 2학년 길이와 시각 1. 여러 가지 단위로 재기
+ · 2학년 길이와 시각 2. 1 cm와 자로 재기
+ · 2학년 길이와 시각 3. 어림하기
+ · 2학년 길이와 시각 4. 1 m와 몇 m 몇 cm
+ · 2학년 길이와 시각 5. 길이의 덧셈과 뺄셈
+＋ HME 대비 모의 학력평가 (A3 시험지)" data-id="2-04"><i>5</i><span class="nm"><em>2-04</em>길이 재기</span></button><button class="st l4" title="2-09 시각과 시간
+정류장 도움지 3개 정류장 · 23쪽
+ · 2학년 길이와 시각 6. 몇 시 몇 분
+ · 2학년 길이와 시각 7. 걸린 시간과 1시간
+ · 2학년 길이와 시각 8. 오전·오후, 하루와 달력
+＋ 시간의 덧셈과 뺄셈
+＋ HME 대비 모의 학력평가 (A3 시험지)" data-id="2-09"><i>3</i><span class="nm"><em>2-09</em>시각과 시간</span></button></div><div class="cell"><button class="st l3" title="3-02 평면도형
+정류장 도움지 3개 정류장 · 24쪽
+ · 3학년 평면도형과 원 1. 선분·반직선·직선
+ · 3학년 평면도형과 원 2. 각과 직각
+ · 3학년 평면도형과 원 3. 직사각형과 정사각형" data-id="3-02"><i>3</i><span class="nm"><em>3-02</em>평면도형</span></button><button class="st l4" title="3-05 길이와 시간
+정류장 도움지 3개 정류장 · 29쪽
+ · 3학년 길이·시간·들이·무게 1. mm와 km
+ · 3학년 길이·시간·들이·무게 2. 초 단위
+ · 3학년 길이·시간·들이·무게 3. 시간 더하고 빼기
+＋ 시간의 덧셈과 뺄셈" data-id="3-05"><i>3</i><span class="nm"><em>3-05</em>길이와 시간</span></button><button class="st l2" title="3-09 원
+정류장 도움지 2개 정류장 · 18쪽
+ · 3학년 평면도형과 원 4. 원의 중심·반지름·지름
+ · 3학년 평면도형과 원 5. 원으로 길이 찾기" data-id="3-09"><i>2</i><span class="nm"><em>3-09</em>원</span></button><button class="st l2" title="3-11 들이와 무게
+정류장 도움지 2개 정류장 · 19쪽
+ · 3학년 길이·시간·들이·무게 4. 들이(L, mL)
+ · 3학년 길이·시간·들이·무게 5. 무게(kg, g)" data-id="3-11"><i>2</i><span class="nm"><em>3-11</em>들이와 무게</span></button></div><div class="cell"><button class="st l3" title="4-02 각도
+정류장 도움지 3개 정류장 · 28쪽
+ · 4학년 각도와 도형 1. 각도와 각도기
+ · 4학년 각도와 도형 2. 예각·둔각, 합과 차
+ · 4학년 각도와 도형 3. 각의 합" data-id="4-02"><i>3</i><span class="nm"><em>4-02</em>각도</span></button><button class="st l3" title="4-04 평면도형의 이동
+정류장 도움지 3개 정류장 · 22쪽
+ · 4학년 평면도형의 이동 1. 밀기
+ · 4학년 평면도형의 이동 2. 뒤집기
+ · 4학년 평면도형의 이동 3. 돌리기" data-id="4-04"><i>3</i><span class="nm"><em>4-04</em>평면도형의 이동</span></button><button class="st l1" title="4-08 삼각형
+정류장 도움지 1개 정류장 · 8쪽
+ · 4학년 각도와 도형 4. 여러 가지 삼각형" data-id="4-08"><i>1</i><span class="nm"><em>4-08</em>삼각형</span></button><button class="st l1" title="4-10 사각형
+정류장 도움지 1개 정류장 · 8쪽
+ · 4학년 각도와 도형 5. 수직·평행과 사각형" data-id="4-10"><i>1</i><span class="nm"><em>4-10</em>사각형</span></button><button class="st l1" title="4-12 다각형
+정류장 도움지 1개 정류장 · 9쪽
+ · 4학년 각도와 도형 6. 다각형과 대각선" data-id="4-12"><i>1</i><span class="nm"><em>4-12</em>다각형</span></button></div><div class="cell"><button class="st l3" title="5-06 다각형의 둘레와 넓이
+정류장 도움지 5개 정류장 · 38쪽
+ · 5학년 다각형의 둘레와 넓이 1. 둘레
+ · 5학년 다각형의 둘레와 넓이 2. 넓이의 단위
+ · 5학년 다각형의 둘레와 넓이 3. 직사각형의 넓이
+ · 5학년 다각형의 둘레와 넓이 4. 평행사변형·삼각형
+ · 5학년 다각형의 둘레와 넓이 5. 사다리꼴·마름모" data-id="5-06"><i>5</i><span class="nm"><em>5-06</em>다각형의 둘레와 넓이</span></button><button class="st l2" title="5-09 합동과 대칭
+정류장 도움지 2개 정류장 · 17쪽
+ · 5학년 합동과 대칭, 직육면체 1. 합동과 대응
+ · 5학년 합동과 대칭, 직육면체 2. 선대칭·점대칭" data-id="5-09"><i>2</i><span class="nm"><em>5-09</em>합동과 대칭</span></button><button class="st l1" title="5-11 직육면체
+정류장 도움지 1개 정류장 · 8쪽
+ · 5학년 합동과 대칭, 직육면체 3. 직육면체와 전개도
+＋ 전개도와 공간 감각" data-id="5-11"><i>1</i><span class="nm"><em>5-11</em>직육면체</span></button></div><div class="cell"><button class="st l2" title="6-02 각기둥과 각뿔
+정류장 도움지 2개 정류장 · 19쪽
+ · 6학년 각기둥과 각뿔, 원기둥·원뿔·구 1. 각기둥
+ · 6학년 각기둥과 각뿔, 원기둥·원뿔·구 2. 각뿔" data-id="6-02"><i>2</i><span class="nm"><em>6-02</em>각기둥과 각뿔</span></button><button class="st l3" title="6-06 직육면체의 부피와 겉넓이
+정류장 도움지 4개 정류장 · 34쪽
+ · 6학년 직육면체의 부피와 겉넓이 1. 부피의 뜻
+ · 6학년 직육면체의 부피와 겉넓이 2. 직육면체의 부피
+ · 6학년 직육면체의 부피와 겉넓이 3. m³와 cm³
+ · 6학년 직육면체의 부피와 겉넓이 4. 겉넓이" data-id="6-06"><i>4</i><span class="nm"><em>6-06</em>직육면체의 부피와 겉넓이</span></button><button class="st l4" title="6-09 공간과 입체
+정류장 도움지 3개 정류장 · 28쪽
+ · 6학년 공간과 입체 1. 쌓기나무 개수
+ · 6학년 공간과 입체 2. 앞·옆에서 본 모양
+ · 6학년 공간과 입체 3. 가장 적게·많게
+＋ 전개도와 공간 감각" data-id="6-09"><i>3</i><span class="nm"><em>6-09</em>공간과 입체</span></button><button class="st l3" title="6-11 원의 넓이
+정류장 도움지 3개 정류장 · 22쪽
+ · 6학년 원의 둘레와 넓이 1. 원주와 원주율
+ · 6학년 원의 둘레와 넓이 2. 원의 넓이
+ · 6학년 원의 둘레와 넓이 3. 원 문제 해결" data-id="6-11"><i>3</i><span class="nm"><em>6-11</em>원의 넓이</span></button><button class="st l1" title="6-12 원기둥 · 원뿔 · 구
+정류장 도움지 1개 정류장 · 8쪽
+ · 6학년 각기둥과 각뿔, 원기둥·원뿔·구 3. 원기둥·원뿔·구" data-id="6-12"><i>1</i><span class="nm"><em>6-12</em>원기둥 · 원뿔 · 구</span></button></div><div class="ln"><span>자료와 가능성</span></div><div class="cell empty"><span class="none">이 학년엔 이 노선 역이 없어요</span></div><div class="cell"><button class="st l2" title="2-05 분류하기
+정류장 도움지 2개 정류장 · 17쪽
+ · 2학년 분류·표·그래프 1. 기준 정해 나누기
+ · 2학년 분류·표·그래프 2. 나누어 세기" data-id="2-05"><i>2</i><span class="nm"><em>2-05</em>분류하기</span></button><button class="st l2" title="2-10 표와 그래프
+정류장 도움지 2개 정류장 · 23쪽
+ · 2학년 분류·표·그래프 3. 표로 나타내기
+ · 2학년 분류·표·그래프 4. ○ 그래프
+＋ HME 대비 모의 학력평가 (A3 시험지)" data-id="2-10"><i>2</i><span class="nm"><em>2-10</em>표와 그래프</span></button></div><div class="cell"><button class="st l3" title="3-12 자료의 정리
+정류장 도움지 3개 정류장 · 31쪽
+ · 3학년 자료의 정리 1. 모으고 표로
+ · 3학년 자료의 정리 2. 그림그래프 읽기
+ · 3학년 자료의 정리 3. 그림그래프 그리기" data-id="3-12"><i>3</i><span class="nm"><em>3-12</em>자료의 정리</span></button></div><div class="cell"><button class="st l2" title="4-05 막대그래프
+정류장 도움지 2개 정류장 · 19쪽
+ · 4학년 막대그래프와 꺾은선그래프 1. 막대그래프 읽기
+ · 4학년 막대그래프와 꺾은선그래프 2. 막대그래프 그리기" data-id="4-05"><i>2</i><span class="nm"><em>4-05</em>막대그래프</span></button><button class="st l1" title="4-11 꺾은선그래프
+정류장 도움지 1개 정류장 · 12쪽
+ · 4학년 막대그래프와 꺾은선그래프 3. 꺾은선그래프" data-id="4-11"><i>1</i><span class="nm"><em>4-11</em>꺾은선그래프</span></button></div><div class="cell"><button class="st l2" title="5-12 평균과 가능성
+정류장 도움지 2개 정류장 · 19쪽
+ · 5학년 평균과 가능성 1. 평균
+ · 5학년 평균과 가능성 2. 일이 일어날 가능성" data-id="5-12"><i>2</i><span class="nm"><em>5-12</em>평균과 가능성</span></button></div><div class="cell"><button class="st l2" title="6-05 여러 가지 그래프
+정류장 도움지 2개 정류장 · 20쪽
+ · 6학년 여러 가지 그래프 1. 띠·원그래프 읽기
+ · 6학년 여러 가지 그래프 2. 그리기와 고르기" data-id="6-05"><i>2</i><span class="nm"><em>6-05</em>여러 가지 그래프</span></button></div>
+  </div></div>
+  <p class="note">원 안의 숫자는 그 역에 연결된 정류장 도움지 정류장 수예요. 정류장 하나마다 (가)·(나)·(다) 세 편이 있어요. 역에 마우스를 올리면 연결된 정류장과 문제집이 보여요.</p>
+  <div class="two">
+    <section class="panel"><h2>먼저 채울 역</h2>
+      <table><tr><th>역</th><th>이름</th><th>도움지</th><th>그 밖의 자료</th></tr><tr><td class="id">1-05</td><td>50까지의 수</td><td class="n">1</td><td>—</td></tr><tr><td class="id">4-08</td><td>삼각형</td><td class="n">1</td><td>—</td></tr><tr><td class="id">4-10</td><td>사각형</td><td class="n">1</td><td>—</td></tr><tr><td class="id">4-11</td><td>꺾은선그래프</td><td class="n">1</td><td>—</td></tr><tr><td class="id">4-12</td><td>다각형</td><td class="n">1</td><td>—</td></tr><tr><td class="id">5-11</td><td>직육면체</td><td class="n">1</td><td>전개도와 공간 감각</td></tr><tr><td class="id">6-01</td><td>분수의 나눗셈 (분수 ÷ 자연수)</td><td class="n">1</td><td>—</td></tr><tr><td class="id">6-03</td><td>소수의 나눗셈 (소수 ÷ 자연수)</td><td class="n">1</td><td>—</td></tr><tr><td class="id">6-12</td><td>원기둥 · 원뿔 · 구</td><td class="n">1</td><td>—</td></tr></table>
+      <p class="note">비어 있는 역은 없어요. 위 역들은 도움지 정류장이 하나뿐이라 다지기 문제집을 붙이면 좋아요.</p></section>
+    <section class="panel"><h2>관문 학습지</h2>
+      <table><tr><th>관문</th><th>역</th><th>이름</th><th>학습지</th></tr><tr><td>관문 1</td><td class="id">1-07</td><td>10 만들기</td><td><span class=ok>있음</span></td></tr><tr><td>관문 2</td><td class="id">2-01</td><td>자릿값</td><td><span class=ok>있음</span></td></tr><tr><td>관문 3</td><td class="id">2-06</td><td>곱셈의 의미</td><td><span class=ok>있음</span></td></tr><tr><td>관문 4</td><td class="id">3-03</td><td>나눗셈의 두 의미</td><td><span class=miss>없음</span></td></tr><tr><td>관문 5</td><td class="id">3-06</td><td>분수는 수</td><td><span class=miss>없음</span></td></tr><tr><td>관문 6</td><td class="id">5-04</td><td>크기가 같은 분수</td><td><span class=miss>없음</span></td></tr><tr><td>관문 7</td><td class="id">6-04</td><td>곱셈적 비교</td><td><span class=miss>없음</span></td></tr></table>
+      <h2 style="margin-top:18px">문제집 · 게임 · 모의평가</h2>
+      <table><tr><th>학년</th><th>자료</th><th>연결 역</th></tr><tr><td>2학년</td><td>뛰어 세기 탄탄 다지기</td><td class="id">2-01 2-07</td></tr><tr><td>2학년</td><td>자릿값 탄탄 다지기</td><td class="id">2-01 2-07</td></tr><tr><td>2학년</td><td>시간의 덧셈과 뺄셈</td><td class="id">2-09 3-05</td></tr><tr><td>5학년</td><td>전개도와 공간 감각</td><td class="id">5-11 6-09</td></tr><tr><td>2학년</td><td>HME 대비 모의 학력평가 (A3 시험지)</td><td class="id">2-07 2-08 2-04 2-09 2-10 2-11</td></tr><tr><td>2학년</td><td>답 찾아 빙고 (게임 세트)</td><td class="id">2-03 2-08</td></tr></table>
+      <p class="note">모든 학년에 점검 시험지 A·B안, 정답과 채점, 결과 기록지가 있어요.</p></section>
+  </div>
+</div>
+<div id="tip" hidden></div>
+<script>
+const tip=document.getElementById('tip');
+document.querySelectorAll('.grid .st').forEach(b=>{const t=b.getAttribute('title');b.removeAttribute('title');b.setAttribute('aria-label',t);b.tabIndex=0;
+  const show=e=>{tip.textContent=t;tip.hidden=false;const r=b.getBoundingClientRect();let x=r.left,y=r.bottom+6;tip.style.left=Math.min(x,innerWidth-330)+'px';tip.style.top=(y+tip.offsetHeight>innerHeight?r.top-tip.offsetHeight-6:y)+'px';};
+  b.addEventListener('mouseenter',show);b.addEventListener('focus',show);b.addEventListener('mouseleave',()=>tip.hidden=true);b.addEventListener('blur',()=>tip.hidden=true);});
+</script>
