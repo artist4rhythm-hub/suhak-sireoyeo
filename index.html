@@ -387,6 +387,7 @@ main{gap:28px}
 .rep-legend span{display:inline-flex;align-items:center;gap:5px}
 .rep-legend i{display:inline-block;width:22px;height:8px;background:#222}.rep-legend i.f{background:transparent;border:1.5px solid #222}.rep-legend i.z{background:rgba(0,0,0,.08);border:1px dashed #777}
 @media print{
+  .rep h2{break-after:avoid}.rep svg{break-inside:avoid}
   body *{visibility:hidden}
   .rep,.rep *{visibility:visible}
   .rep{position:absolute;left:0;top:0;border:none;max-width:none;width:100%;padding:8mm 10mm}
@@ -591,6 +592,22 @@ function viewSem(){
   return h+'</div>'+detailCol();
 }
 
+
+function radarSVG(names,series,size){
+  size=size||420;var n=names.length,cx=size/2,cy=size/2,R=size*0.32,ang=[];for(var i=0;i<n;i++)ang.push(-Math.PI/2+2*Math.PI*i/n);
+  function P(i,r){return [cx+R*r*Math.cos(ang[i]),cy+R*r*Math.sin(ang[i])];}
+  function poly(r){var a=[];for(var i=0;i<n;i++){var p=P(i,r);a.push(p[0].toFixed(1)+','+p[1].toFixed(1));}return a.join(' ');}
+  var b='<polygon points="'+poly(0.6)+'" fill="#EDEDED" stroke="none"/>';
+  for(var k=1;k<=10;k++){var w=k===6||k===9?1.6:(k===10?1.6:.6),dash=k===6||k===9?' stroke-dasharray="5 4"':'',col=k%10&&k!==6&&k!==9?'#C4C4C4':'#333';b+='<polygon points="'+poly(k/10)+'" fill="none" stroke="'+col+'" stroke-width="'+w+'"'+dash+'/>';}
+  for(var i=0;i<n;i++){var p=P(i,1);b+='<line x1="'+cx+'" y1="'+cy+'" x2="'+p[0].toFixed(1)+'" y2="'+p[1].toFixed(1)+'" stroke="#999" stroke-width=".8"/>';
+    var q=P(i,1.2),c=Math.cos(ang[i]),anc=Math.abs(c)<.25?'middle':(c>0?'start':'end');
+    b+='<text x="'+q[0].toFixed(1)+'" y="'+(q[1]+4).toFixed(1)+'" text-anchor="'+anc+'" font-size="13" fill="#111">'+esc(names[i])+'</text>';}
+  var p6=P(0,.6),p9=P(0,.9);b+='<text x="'+(p6[0]+5)+'" y="'+(p6[1]+4)+'" font-size="10" fill="#555">60</text><text x="'+(p9[0]+5)+'" y="'+(p9[1]+4)+'" font-size="10" fill="#555">90</text>';
+  series.forEach(function(se){var a=[];se.vals.forEach(function(v,i){var p=P(i,v/100);a.push(p[0].toFixed(1)+','+p[1].toFixed(1));});
+    b+='<polygon points="'+a.join(' ')+'" fill="'+(se.fill||'none')+'" fill-opacity="'+(se.fill?.35:0)+'" stroke="#111" stroke-width="'+(se.w||2)+'"'+(se.dash?' stroke-dasharray="'+se.dash+'"':'')+'/>';
+    se.vals.forEach(function(v,i){var p=P(i,v/100);b+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+(se.r||3.5)+'" fill="#111"/>';});});
+  return '<svg viewBox="-60 -10 '+(size+120)+' '+(size+20)+'" role="img" aria-label="단원별 실력 지도" style="width:100%;max-width:520px;height:auto;display:block;margin:0 auto">'+b+'</svg>';
+}
 function viewSemReport(){
   var g=S.semG||S.child.grade, s=S.semS||semNow(), k=g+'-'+s, d=semData(g,s), r=semFix(semRes()[k]);
   if(!d)return '<div class="col"><div class="card"><p>보고서를 불러오는 중이에요…</p></div></div>';
@@ -612,28 +629,43 @@ function viewSemReport(){
   h+='<h2>1. 종합 점수</h2><div class="rep-score"><div class="rep-big"><small>'+bLabel+'</small><b>'+score+'</b><small>점 / 100 · 문항 '+active.length+'개</small></div><div>'+
     '<div class="rep-track" style="height:22px"><span class="zone"></span><span class="bar" style="width:'+score+'%"></span></div><div class="rep-scale"><span>0</span><span>부족</span><span>60</span><span>보통</span><span>90</span><span>100</span></div>'+
     '<p style="margin:8px 0 0;font-size:.9375rem"><b>'+grade+'.</b> '+(r.runs.B.done&&first.length?'처음('+first[0]+'안) '+pct(active,first[0])+'점 → 다시 확인(B안) '+pct(active,'B')+'점':'')+'</p></div></div>';
-  // 2. 단원별
-  h+='<h2>2. 단원(역)별 이해도</h2><table class="rep-bars"><tr><th>단원</th><th>정답률 <span class="rep-scale" style="display:inline-flex;gap:0;width:auto"></span></th><th style="text-align:right">%</th><th>판정</th></tr>';
+  // 2. 실력 지도(원형)
+  var U=d.units.filter(function(u){return !r.skip[u.uid];}), SER=[], IN=[];
+  function up1(v){return U.map(function(u){return pct(d.items.filter(function(x){return x.uid===u.uid;}),v);});}
+  if(r.runs.A.done)SER.push({k:'A',vals:up1('A'),fill:'#9E9E9E',w:1.4});
+  if(r.runs.C.done)SER.push({k:'C',vals:up1('C'),dash:'7 5',w:2.2});
+  if(r.runs.B.done)SER.push({k:'B',vals:up1('B'),w:3.2,r:4.5});
+  if(U.length>=3&&SER.length){
+    h+='<h2>2. 실력 지도 (원형 그래프)</h2><div style="display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:16px;align-items:center">'+radarSVG(U.map(function(u){return u.name;}),SER)+
+      '<div class="small" style="line-height:1.7">'+SER.map(function(se){return '<div style="display:flex;align-items:center;gap:8px"><svg width="34" height="10"><line x1="0" y1="5" x2="34" y2="5" stroke="#111" stroke-width="'+se.w+'"'+(se.dash?' stroke-dasharray="'+se.dash+'"':'')+'/></svg>'+se.k+'안 '+({A:'(처음 · 계산·풀이)',C:'(다른 모양 · 개념)',B:'(다시 확인)'}[se.k])+'</div>';}).join('')+
+      '<p style="margin:8px 0 0">도형이 <b>넓고 둥글수록</b> 고르게 튼튼해요. 안으로 들어간 곳이 약한 단원이에요. 회색 구역(60% 안)이면 그 단원부터 채워요.</p></div></div>';
+    if(r.runs.A.done&&r.runs.C.done){var a=up1('A'),c=up1('C');
+      U.forEach(function(u,i){if(a[i]-c[i]>=34)IN.push('<b>'+esc(u.name)+'</b>: 계산·풀이(A안)는 되는데 다른 모양(C안)에서 흔들려요 → 개념 카드로 뜻부터 다시 봐요.');
+        else if(c[i]-a[i]>=34)IN.push('<b>'+esc(u.name)+'</b>: 개념(C안)은 아는데 계산·풀이(A안)에서 실수가 있어요 → (나) 다지기편으로 연습해요.');});
+      h+='<div class="rep-note" style="margin-top:10px"><b>유형 비교</b><br>'+(IN.length?IN.join('<br>'):'A안과 C안 결과가 비슷해요. 계산과 개념이 고르게 자라고 있어요.')+'</div>';}
+  }
+  // 3. 단원별
+  h+='<h2>3. 단원(역)별 이해도</h2><table class="rep-bars"><tr><th>단원</th><th>정답률 <span class="rep-scale" style="display:inline-flex;gap:0;width:auto"></span></th><th style="text-align:right">%</th><th>판정</th></tr>';
   d.units.forEach(function(u){var L=d.items.filter(function(x){return x.uid===u.uid;});
     if(r.skip[u.uid]){h+='<tr><td class="nm">'+esc(u.name)+'</td><td><div class="rep-track"><span class="zone"></span></div></td><td class="pc">—</td><td class="vd"><span class="rep-tag mid">안 배움</span></td></tr>';return;}
     var pl=upct(L), pf=first.length&&r.runs.B.done?pct(L,first[0]):null;
     h+='<tr><td class="nm">'+esc(u.name)+'</td><td><div class="rep-track"><span class="zone"></span>'+(pf!==null?'<span class="bar first" style="width:'+pf+'%"></span>':'')+'<span class="bar" style="width:'+pl+'%"></span></div></td><td class="pc">'+pl+'</td><td class="vd"><span class="rep-tag'+(pl<60?' low':pl<90?' mid':'')+'">'+(pl>=90?'튼튼':pl>=60?'보통':'부족')+'</span></td></tr>';});
   h+='</table><div class="rep-legend"><span><i></i>'+bLabel.replace(' 기준','')+' 정답률</span>'+(r.runs.B.done&&first.length?'<span><i class="f"></i>처음 정답률</span>':'')+'<span><i class="z"></i>보통 구간(60~90%)</span></div>';
   // 3. 정류장 표
-  h+='<h2>3. 정류장별 결과</h2><table class="rep-st"><tr><th>번호</th><th>단원</th><th>정류장</th>'+['A','C','B'].map(function(v){return '<th style="width:40px">'+v+'안</th>';}).join('')+'<th>판정</th></tr>';
+  h+='<h2>4. 정류장별 결과</h2><table class="rep-st"><tr><th>번호</th><th>단원</th><th>정류장</th>'+['A','C','B'].map(function(v){return '<th style="width:40px">'+v+'안</th>';}).join('')+'<th>판정</th></tr>';
   J.forEach(function(j){var x=j.x;h+='<tr><td class="c">'+x.n+'</td><td>'+esc(x.unit)+'</td><td>정류장 '+x.st+' '+esc(x.title)+'</td>'+
     ['A','C','B'].map(function(v){return '<td class="c">'+(j.st==='skip'||!r.runs[v].done?'':(r.runs[v].wrong[x.n]?'✕':'○'))+'</td>';}).join('')+'<td>'+(j.st==='sure'||j.st==='gap'?'<b>'+VD[j.st]+'</b>':VD[j.st])+'</td></tr>';});
   h+='</table>';
   // 4. 처방
   var need=J.filter(function(j){return j.st==='sure'||j.st==='gap'||j.st==='shaky';}).sort(function(a,b){return ({sure:0,gap:1,shaky:2}[a.st])-({sure:0,gap:1,shaky:2}[b.st]);});
-  h+='<h2>4. 채울 순서 (처방)</h2>';
+  h+='<h2>5. 채울 순서 (처방)</h2>';
   if(need.length){h+='<ol class="rep-plan">'+need.map(function(j){var x=j.x;return '<li><div><b>정류장 '+x.st+' '+esc(x.title)+'</b> <span class="small muted">'+esc(x.unit)+' · '+VD[j.st]+'</span><br><span class="small">(가) 기본편 → (나) 다지기편'+(x.pre.length?' · 함께 다질 곳: '+esc(x.pre[0].label):'')+'</span></div></li>';}).join('')+'</ol>'+
     '<p class="small" style="margin-top:6px">한 정류장에 보통 3~5일, 하루 10~15분이면 약 <b>'+(need.length*3)+'~'+(need.length*5)+'일</b>이 걸려요. 다 채우면 B안으로 다시 점검해요.</p>';}
   else h+='<p>채울 정류장이 없어요. 생각편(다)으로 더 깊이 다져 보세요.</p>';
   // 5. 부모님께
   var strong=d.units.filter(function(u){var L=d.items.filter(function(x){return x.uid===u.uid;});return !r.skip[u.uid]&&upct(L)>=90;}).map(function(u){return u.name;});
   var weak=d.units.filter(function(u){var L=d.items.filter(function(x){return x.uid===u.uid;});return !r.skip[u.uid]&&upct(L)<60;}).map(function(u){return u.name;});
-  h+='<h2>5. 부모님께</h2><div class="rep-note">'+(strong.length?'<b>잘하는 곳</b> '+esc(strong.join(', '))+'. 잘한 점을 먼저 말해 주세요.<br>':'')+(weak.length?'<b>먼저 채울 곳</b> '+esc(weak.join(', '))+'. 이 단원은 아래 학년 기초(함께 다질 곳)부터 짧게 확인하면 훨씬 빨리 채워져요.<br>':'')+
+  h+='<h2>6. 부모님께</h2><div class="rep-note">'+(strong.length?'<b>잘하는 곳</b> '+esc(strong.join(', '))+'. 잘한 점을 먼저 말해 주세요.<br>':'')+(weak.length?'<b>먼저 채울 곳</b> '+esc(weak.join(', '))+'. 이 단원은 아래 학년 기초(함께 다질 곳)부터 짧게 확인하면 훨씬 빨리 채워져요.<br>':'')+
     (first.length<2&&!r.runs.B.done?'<b>정확도 높이기</b> 하루 이틀 뒤 C안을 풀면 “확실히 빈 곳”과 “흔들리는 곳”을 나눠 볼 수 있어요.':'<b>다음 점검</b> 정류장을 다 채운 뒤 B안으로 다시 점검하고 이 보고서를 나란히 비교해 보세요.')+'</div>';
   h+='<p class="small muted" style="margin-top:14px">이 보고서는 학교 시험 점수가 아니라, 이번 학기에 어디가 비어 있는지 찾는 지도예요. 정답률 구간: 90% 이상 튼튼 · 60~89% 보통 · 60% 미만 부족.</p></article></div>';
   return h;
