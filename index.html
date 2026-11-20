@@ -561,7 +561,7 @@ function viewSem(){
   if(!d)return h+'<div class="card"><p>'+g+'학년 '+s+'학기 승차권을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</p><button class="btn ghost" data-semg="5" data-sems="2">5학년 2학기 보기</button></div></div>'+detailCol();
   var base='worksheets/sem/g'+k+'-', half=Math.ceil(d.units.length/2);
   h+='<section class="card"><h3>1. 승차권 출력</h3><div class="sem-tk" style="border-style:dashed"><div class="t"><b>'+g+'학년 '+s+'학기 노선 점검 · 3가지 승차권</b><small>'+d.n+'문제 · 약 30분 · A4 흑백</small></div><div class="go">'+
-    '<a class="main" data-pr="sem-A" href="'+base+'A.pdf" target="_blank" rel="noopener">A안 (처음)</a><a data-pr="sem-C" href="'+base+'C.pdf" target="_blank" rel="noopener">C안 (다른 모양)</a><a data-pr="sem-B" href="'+base+'B.pdf" target="_blank" rel="noopener">B안 (다 채운 뒤)</a><a data-pr="sem-key" href="'+base+'key.pdf" target="_blank" rel="noopener">정답·처방표</a><a data-pr="sem-report" href="'+base+'report.pdf" target="_blank" rel="noopener">이해도 기록표</a></div></div>'+
+    '<a class="main" data-pr="sem-A" href="'+base+'A.pdf" target="_blank" rel="noopener">A안 (처음)</a><a data-pr="sem-C" href="'+base+'C.pdf" target="_blank" rel="noopener">C안 (다른 모양)</a><a data-pr="sem-B" href="'+base+'B.pdf" target="_blank" rel="noopener">B안 (다 채운 뒤)</a><a data-pr="sem-key" href="'+base+'key.pdf" target="_blank" rel="noopener">정답·처방표</a><a data-pr="sem-sol" href="'+base+'sol.pdf" target="_blank" rel="noopener">해설집</a><a data-pr="sem-report" href="'+base+'report.pdf" target="_blank" rel="noopener">이해도 기록표</a></div></div>'+
     '<p class="small muted" style="margin-top:8px">A안 → 하루 이틀 뒤 C안을 풀면 더 정확해요. 두 번 다 틀린 곳은 확실히 빈 곳, 한 번만 틀린 곳은 흔들리는 곳이에요. 정류장을 다 채우면 B안으로 다시 확인해요. 중간고사 전이라면 1~'+half+'번 역만 풀어요.</p></section>';
   var cur=r.runs[r.ver], anyDone=['A','B','C'].some(function(v){return r.runs[v].done;});
   if(!S.semEdit&&anyDone){
@@ -895,7 +895,7 @@ function viewPrint(){
     [1,2].forEach(function(ss){var dd=semData(g,ss);if(!dd)return;var b='worksheets/sem/g'+g+'-'+ss+'-';
       h+='<section class="pv-area"><div class="pv-ah"><h2>학기 점검 승차권</h2><span class="pv-sem">'+g+'학년 '+ss+'학기</span><span class="pv-cnt">'+dd.n+'문제</span></div>'+
         '<p class="pv-common">A안을 풀고 틀린 번호를 <button class="pill pass" data-nav="diag" data-dmode="sem">진단 → 학기 점검</button>에 넣으면 채울 정류장을 알려 줘요.</p><ol class="pv-list">'+
-        [['A','A안 (처음)'],['C','C안 (다른 모양 문제)'],['B','B안 (다 채운 뒤)'],['key','정답·처방표 (부모님용)'],['report','이해도 기록표 (손 채점용)']].map(function(x){return '<li class="pv-row"><span class="pv-nm">'+x[1]+'</span><a class="pv-go" data-pr="sem-'+x[0]+'" href="'+b+x[0]+'.pdf" target="_blank" rel="noopener">출력</a></li>';}).join('')+'</ol></section>';});
+        [['A','A안 (처음)'],['C','C안 (다른 모양 문제)'],['B','B안 (다 채운 뒤)'],['key','정답·처방표 (부모님용)'],['sol','해설집 (아이와 함께)'],['report','이해도 기록표 (손 채점용)']].map(function(x){return '<li class="pv-row"><span class="pv-nm">'+x[1]+'</span><a class="pv-go" data-pr="sem-'+x[0]+'" href="'+b+x[0]+'.pdf" target="_blank" rel="noopener">출력</a></li>';}).join('')+'</ol></section>';});
   } else {
     var b=CAT.items.filter(function(x){return x.group==='book'&&x.kind==='book';});
     if(!b.length)h+='<p class="muted">아직 없어요.</p>';
