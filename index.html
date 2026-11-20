@@ -124,6 +124,13 @@ a.pfile{display:inline-flex;align-items:center;gap:4px;border:1.5px solid var(--
 a.pfile:hover{background:var(--soft)}
 a.pfile small{color:var(--muted)}
 .pr-grid{display:grid;gap:16px}
+.pill.sem{color:var(--ink);background:var(--soft);border-color:var(--edge);font-family:var(--body);font-size:0.75rem;vertical-align:middle}
+.semhead{font-family:var(--title);color:var(--green);font-size:1rem;margin:8px 2px 0;border-bottom:1.5px dashed var(--edge);padding-bottom:2px}
+.semtxt{color:var(--green);font-weight:400;font-family:var(--title)}
+.gstrip{position:relative;height:clamp(76px,22vw,150px);background:var(--card) right center/cover no-repeat;border-radius:16px;display:flex;flex-direction:column;justify-content:center;padding:0 0 0 5%;box-sizing:border-box}
+.gstrip b{font-family:var(--title);font-weight:400;font-size:clamp(1.25rem,4.4vw,2rem);color:#1F3B2A;line-height:1.1}
+.gstrip span{font-size:clamp(0.75rem,2vw,0.9375rem);color:#3d5446}
+@media (prefers-color-scheme: dark){.gstrip b,.gstrip span{color:#1F3B2A}}
 .pr-st{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;border-top:1.5px dashed var(--edge);padding-top:8px}
 .pr-st .t{font-family:var(--title)}
 .pr-st .t .no{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:var(--green);color:var(--on-green);margin-right:6px;font-size:0.875rem}
@@ -404,13 +411,21 @@ function viewDiag(){
   return h+'</div>'+detailCol();
 }
 
+function SEMN(id){var g=+id[0],n=+id.slice(2);return n<=(g===1?5:6)?1:2;}
+function SEML(id){return id[0]+'학년 '+SEMN(id)+'학기';}
+function semPill(t){return t?'<span class="pill sem">'+esc(t)+'</span>':'';}
+function semShort(sem){return (sem||'').split('·').map(function(x){var a=x.split('-');return a.length===2?a[0]+'학년 '+a[1]+'학기':x;}).join(' · ');}
+function gStrip(g,title,sub){return '<div class="gstrip" style="background-image:url(img/strip-g'+g+'.webp)"><b>'+esc(title)+'</b>'+(sub?'<span>'+esc(sub)+'</span>':'')+'</div>';}
 function viewMap(){
   var g=S.mapGrade||S.child.grade;
   var lead=DATA.gradeLeads[String(g)]||'';
   var h='<div class="col"><div class="tabs" role="group" aria-label="학년">';
   for(var i=1;i<=6;i++)h+='<button class="tab" aria-pressed="'+(i===g)+'" data-grade="'+i+'">'+i+'학년</button>';
-  h+='</div><p class="small">'+esc(lead)+'</p><div class="list">';
-  DATA.stations.filter(function(s){return s.grade===g;}).forEach(function(s){var p=S.progress[s.id];
+  var gs=DATA.stations.filter(function(s){return s.grade===g;}), n1=gs.filter(function(s){return SEMN(s.id)===1;}).length;
+  h+='</div>'+gStrip(g,g+'학년 노선','1학기 '+n1+'역 · 2학기 '+(gs.length-n1)+'역')+'<p class="small">'+esc(lead)+'</p><div class="list">';
+  var lastSem=0;
+  gs.forEach(function(s){var p=S.progress[s.id];
+    if(SEMN(s.id)!==lastSem){lastSem=SEMN(s.id);h+='<div class="semhead">'+g+'학년 '+lastSem+'학기</div>';}
     h+='<button class="st" data-open="'+s.id+'" aria-selected="'+(S.sel===s.id)+'"><span class="no">'+s.id+'</span><span class="nm"><span class="dot" style="background:var('+LINE_VAR[s.lineKey]+')"></span>'+esc(s.name)+(s.gate?' <span class="pill gate">'+GATE_CH[s.gate-1]+'</span>':'')+'</span>'+
       (p?'<span class="pill '+(p.s==='passed'?'pass':'stuck')+'">'+(p.s==='passed'?'통과':'막힘')+'</span>':(unlocked(s)&&!S.pass?'<span class="small muted">맛보기</span>':''))+'</button>';});
   h+='</div></div>';
@@ -555,31 +570,32 @@ function stationPrints(id){
 function viewPrint(){
   if(!CAT)return '<div class="col"><div class="card"><p>출력물 목록을 불러오는 중이에요…</p></div></div>';
   var g=S.printGrade||S.child.grade, k=S.printKind||'dowumji';
-  var h='<div class="col"><section class="card"><h2 class="big" style="margin-top:0">출력하기</h2><p class="small">학년과 종류를 고르고, 필요한 정류장·편만 골라 출력하세요. 모두 A4 흑백용이고 답은 오른쪽 회색 칸에 써요.</p>'+
+  var h='<div class="col"><section class="card"><h2 class="big" style="margin-top:0">출력하기</h2><p class="small">학년과 종류를 고르고, 필요한 정류장·편만 골라 출력하세요. 모두 A4 흑백용이고 답은 오른쪽 회색 칸에 써요. 각 항목 옆 <span class="pill sem">3학년 1학기</span> 표시는 교과서 단원 기준이에요(2022 개정 교육과정, 출판사에 따라 순서가 조금 다를 수 있어요).</p>'+
     '<div class="tabs wrap" role="group" aria-label="학년">';
   for(var i=1;i<=6;i++)h+='<button class="tab" aria-pressed="'+(i===g)+'" data-pgrade="'+i+'">'+i+'학년</button>';
   h+='</div><div class="tabs wrap" role="group" aria-label="종류" style="margin-top:8px">'+[['dowumji','정류장 도움지'],['test','점검 시험지'],['book','문제집·게임']].map(function(x){return '<button class="tab" aria-pressed="'+(x[0]===k)+'" data-pkind="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div></section>';
+  h+=gStrip(g,g+'학년 출력물','학년·학기 표시를 확인해요');
   var its=CAT.items.filter(function(x){return x.grade===g;});
   if(k==='dowumji'){
     var mods=[];its.filter(function(x){return x.group==='dowumji';}).forEach(function(x){if(mods.indexOf(x.mod)<0)mods.push(x.mod);});
     h+='<section class="card pr-legend"><b>쓰는 순서</b> ① 점검 시험지로 흔들리는 영역 찾기 → ② 그 영역의 <b>부모님 안내서</b> 읽기 → ③ <b>확인지 A</b>로 출발 정류장 찾기 → ④ 정류장마다 (가)→(나)→(다) → ⑤ 다 마치면 <b>확인지 B</b></section>';
     h+='<div class="pr-grid">';
     mods.forEach(function(m){var a=its.filter(function(x){return x.mod===m;}), area=a[0].area;
-      h+='<section class="card pr-area"><h3>'+g+'학년 '+esc(area)+'</h3><div class="pr-row"><span class="lab small muted">영역 공통</span>'+a.filter(function(x){return !x.st;}).map(function(x){return pf(x);}).join('')+'</div>';
+      h+='<section class="card pr-area"><h3>'+g+'학년 '+esc(area)+' '+semPill(semShort(a[0].sem))+'</h3><div class="pr-row"><span class="lab small muted">영역 공통</span>'+a.filter(function(x){return !x.st;}).map(function(x){return pf(x);}).join('')+'</div>';
       var nos=[];a.forEach(function(x){if(x.st&&nos.indexOf(x.st)<0)nos.push(x.st);});
       nos.forEach(function(n){var f=a.filter(function(x){return x.st===n;});
-        h+='<div class="pr-st"><div class="t"><span class="no">'+n+'</span>'+esc(f[0].st_title)+' <span class="ids">· 역 '+f[0].stations.map(function(i){return '<button class="pill pass" data-open="'+i+'">'+i+'</button>';}).join(' ')+'</span></div><div class="pr-row">'+f.map(function(x){return pf(x);}).join('')+'</div></div>';});
+        h+='<div class="pr-st"><div class="t"><span class="no">'+n+'</span>'+esc(f[0].st_title)+' <span class="ids">· '+semShort(f[0].sem)+' · 역 '+f[0].stations.map(function(i){return '<button class="pill pass" data-open="'+i+'">'+i+'</button>';}).join(' ')+'</span></div><div class="pr-row">'+f.map(function(x){return pf(x);}).join('')+'</div></div>';});
       h+='</section>';});
     h+='</div>';
   } else if(k==='test'){
     var t=its.filter(function(x){return x.group==='test';});
-    h+='<section class="card pr-area"><h3>'+g+'학년 수학 한 바퀴 (점검 시험)</h3><p class="small">A안으로 먼저 보고, 결과 기록지에 채점해 실력 지도(원형 그래프)를 그려요. 도움지를 마친 뒤 B안으로 다시 봐요.</p><div class="pr-row">'+t.map(function(x){return pf(x);}).join('')+'</div></section>';
+    h+='<section class="card pr-area"><h3>'+g+'학년 수학 한 바퀴 (점검 시험) '+semPill(g+'학년 1·2학기 전체')+'</h3><p class="small">A안으로 먼저 보고, 결과 기록지에 채점해 실력 지도(원형 그래프)를 그려요. 도움지를 마친 뒤 B안으로 다시 봐요.</p><div class="pr-row">'+t.map(function(x){return pf(x);}).join('')+'</div></section>';
   } else {
     var b=CAT.items.filter(function(x){return x.group==='book'&&x.kind==='book';});
     if(!b.length)h+='<section class="card"><p class="muted">아직 없어요.</p></section>';
     b.sort(function(x,y){return (x.grade===g?0:1)-(y.grade===g?0:1)||x.grade-y.grade;}).forEach(function(x){
       var ex=CAT.items.filter(function(y){return y.parent&&x.file.indexOf('/'+y.parent+'.')>0;});
-      h+='<section class="card pr-area"><h3>'+x.grade+'학년 · '+esc(x.title)+'</h3><div class="pr-row">'+pf(x,x.file.slice(-4)==='.zip'?'세트 내려받기 (zip)':'문제집 열기')+ex.map(function(y){return pf(y,y.title.split(' · ').pop());}).join('')+'</div>'+
+      h+='<section class="card pr-area"><h3>'+x.grade+'학년 · '+esc(x.title)+' '+semPill(semShort(x.sem))+'</h3><div class="pr-row">'+pf(x,x.file.slice(-4)==='.zip'?'세트 내려받기 (zip)':'문제집 열기')+ex.map(function(y){return pf(y,y.title.split(' · ').pop());}).join('')+'</div>'+
         '<div class="small muted">관련 역 '+x.stations.map(function(i){return '<button class="pill pass" data-open="'+i+'">'+i+'</button>';}).join(' ')+'</div></section>';});
   }
   return h+'</div>';
@@ -594,6 +610,7 @@ function stationCard(id){
     '<button class="back phone-only" data-act="close">← 돌아가기</button>'+
     '<div class="row"><span class="eyebrow"><span class="dot" style="background:var('+LINE_VAR[s.lineKey]+')"></span>'+line+'</span>'+(s.gate?'<span class="pill gate">관문 '+GATE_CH[s.gate-1]+'</span>':'')+(p?'<span class="pill '+(p.s==='passed'?'pass':'stuck')+'">'+(p.s==='passed'?'통과 '+p.at:'막힘 '+p.at)+'</span>':'')+'</div>'+
     '<h2 class="big">'+s.id+' '+esc(s.name)+'</h2>'+
+    '<p class="small muted" style="margin:2px 0 0">교과 연계 · <b class="semtxt">'+SEML(s.id)+'</b> 「'+esc(s.name)+'」</p>'+
     '<div class="kv">'+
     '<div><h3>목적지</h3><p>'+esc(s.goal)+'</p></div>'+
     '<div><h3>핵심 개념</h3><p>'+s.core.map(function(x){return '<span class="mark">'+esc(x)+'</span>';}).join(' · ')+'</p></div>'+
