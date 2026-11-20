@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- 대체 글꼴(카페24 글꼴 파일이 없을 때만 보임) -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@600&family=Gaegu:wght@700&family=Gowun+Dodum&display=swap">
+<link rel="stylesheet" href="fonts/renew.css">
 <style>
 /* 카페24 상업용 무료 글꼴: fonts.cafe24.com에서 받아 fonts/ 폴더에 넣으면 적용됨 */
 @font-face{font-family:"Cafe24 Danjunghae";font-display:swap;
@@ -249,6 +249,85 @@ img,svg{max-width:100%}
 table.rec{display:block;overflow-x:auto}
 @media (min-width:600px){table.rec{display:table}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ================= 리뉴얼: 여백 노트 =================
+   글꼴: 한글 고운돋움, 숫자·기호는 Inter(빗금 없는 0) — 0과 ㅇ이 한눈에 달라요.
+   선은 가늘게, 그림자 없이, 여백은 넉넉하게. */
+:root{
+  --paper:#FBFBF7; --card:#FFFFFF; --ink:#1E2A22; --muted:#66746A; --line:#E3E8DF; --line2:#CDD6C8;
+  --soft:#EEF3EA; --edge:#CDD6C8;
+  --title:"Num","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --body:"Num","Gowun Dodum","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --r:16px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--paper:#141A16;--card:#1A221C;--ink:#E4ECE6;--muted:#9AAEA0;--line:#2A362E;--line2:#3A4A3F;--soft:#21302A;--edge:#3A4A3F}}
+:root[data-theme="dark"]{--paper:#141A16;--card:#1A221C;--ink:#E4ECE6;--muted:#9AAEA0;--line:#2A362E;--line2:#3A4A3F;--soft:#21302A;--edge:#3A4A3F}
+body{background-image:none;letter-spacing:-0.005em;line-height:1.75;font-feature-settings:"tnum" 1}
+.num{font-family:"Num",var(--title);font-weight:600}
+.top{border-bottom:1px solid var(--line);padding:14px 20px}
+.child-chip{border:1px solid var(--line2)}
+.rail{border-right:1px solid var(--line)!important;padding:28px 12px!important;gap:4px!important}
+.rail .logo{margin-bottom:28px!important}
+.bottom{border-top:1px solid var(--line)}
+.navbtn[aria-current="page"]{background:var(--soft);color:var(--ink)}
+.navbtn b{font-size:1.0625rem}
+.card{border:1px solid var(--line);box-shadow:none;padding:24px;border-radius:var(--r)}
+.tape::before{display:none}
+.btn{border:1px solid var(--green);box-shadow:none;border-radius:999px;padding:10px 20px}
+.btn:active{transform:none}
+.btn.red{box-shadow:none}
+.btn.ghost{border-color:var(--line2)}
+.tab{border:1px solid var(--line2);border-radius:999px;padding:6px 14px}
+.tab[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.st{border:0;border-bottom:1px solid var(--line);border-radius:0;background:none;padding:14px 6px}
+.list{gap:0;border-top:1px solid var(--line)}
+.st[aria-selected="true"]{background:var(--soft);border-radius:10px}
+.lv{border:1px dashed var(--line2)}
+.progress{border:1px solid var(--line2)}
+.field input,.field select{border:1px solid var(--line2)}
+.pill{border-width:1px}
+.semhead{border-bottom:0;margin:22px 4px 6px;font-size:0.875rem;letter-spacing:.06em;color:var(--green)}
+main{gap:28px}
+.col{gap:24px}
+.foot{border-top:1px solid var(--line)}
+.gstrip{border-radius:18px}
+.kv{gap:20px}
+.kv h3{font-size:1.125rem}
+/* 출력 탭 */
+.pv{gap:0}
+.pv-head{padding:8px 0 8px}
+.pv-head .eyebrow{margin:0}
+.pv-title{font-size:clamp(1.75rem,4vw,2.5rem);margin:6px 0 0}
+.pv-lead{margin:12px 0 0;color:var(--muted);max-width:38rem}
+.pv-ctl{display:flex;flex-wrap:wrap;gap:12px 20px;margin-top:28px;align-items:center}
+.seg{display:flex;flex-wrap:nowrap;overflow-x:auto;max-width:100%;scrollbar-width:none;gap:2px;border:1px solid var(--line2);border-radius:999px;padding:3px}
+.seg-b{border:0;background:none;color:var(--muted);padding:7px 14px;border-radius:999px;white-space:nowrap}
+.seg-b[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.seg-set .seg-b[aria-pressed="true"]{background:var(--green);color:var(--on-green)}
+.pv-order{margin:36px 0 0;font-size:0.875rem;color:var(--muted)}
+.pv .pr-grid{margin-top:8px;gap:0 56px}
+.pv-area{padding:40px 0 8px}
+.pv-ah{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+.pv-ah h2{font-size:1.625rem}
+.pv-sem{font-size:0.8125rem;color:var(--green)}
+.pv-cnt{font-size:0.8125rem;color:var(--muted)}
+.pv-common{margin:8px 0 0;font-size:0.875rem;color:var(--muted)}
+.pv-link{color:var(--green);text-decoration:none;border-bottom:1px solid transparent}
+.pv-link:hover{border-bottom-color:currentColor}
+.sep{margin:0 6px;color:var(--line2)}
+.pv-list{list-style:none;margin:18px 0 0;padding:0;border-top:1px solid var(--line)}
+.pv-row{display:flex;align-items:center;gap:16px;padding:14px 2px;border-bottom:1px solid var(--line)}
+.pv-no{font-family:"Num",var(--title);color:var(--muted);font-size:0.875rem;min-width:1.75rem}
+.pv-nm{flex:1;min-width:0}
+.pv-nm small{display:block;font-size:0.75rem;color:var(--muted);margin-top:1px}
+.pv-go{flex:none;text-decoration:none;color:var(--green);border:1px solid var(--green);border-radius:999px;padding:6px 14px;font-size:0.875rem;white-space:nowrap}
+.pv-go:hover{background:var(--green);color:var(--on-green)}
+.km{display:inline-grid;place-items:center;width:1.5em;height:1.5em;border-radius:50%;font-size:0.8125rem;box-sizing:border-box;vertical-align:-0.15em}
+.k-ga{background:currentColor}.k-ga{color:inherit}.seg-b .k-ga{background:var(--ink);color:var(--paper)}.seg-b[aria-pressed="true"] .k-ga{background:var(--paper);color:var(--green)}
+.k-na{border:3px double currentColor}.k-da{border:1.5px dashed currentColor}
+.pv-more{margin-top:12px;border:0;background:none;color:var(--green);padding:6px 0;font-size:0.875rem}
+@media (min-width:1000px){main.single .pv .pr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1600px){main.single .pv .pr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 
 </head>
@@ -560,43 +639,54 @@ function stationPrints(id){
   var h='<div class="wsbox" style="justify-items:stretch"><h3 style="margin:0">출력용 학습지</h3>';
   Object.keys(mods).forEach(function(m){var M=mods[m];
     h+='<div class="small muted">'+M.grade+'학년 '+esc(M.area)+' 정류장 도움지</div>';
-    Object.keys(M.st).forEach(function(n){var t=M.st[n];h+='<div class="pr-row"><span class="lab">정류장 '+n+' '+esc(t.title)+'</span>'+t.f.map(function(x){return pf(x);}).join('')+'</div>';});
+    h+='<ol class="pv-list" style="margin-top:6px">';
+    Object.keys(M.st).forEach(function(n){var t=M.st[n];h+='<li class="pv-row"><span class="pv-no">'+n+'</span><span class="pv-nm">'+esc(t.title)+'<small>'+t.f.map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc((KIND_LABEL[x.kind]||x.kind).replace('편',''))+'</a>';}).join('<span class="sep">·</span>')+'</small></span></li>';});
+    h+='</ol>';
     var area=(CAT.items||[]).filter(function(x){return x.mod===m&&!x.st;});
-    if(area.length)h+='<div class="pr-row"><span class="lab small muted">영역 공통</span>'+area.map(function(x){return pf(x);}).join('')+'</div>';});
+    if(area.length)h+='<p class="pv-common">함께 쓰는 자료 &nbsp;'+area.map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc(KIND_LABEL[x.kind]||x.title)+'</a>';}).join('<span class="sep">·</span>')+'</p>';});
   var others=its.filter(function(x){return x.group==='book'&&x.kind==='book'||x.group==='gate';});
-  if(others.length)h+='<div class="pr-row"><span class="lab">문제집·학습지</span>'+others.map(function(x){return pf(x,x.title);}).join('')+'</div>';
+  if(others.length)h+='<p class="pv-common">문제집·학습지 &nbsp;'+others.map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc(x.title)+'</a>';}).join('<span class="sep">·</span>')+'</p>';
   return h+'<span class="small muted">A4 · 흑백 인쇄 · 실제 크기(100%)로 출력하세요. 전체 목록은 <button class="pill pass" data-nav="print">출력</button> 탭에 있어요.</span></div>';
 }
 function viewPrint(){
   if(!CAT)return '<div class="col"><div class="card"><p>출력물 목록을 불러오는 중이에요…</p></div></div>';
-  var g=S.printGrade||S.child.grade, k=S.printKind||'dowumji';
-  var h='<div class="col"><section class="card"><h2 class="big" style="margin-top:0">출력하기</h2><p class="small">학년과 종류를 고르고, 필요한 정류장·편만 골라 출력하세요. 모두 A4 흑백용이고 답은 오른쪽 회색 칸에 써요. 각 항목 옆 <span class="pill sem">3학년 1학기</span> 표시는 교과서 단원 기준이에요(2022 개정 교육과정, 출판사에 따라 순서가 조금 다를 수 있어요).</p>'+
-    '<div class="tabs wrap" role="group" aria-label="학년">';
-  for(var i=1;i<=6;i++)h+='<button class="tab" aria-pressed="'+(i===g)+'" data-pgrade="'+i+'">'+i+'학년</button>';
-  h+='</div><div class="tabs wrap" role="group" aria-label="종류" style="margin-top:8px">'+[['dowumji','정류장 도움지'],['test','점검 시험지'],['book','문제집·게임']].map(function(x){return '<button class="tab" aria-pressed="'+(x[0]===k)+'" data-pkind="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div></section>';
-  h+=gStrip(g,g+'학년 출력물','학년·학기 표시를 확인해요');
+  var g=S.printGrade||S.child.grade, k=S.printKind||'dowumji', set=S.printSet||'ga';
+  var SETN={ga:'(가) 기본편',na:'(나) 다지기편',da:'(다) 생각편'};
+  var h='<div class="col pv"><header class="pv-head"><p class="eyebrow">출력하기</p><h1 class="pv-title">'+g+'학년 출력물</h1>'+
+    '<p class="pv-lead">A4 흑백으로 출력해요. 항목마다 몇 학년 몇 학기 과정인지 적혀 있어요(2022 개정 교과서 단원 기준).</p>'+
+    '<div class="pv-ctl"><div class="seg" role="group" aria-label="학년">';
+  for(var i=1;i<=6;i++)h+='<button class="seg-b" aria-pressed="'+(i===g)+'" data-pgrade="'+i+'">'+i+'학년</button>';
+  h+='</div><div class="seg" role="group" aria-label="종류">'+[['dowumji','정류장 도움지'],['test','점검 시험지'],['book','문제집']].map(function(x){return '<button class="seg-b" aria-pressed="'+(x[0]===k)+'" data-pkind="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div>';
+  if(k==='dowumji')h+='<div class="seg seg-set" role="group" aria-label="편">'+['ga','na','da'].map(function(s){return '<button class="seg-b" aria-pressed="'+(s===set)+'" data-pset="'+s+'"><span class="km k-'+s+'">'+{ga:'가',na:'나',da:'다'}[s]+'</span> '+SETN[s].slice(4)+'</button>';}).join('')+'</div>';
+  h+='</div></header>';
   var its=CAT.items.filter(function(x){return x.grade===g;});
   if(k==='dowumji'){
     var mods=[];its.filter(function(x){return x.group==='dowumji';}).forEach(function(x){if(mods.indexOf(x.mod)<0)mods.push(x.mod);});
-    h+='<section class="card pr-legend"><b>쓰는 순서</b> ① 점검 시험지로 흔들리는 영역 찾기 → ② 그 영역의 <b>부모님 안내서</b> 읽기 → ③ <b>확인지 A</b>로 출발 정류장 찾기 → ④ 정류장마다 (가)→(나)→(다) → ⑤ 다 마치면 <b>확인지 B</b></section>';
-    h+='<div class="pr-grid">';
-    mods.forEach(function(m){var a=its.filter(function(x){return x.mod===m;}), area=a[0].area;
-      h+='<section class="card pr-area"><h3>'+g+'학년 '+esc(area)+' '+semPill(semShort(a[0].sem))+'</h3><div class="pr-row"><span class="lab small muted">영역 공통</span>'+a.filter(function(x){return !x.st;}).map(function(x){return pf(x);}).join('')+'</div>';
+    h+='<p class="pv-order">쓰는 순서 &nbsp; 부모님 안내서 → 확인지 A로 출발 정류장 찾기 → 정류장마다 (가)·(나)·(다) → 확인지 B</p><div class="pr-grid">';
+    mods.forEach(function(m){var a=its.filter(function(x){return x.mod===m;}), area=a[0].area, open=S.prOpen&&S.prOpen[m];
       var nos=[];a.forEach(function(x){if(x.st&&nos.indexOf(x.st)<0)nos.push(x.st);});
-      nos.forEach(function(n){var f=a.filter(function(x){return x.st===n;});
-        h+='<div class="pr-st"><div class="t"><span class="no">'+n+'</span>'+esc(f[0].st_title)+' <span class="ids">· '+semShort(f[0].sem)+' · 역 '+f[0].stations.map(function(i){return '<button class="pill pass" data-open="'+i+'">'+i+'</button>';}).join(' ')+'</span></div><div class="pr-row">'+f.map(function(x){return pf(x);}).join('')+'</div></div>';});
-      h+='</section>';});
+      h+='<section class="pv-area"><div class="pv-ah"><h2>'+esc(area)+'</h2><span class="pv-sem">'+esc(semShort(a[0].sem))+'</span><span class="pv-cnt">정류장 '+nos.length+'개</span></div>'+
+        '<p class="pv-common">함께 쓰는 자료 &nbsp;'+a.filter(function(x){return !x.st;}).map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc(KIND_LABEL[x.kind]||x.title)+'</a>';}).join('<span class="sep">·</span>')+'</p><ol class="pv-list">';
+      nos.forEach(function(n,idx){var f=a.filter(function(x){return x.st===n&&x.kind===set;})[0]; if(!f)return;
+        var hide=!open&&nos.length>6&&idx>=5;
+        h+='<li class="pv-row"'+(hide?' hidden':'')+'><span class="pv-no">'+(n<10?'0'+n:n)+'</span><span class="pv-nm">'+esc(f.st_title)+'<small>'+esc(semShort(f.sem))+'</small></span>'+
+          '<a class="pv-go" data-pr="'+esc(f.kind)+'" href="'+esc(f.file)+'" target="_blank" rel="noopener" aria-label="정류장 '+n+' '+esc(f.st_title)+' '+SETN[set]+' 출력">출력 <span class="num">'+f.pages+'</span>쪽</a></li>';});
+      h+='</ol>'+(nos.length>6&&!open?'<button class="pv-more" data-propen="'+m+'">정류장 '+(nos.length-5)+'개 더 보기</button>':'')+'</section>';});
     h+='</div>';
   } else if(k==='test'){
     var t=its.filter(function(x){return x.group==='test';});
-    h+='<section class="card pr-area"><h3>'+g+'학년 수학 한 바퀴 (점검 시험) '+semPill(g+'학년 1·2학기 전체')+'</h3><p class="small">A안으로 먼저 보고, 결과 기록지에 채점해 실력 지도(원형 그래프)를 그려요. 도움지를 마친 뒤 B안으로 다시 봐요.</p><div class="pr-row">'+t.map(function(x){return pf(x);}).join('')+'</div></section>';
+    h+='<section class="pv-area"><div class="pv-ah"><h2>수학 한 바퀴 (점검 시험)</h2><span class="pv-sem">'+g+'학년 1·2학기 전체</span></div>'+
+      '<p class="pv-common">A안으로 먼저 보고 결과 기록지에 채점해요. 도움지를 마친 뒤 B안으로 다시 봐요.</p><ol class="pv-list">'+
+      t.map(function(x){return '<li class="pv-row"><span class="pv-nm">'+esc(KIND_LABEL[x.kind]||x.title)+'</span><a class="pv-go" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">출력 <span class="num">'+x.pages+'</span>쪽</a></li>';}).join('')+'</ol></section>';
   } else {
     var b=CAT.items.filter(function(x){return x.group==='book'&&x.kind==='book';});
-    if(!b.length)h+='<section class="card"><p class="muted">아직 없어요.</p></section>';
+    if(!b.length)h+='<p class="muted">아직 없어요.</p>';
+    h+='<section class="pv-area"><ol class="pv-list">';
     b.sort(function(x,y){return (x.grade===g?0:1)-(y.grade===g?0:1)||x.grade-y.grade;}).forEach(function(x){
       var ex=CAT.items.filter(function(y){return y.parent&&x.file.indexOf('/'+y.parent+'.')>0;});
-      h+='<section class="card pr-area"><h3>'+x.grade+'학년 · '+esc(x.title)+' '+semPill(semShort(x.sem))+'</h3><div class="pr-row">'+pf(x,x.file.slice(-4)==='.zip'?'세트 내려받기 (zip)':'문제집 열기')+ex.map(function(y){return pf(y,y.title.split(' · ').pop());}).join('')+'</div>'+
-        '<div class="small muted">관련 역 '+x.stations.map(function(i){return '<button class="pill pass" data-open="'+i+'">'+i+'</button>';}).join(' ')+'</div></section>';});
+      h+='<li class="pv-row"><span class="pv-no">'+x.grade+'학년</span><span class="pv-nm">'+esc(x.title)+'<small>'+esc(semShort(x.sem))+(ex.length?' · '+ex.map(function(y){return '<a class="pv-link" data-pr="book-extra" href="'+esc(y.file)+'" target="_blank" rel="noopener">'+esc(y.title.split(' · ').pop())+'</a>';}).join(' · '):'')+'</small></span>'+
+        '<a class="pv-go" data-pr="book" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+(x.file.slice(-4)==='.zip'?'내려받기':'열기 <span class="num">'+x.pages+'</span>쪽')+'</a></li>';});
+    h+='</ol></section>';
   }
   return h+'</div>';
 }
@@ -728,6 +818,8 @@ document.addEventListener('click',function(e){
   if(t.dataset.grade){S.mapGrade=+t.dataset.grade;render();return;}
   if(t.dataset.pgrade){S.printGrade=+t.dataset.pgrade;render();return;}
   if(t.dataset.pkind){S.printKind=t.dataset.pkind;render();return;}
+  if(t.dataset.pset){S.printSet=t.dataset.pset;render();return;}
+  if(t.dataset.propen){S.prOpen=S.prOpen||{};S.prOpen[t.dataset.propen]=1;render();return;}
   if(t.dataset.size){S.size=t.dataset.size;render();return;}
   if(t.dataset.plat){S.platform=t.dataset.plat;S.storeSheet=false;render();return;}
   if(t.dataset.mark){track(t.dataset.mark==='passed'?'mk_pass':'mk_stuck',(t.dataset.mark==='passed'?'ps_':'sk_')+t.dataset.id);S.progress[t.dataset.id]={s:t.dataset.mark,at:today()};syncDiag();if(cloudOn())cloudCall('saveProgress',t.dataset.id,t.dataset.mark);render();return;}
