@@ -123,6 +123,7 @@ main{flex:1;padding:16px 16px 24px;display:grid;grid-template-columns:minmax(0,1
 a.pfile{display:inline-flex;align-items:center;gap:4px;border:1.5px solid var(--edge);border-radius:10px;padding:5px 10px;text-decoration:none;color:var(--ink,inherit);background:var(--card);font-size:0.875rem;white-space:nowrap}
 a.pfile:hover{background:var(--soft)}
 a.pfile small{color:var(--muted)}
+.pr-grid{display:grid;gap:16px}
 .pr-st{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;border-top:1.5px dashed var(--edge);padding-top:8px}
 .pr-st .t{font-family:var(--title)}
 .pr-st .t .no{display:inline-grid;place-items:center;width:1.6em;height:1.6em;border-radius:50%;background:var(--green);color:var(--on-green);margin-right:6px;font-size:0.875rem}
@@ -181,21 +182,65 @@ body.intro-on .app{display:none}
   .step{grid-template-columns:1fr}
 }
 
+/* ---------- 기기별 배치 ----------
+   폰(~599): 아래 메뉴 + 한 줄
+   태블릿 세로(600~899): 왼쪽 메뉴 + 한 줄(역 카드는 눌렀을 때 화면 전체로)
+   태블릿 가로·노트북(900~1399): 왼쪽 메뉴 + 두 줄(목록 | 역 카드)
+   큰 화면(1400~): 두 줄을 넓게, 글자 조금 크게
+   낮은 가로 화면(높이 ~500): 위쪽 띠 고정 해제, 아래 메뉴 얇게 */
 @media (min-width:600px){
   .app{flex-direction:row}
-  .rail{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;box-sizing:border-box;width:96px;flex:none;
-    border-right:2px solid var(--edge);background:var(--card);padding:16px 8px}
-  .rail .logo{font-size:1.25rem;text-align:center;margin-bottom:12px}
+  .rail{display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh;height:100dvh;box-sizing:border-box;width:84px;flex:none;
+    border-right:2px solid var(--edge);background:var(--card);padding:16px 8px;overflow-y:auto}
+  .rail .logo{font-size:1.125rem;text-align:center;margin-bottom:12px}
   .rail .navbtn{padding:10px 0}
   .bottom{display:none}
   .shell{flex:1;min-width:0;display:flex;flex-direction:column}
   .top .logo{display:none}
-  main{padding:20px 24px 32px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+  main{padding:20px 24px 32px}
   main.single{grid-template-columns:minmax(0,760px);justify-content:center}
-  .panel-detail{display:grid;gap:16px;align-content:start;position:sticky;top:76px;max-height:calc(100vh - 96px);overflow:auto;min-width:0}
-  .phone-only{display:none}
   .foot{padding:12px 24px 24px}
 }
+@media (min-width:900px){
+  .rail{width:96px}
+  .rail .logo{font-size:1.25rem}
+  main{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+  .panel-detail{display:grid;gap:16px;align-content:start;position:sticky;top:76px;max-height:calc(100vh - 96px);max-height:calc(100dvh - 96px);overflow:auto;min-width:0}
+  .phone-only{display:none}
+}
+@media (min-width:1200px){
+  main{grid-template-columns:minmax(0,1.3fr) minmax(360px,1fr);gap:24px}
+  .rail{width:108px}
+}
+@media (min-width:1400px){
+  html{font-size:calc(var(--fs) * 1.06)}
+  main,.foot{max-width:1440px}
+  main.single{grid-template-columns:minmax(0,880px)}
+}
+@media (max-height:500px) and (orientation:landscape){
+  .top{position:static}
+  .bottom{padding:2px 4px calc(2px + env(safe-area-inset-bottom,0px))}
+  .bottom .navbtn{padding:2px 0;font-size:0.75rem}
+  .foot{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  .rail{padding:8px 6px;gap:2px}
+  .rail .logo{margin-bottom:4px}
+  .rail .navbtn{padding:4px 0}
+  .panel-detail{top:12px;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px)}
+  .hero-art{aspect-ratio:3/1.4}
+}
+/* 넓은 화면에서 출력 목록은 두 칸으로 */
+@media (min-width:1000px){
+  main.single.wide-print{grid-template-columns:minmax(0,1240px)}
+  main.single .pr-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+}
+@media (min-width:1600px){
+  main.single.wide-print{grid-template-columns:minmax(0,1560px)}
+  main.single .pr-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+/* 표·그림이 좁은 화면에서 넘치지 않게 */
+img,svg{max-width:100%}
+table.rec{display:block;overflow-x:auto}
+@media (min-width:600px){table.rec{display:table}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
@@ -518,12 +563,14 @@ function viewPrint(){
   if(k==='dowumji'){
     var mods=[];its.filter(function(x){return x.group==='dowumji';}).forEach(function(x){if(mods.indexOf(x.mod)<0)mods.push(x.mod);});
     h+='<section class="card pr-legend"><b>쓰는 순서</b> ① 점검 시험지로 흔들리는 영역 찾기 → ② 그 영역의 <b>부모님 안내서</b> 읽기 → ③ <b>확인지 A</b>로 출발 정류장 찾기 → ④ 정류장마다 (가)→(나)→(다) → ⑤ 다 마치면 <b>확인지 B</b></section>';
+    h+='<div class="pr-grid">';
     mods.forEach(function(m){var a=its.filter(function(x){return x.mod===m;}), area=a[0].area;
       h+='<section class="card pr-area"><h3>'+g+'학년 '+esc(area)+'</h3><div class="pr-row"><span class="lab small muted">영역 공통</span>'+a.filter(function(x){return !x.st;}).map(function(x){return pf(x);}).join('')+'</div>';
       var nos=[];a.forEach(function(x){if(x.st&&nos.indexOf(x.st)<0)nos.push(x.st);});
       nos.forEach(function(n){var f=a.filter(function(x){return x.st===n;});
         h+='<div class="pr-st"><div class="t"><span class="no">'+n+'</span>'+esc(f[0].st_title)+' <span class="ids">· 역 '+f[0].stations.map(function(i){return '<button class="pill pass" data-open="'+i+'">'+i+'</button>';}).join(' ')+'</span></div><div class="pr-row">'+f.map(function(x){return pf(x);}).join('')+'</div></div>';});
       h+='</section>';});
+    h+='</div>';
   } else if(k==='test'){
     var t=its.filter(function(x){return x.group==='test';});
     h+='<section class="card pr-area"><h3>'+g+'학년 수학 한 바퀴 (점검 시험)</h3><p class="small">A안으로 먼저 보고, 결과 기록지에 채점해 실력 지도(원형 그래프)를 그려요. 도움지를 마친 뒤 B안으로 다시 봐요.</p><div class="pr-row">'+t.map(function(x){return pf(x);}).join('')+'</div></section>';
@@ -635,6 +682,7 @@ function viewIntro(){
   return h;
 }
 
+var WIDE='(min-width:900px)';
 function detailCol(){return '<aside class="panel-detail" aria-label="역 카드">'+(S.sel?stationCard(S.sel):'<div class="card"><p class="muted">역을 고르면 여기에 카드가 열려요.</p></div>')+'</aside>';}
 
 function render(){
@@ -645,11 +693,12 @@ function render(){
   ib.innerHTML='';
   chip();
   document.querySelectorAll('[data-nav]').forEach(function(b){b.setAttribute('aria-current',b.dataset.nav===S.view?'page':'false');});
-  var wide=window.matchMedia('(min-width:600px)').matches;
+  var wide=window.matchMedia(WIDE).matches;
   var m=document.getElementById('main');
   if(!wide && S.detailOpen && S.sel){m.innerHTML='<div class="col">'+stationCard(S.sel)+'</div>';}
   else m.innerHTML=({today:viewToday,diag:viewDiag,map:viewMap,print:viewPrint,record:viewRecord}[S.view]||viewToday)();
   m.classList.toggle('single',S.view==='record'||S.view==='print');
+  m.classList.toggle('wide-print',S.view==='print');
   save();trackView();
 }
 
@@ -658,7 +707,7 @@ document.addEventListener('click',function(e){
   var pr=e.target.closest('a[data-pr]'); if(pr){track('pr_open','pr_'+pr.dataset.pr);return;}
   var t=e.target.closest('button'); if(!t)return;
   if(t.dataset.nav){S.view=t.dataset.nav;S.detailOpen=false;if(S.view==='diag')S.diagStep=null;render();window.scrollTo(0,0);return;}
-  if(t.dataset.open){track('st_open','st_'+t.dataset.open);S.sel=t.dataset.open;S.detailOpen=true;if(S.view==='print'){S.view='map';}S.mapGrade=byId[S.sel].grade;render();if(!window.matchMedia('(min-width:600px)').matches)window.scrollTo(0,0);return;}
+  if(t.dataset.open){track('st_open','st_'+t.dataset.open);S.sel=t.dataset.open;S.detailOpen=true;if(S.view==='print'){S.view='map';}S.mapGrade=byId[S.sel].grade;render();if(!window.matchMedia(WIDE).matches)window.scrollTo(0,0);return;}
   if(t.dataset.grade){S.mapGrade=+t.dataset.grade;render();return;}
   if(t.dataset.pgrade){S.printGrade=+t.dataset.pgrade;render();return;}
   if(t.dataset.pkind){S.printKind=t.dataset.pkind;render();return;}
@@ -719,7 +768,7 @@ document.addEventListener('submit',function(e){
   if(g!==S.child.grade){S.diag={};S.diagStep=null;}
   S.child={nickname:n,grade:g};S.sample=false;S.mapGrade=g;S.view='today';if(cloudOn())cloudCall('saveChild',n,g);render();
 });
-window.matchMedia('(min-width:600px)').addEventListener('change',render);
+window.matchMedia(WIDE).addEventListener('change',render);
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',render);
 
 window.SUHAK={
