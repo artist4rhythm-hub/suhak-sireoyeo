@@ -458,9 +458,11 @@ function localState(){var keep={size:S.size,selftest:S.selftest};var v=load();v.
 function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function esc(t){return String(t==null?'':t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 
-// ---------- 이용권(시제품 미리보기) ----------
+// ---------- 이용권 ----------
+// 지금은 모든 자료를 열어 두고 내용을 채우는 단계. 판매를 시작할 때 ALL_OPEN을 false로 바꾸면 예전 맛보기·구독 구조가 돌아와요.
+var ALL_OPEN=true;
 function sampleStationOf(g){var gs=DATA.stations.filter(function(s){return s.grade===g;});var gate=gs.find(function(s){return s.gate;});return (gate||gs[0]).id;}
-function unlocked(st){return S.pass || st.id===sampleStationOf(st.grade);}
+function unlocked(st){return ALL_OPEN || S.pass || st.id===sampleStationOf(st.grade);}
 
 // ---------- 진단 ----------
 function gatesFor(grade){return DATA.gates.filter(function(g){return byId[g.station].grade<=grade;});}
@@ -720,7 +722,7 @@ function viewMap(){
   gs.forEach(function(s){var p=S.progress[s.id];
     if(SEMN(s.id)!==lastSem){lastSem=SEMN(s.id);h+='<div class="semhead">'+g+'학년 '+lastSem+'학기</div>';}
     h+='<button class="st" data-open="'+s.id+'" aria-selected="'+(S.sel===s.id)+'"><span class="no">'+s.id+'</span><span class="nm"><span class="dot" style="background:var('+LINE_VAR[s.lineKey]+')"></span>'+esc(s.name)+(s.gate?' <span class="pill gate">'+GATE_CH[s.gate-1]+'</span>':'')+'</span>'+
-      (p?'<span class="pill '+(p.s==='passed'?'pass':'stuck')+'">'+(p.s==='passed'?'통과':'막힘')+'</span>':(unlocked(s)&&!S.pass?'<span class="small muted">맛보기</span>':''))+'</button>';});
+      (p?'<span class="pill '+(p.s==='passed'?'pass':'stuck')+'">'+(p.s==='passed'?'통과':'막힘')+'</span>':(unlocked(s)&&!S.pass&&!ALL_OPEN?'<span class="small muted">맛보기</span>':''))+'</button>';});
   h+='</div></div>';
   return h+detailCol();
 }
@@ -780,6 +782,7 @@ function cloudCall(fn){if(window.Cloud&&window.Cloud[fn])return window.Cloud[fn]
 // ---------- 구독(앱 안 결제) ----------
 var PLAT={web:'웹',android:'안드로이드 앱',ios:'아이폰·패드 앱'};
 function purchaseCard(){
+  if(ALL_OPEN)return '';
   var p=S.platform||'web', store=p==='ios'?'App Store':'Google Play';
   var h='<section class="card"><h3>가족 연 구독</h3><p class="num big" style="margin:0">12,900원 <span class="small muted" style="font-family:var(--body)">/ 1년 · 아이 4명까지</span></p>'+
     '<p class="small">무료: 관문 진단 · 노선도 · 확인 질문 · 생각 문제 입구 · 학년별 맛보기 1역<br>구독: 69개 역의 생각 문제 가운데·도전 · 오개념 · 아이 최대 4명</p>'+
@@ -812,9 +815,7 @@ var SELF_TEST=[
   ['here','노선도의 ‘지금 여기’ 위치가 맞다'],
   ['map','지도에서 다른 학년 역 카드를 열어 본다'],
   ['mark','역 카드에서 통과·막힘을 누르면 기록에 쌓인다'],
-  ['ws','1-07·2-01·2-06 역 카드에서 무료 학습지가 열리고, PC에서 출력된다'],
-  ['lock','잠긴 칸을 보고 무료와 유료 차이를 알 수 있다'],
-  ['coupon','앱 구독(안드로이드·아이폰)과 웹 쿠폰 적용 뒤 잠금이 풀린다'],
+  ['ws','역 카드에서 학습지가 열리고, PC에서 출력된다'],
   ['font','제목(단정해)·본문(심플해)·손글씨(고운밤)이 잘 읽히고, 글자 크기 ‘크게’가 편하다'],
   ['pad','패드 가로 화면에서 두 칸 배치가 편하다'],
   ['dark','어두운 화면 모드에서도 잘 읽힌다'],
@@ -908,7 +909,7 @@ function viewPrint(){
   }
   return h+'</div>';
 }
-function wsLink(id){return WS[id]?'<div class="wsbox"><a class="btn" data-ws="'+(byId[id].gate||'')+'" href="'+WS[id]+'" target="_blank" rel="noopener">무료 학습지 열기 (PDF)</a><span class="small muted">A4 · 41문항 + 부모용 정답. PC에서 열면 바로 출력할 수 있어요.</span></div>':'';}
+function wsLink(id){return WS[id]?'<div class="wsbox"><a class="btn" data-ws="'+(byId[id].gate||'')+'" href="'+WS[id]+'" target="_blank" rel="noopener">학습지 열기 (PDF)</a><span class="small muted">A4 · 41문항 + 부모용 정답. PC에서 열면 바로 출력할 수 있어요.</span></div>':'';}
 function stationCard(id){
   var s=byId[id]; if(!s)return '';
   var p=S.progress[id], open=unlocked(s);
@@ -965,7 +966,7 @@ var SITE_DEFAULT={
   story:'저는 수학을 잘하던 사람이 아닙니다. 고졸 아빠예요.\n\n첫째는 저학년 때 어느 수가 더 큰지 가늠하는 감각이 자리 잡기까지 오래 걸렸습니다. 둘째는 수 감각은 있는데, 오래 붙잡고 생각해야 하는 계산 앞에서는 몸부터 들썩였지요. 그리고 둘 다 같은 말을 했습니다.\n\n“아빠, 수학하기 시러여!”\n\n문제집을 한 권 더 푼다고 달라지지 않았습니다. 필요한 건 빨리 푸는 요령이 아니라, 아이가 지금 어느 역에서 멈춰 섰는지 아는 일이었어요. 그래서 초등 6년 수학을 하나의 노선도로 펼쳐 놓고, 막힌 역으로 돌아가 손으로 만지고 말로 설명하게 했습니다.\n\n이 앱은 그 길을 정리한 길안내입니다. 수학 전문가가 아니어도, 부모가 아이 옆에서 같이 걸을 수 있도록요.',
   sign:'— 두 아이의 아빠, 현우',
   who:'홈스쿨·대안학교처럼 다른 길을 택했지만, 수학적 사고력은 놓치고 싶지 않은 부모님\n빠른 문제 풀이에 지쳐 “수학 싫어”가 입에 붙은 아이를 둔 부모님\n우리 아이가 어디서 막혔는지, 어디로 돌아가야 하는지 알고 싶은 부모님',
-  note:'부모님이 가입하고 쓰는 앱이에요. 아이 정보는 별명과 학년만 받아요. · 지금은 무료 베타예요.',
+  note:'부모님이 가입하고 쓰는 앱이에요. 아이 정보는 별명과 학년만 받아요. · 지금은 모든 자료가 열려 있어요.',
   notice:''
 };
 var SITE_KEY='suhak-site-v1', SITE={};
