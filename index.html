@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#2E6B45">
+<meta name="theme-color" content="#FFFBEA">
+<meta name="color-scheme" content="light">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="수학시러여">
 <title>수학하기 시러여!</title>
@@ -400,7 +401,8 @@ main{gap:28px}
 
 /* ================= 아침 햇살 (밝은 홈) ================= */
 :root:not([data-theme="dark"]){--paper:#FFFFFF;--card:#FFFFFF;--grid:#F1EEE4;--ink:#24302A;--muted:#66716B;--green:#2E7D4F;--soft:#EAF6EE;--edge:#E6E1D3;--hl:#FFE68A;--sun:#FFD66B;--sunbg:#FFFBEA;--sky:#F2F9FF;--skyink:#2F6FA8;--warm:#FFF7F0}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--sun:#8A6A10;--sunbg:#1F2218;--sky:#18222D;--skyink:#8DBFEB;--warm:#241C16}}
+/* 아침 햇살은 늘 밝게: 기기가 다크 모드여도 밝은 색을 씀(섞이면 글자가 안 보임) */
+@media (prefers-color-scheme: dark){:root:not([data-theme="dark"]){--paper:#FFFFFF;--card:#FFFFFF;--grid:#F1EEE4;--ink:#24302A;--muted:#66716B;--green:#2E7D4F;--soft:#EAF6EE;--edge:#E6E1D3;--red:#C9392F;--hl:#FFE68A;--on-green:#FFFFFF;--l-number:#2E6B45;--l-relation:#C9392F;--l-shape:#3A6EA5;--l-data:#A8730E;--sun:#FFD66B;--sunbg:#FFFBEA;--sky:#F2F9FF;--skyink:#2F6FA8;--warm:#FFF7F0;color-scheme:light}}
 body{background:var(--paper);background-image:linear-gradient(180deg,var(--sunbg) 0,var(--paper) 360px)!important;background-size:auto!important}
 .top{background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--edge)!important;display:flex;align-items:center;gap:20px}
 .card{border:1px solid var(--edge)!important;border-radius:22px!important;box-shadow:0 4px 18px rgba(80,70,20,.06)!important}
@@ -808,7 +810,7 @@ function viewMap(){
 function viewRecord(){
   var rows=Object.keys(S.progress).sort().map(function(id){var p=S.progress[id],s=byId[id];
     return '<tr><td>'+id+'</td><td>'+esc(s.name)+'</td><td><span class="pill '+(p.s==='passed'?'pass':'stuck')+'">'+(p.s==='passed'?'통과':'막힘')+'</span></td><td class="muted">'+p.at+'</td></tr>';}).join('');
-  var h='<div class="col">'+accountCard()+selfTestCard()+'<section class="card"><h3>'+esc(S.child.nickname)+'의 기록</h3>'+(rows?'<div style="overflow-x:auto"><table class="rec"><thead><tr><th>역</th><th>이름</th><th>상태</th><th>날짜</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p class="muted">아직 기록이 없어요. 역 카드에서 ‘통과’나 ‘막힘’을 누르면 여기에 쌓여요.</p>')+'</section>'+
+  var h='<div class="col">'+accountCard()+(/[?&]qa=1/.test(location.search)?selfTestCard():'')+'<section class="card"><h3>'+esc(S.child.nickname)+'의 기록</h3>'+(rows?'<div style="overflow-x:auto"><table class="rec"><thead><tr><th>역</th><th>이름</th><th>상태</th><th>날짜</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p class="muted">아직 기록이 없어요. 역 카드에서 ‘통과’나 ‘막힘’을 누르면 여기에 쌓여요.</p>')+'</section>'+
     '<section class="card"><h3>아이 프로필</h3><p class="small muted">별명과 학년만 저장해요. 실명·생년월일·사진은 받지 않아요.</p>'+
     '<form id="profile" class="row" style="align-items:end"><label class="field" for="nick">별명<input id="nick" maxlength="12" required value="'+esc(S.child.nickname)+'"></label>'+
     '<label class="field" for="grade">학년<select id="grade">'+[1,2,3,4,5,6].map(function(i){return '<option value="'+i+'"'+(i===S.child.grade?' selected':'')+'>'+i+'학년</option>';}).join('')+'</select></label><button class="btn" type="submit">저장</button></form></section>'+
