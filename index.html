@@ -403,7 +403,8 @@ main{gap:28px}
 :root:not([data-theme="dark"]){--paper:#FFFFFF;--card:#FFFFFF;--grid:#F1EEE4;--ink:#24302A;--muted:#66716B;--green:#2E7D4F;--soft:#EAF6EE;--edge:#E6E1D3;--hl:#FFE68A;--sun:#FFD66B;--sunbg:#FFFBEA;--sky:#F2F9FF;--skyink:#2F6FA8;--warm:#FFF7F0}
 /* 아침 햇살은 늘 밝게: 기기가 다크 모드여도 밝은 색을 씀(섞이면 글자가 안 보임) */
 @media (prefers-color-scheme: dark){:root:not([data-theme="dark"]){--paper:#FFFFFF;--card:#FFFFFF;--grid:#F1EEE4;--ink:#24302A;--muted:#66716B;--green:#2E7D4F;--soft:#EAF6EE;--edge:#E6E1D3;--red:#C9392F;--hl:#FFE68A;--on-green:#FFFFFF;--l-number:#2E6B45;--l-relation:#C9392F;--l-shape:#3A6EA5;--l-data:#A8730E;--sun:#FFD66B;--sunbg:#FFFBEA;--sky:#F2F9FF;--skyink:#2F6FA8;--warm:#FFF7F0;color-scheme:light}}
-body{background:var(--paper);background-image:linear-gradient(180deg,var(--sunbg) 0,var(--paper) 360px)!important;background-size:auto!important}
+html{background:var(--paper)}
+body{background:var(--paper);background-image:linear-gradient(180deg,var(--sunbg) 0,var(--paper) 360px)!important;background-size:100% 360px!important;background-repeat:no-repeat!important}
 .top{background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--edge)!important;display:flex;align-items:center;gap:20px}
 .card{border:1px solid var(--edge)!important;border-radius:22px!important;box-shadow:0 4px 18px rgba(80,70,20,.06)!important}
 .topnav{display:none;gap:4px}
@@ -450,6 +451,34 @@ body{background:var(--paper);background-image:linear-gradient(180deg,var(--sunbg
 .side-warm{background:var(--warm)}.side-warm ol{margin:8px 0 0;padding-left:20px;line-height:2}.side-warm small{color:#A0662E;margin-left:4px}
 .side-plain{background:var(--card);border:1px solid var(--edge)}
 .side-sky .btn,.side-plain .btn{margin-top:12px}
+/* ---- 리뉴얼: 노선·출력·소개 ---- */
+.map-head{display:flex;align-items:center;gap:16px;background:linear-gradient(120deg,#FFF6D6,#EEF7FF);border-radius:24px;padding:16px 22px;margin-top:12px}
+.map-head .mh-m{width:72px;height:auto;position:static!important;transform:none!important;flex:none;margin:0!important}
+.map-head h1{font-size:1.5rem;margin:2px 0 0}.map-head p.small{margin:4px 0 0;color:var(--muted)}
+.map-sem{background:var(--card);border:1px solid var(--edge);border-radius:22px;padding:18px 20px;margin-top:14px}
+.ms-h{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-bottom:6px}.ms-h h2{font-size:1.2rem;margin:0}.ms-h .btn{margin-left:auto}
+.ms-list{list-style:none;margin:0;padding:0}
+.ms-row{width:100%;display:flex;align-items:center;gap:12px;background:none;border:0;border-top:1px solid var(--edge);padding:12px 6px;font:inherit;color:inherit;text-align:left;cursor:pointer;border-radius:0;min-height:48px}
+.ms-row:hover,.ms-row[aria-selected="true"]{background:#FFFBEA}
+.ms-no{font-family:"Num",var(--title);color:var(--muted);min-width:40px;font-size:.875rem}
+.ms-nm{flex:1;display:flex;align-items:center;gap:8px;flex-wrap:wrap}.ms-nm small{color:var(--muted);font-size:.75rem}
+.ms-go{color:var(--muted);font-size:1.3rem}
+.pv-block{background:var(--card);border:1px solid var(--edge);border-radius:22px;padding:18px 20px;margin-top:14px}
+.pv-block h2{font-size:1.15rem;display:flex;align-items:center;gap:10px;margin:0 0 6px}
+.pv-block>p{margin:0}
+.pv-n{display:inline-flex;width:26px;height:26px;border-radius:50%;background:#FFD66B;color:#5A4300;align-items:center;justify-content:center;font-family:"Num",var(--title);font-size:.85rem;flex:none}
+.pv-bh{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}.pv-bh h2{margin:0}
+.pv-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pv-chip{border:1.5px solid var(--edge);border-radius:999px;padding:9px 16px;text-decoration:none;color:var(--ink);font-size:.875rem;background:var(--card);min-height:44px;box-sizing:border-box;display:inline-flex;align-items:center}
+.pv-chip.main{background:var(--green);border-color:var(--green);color:#fff}
+.pv-units{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:14px;margin-top:12px}
+.pv-unit{border:1px solid var(--edge);border-radius:18px;padding:14px 16px;background:#FFFEFA;min-width:0}
+.pv-unit h3{font-size:1rem;display:flex;align-items:center;gap:8px;margin:0 0 4px}
+.hero-art{background:linear-gradient(160deg,#FFF3C4 0,#FFFBEA 45%,#E8F4FF 100%)!important;position:relative;overflow:hidden;align-content:center!important;padding-top:0!important}
+.hero-art .hero-m{position:absolute;right:5%;bottom:6%;width:26%;height:auto;max-width:190px}
+.hero-art .brandmark{margin-right:24%!important}
+.field input,.field select,.field textarea{max-width:100%;box-sizing:border-box}
+.rec td:first-child,.rec td:last-child{white-space:nowrap}
 </style>
 
 </head>
@@ -484,7 +513,7 @@ body{background:var(--paper);background-image:linear-gradient(180deg,var(--sunbg
   <nav class="bottom" aria-label="메뉴">
     <button class="navbtn" data-nav="today"><b>오늘</b>홈</button>
     <button class="navbtn" data-nav="diag" data-dmode="sem"><b>점검</b>학기</button>
-    <button class="navbtn" data-nav="map"><b>노선</b>69개 역</button>
+    <button class="navbtn" data-nav="map"><b>노선</b>단원</button>
     <button class="navbtn" data-nav="print"><b>출력</b>학습지</button>
     <button class="navbtn" data-nav="record"><b>기록</b>성장</button>
   </nav>
@@ -606,8 +635,8 @@ function viewToday(){
   } else {
     h+='<section class="side-sky"><p class="lab">학기 점검이란?</p><p>학교 진도에 맞춰 이번 학기 단원을 역처럼 돌아보고, <b>몇 학년 몇 학기</b>로 돌아가 채울지 알려 줘요.</p><button class="btn sky" data-nav="diag" data-dmode="sem">점검지 보기</button></section>';
   }
-  var gs=DATA.stations.filter(function(x){return x.grade===g;}), gp2=gs.filter(function(x){return S.progress[x.id]&&S.progress[x.id].s==='passed';}).length;
-  h+='<section class="side-plain"><p class="lab">'+g+'학년 역 진행</p><p class="num" style="margin:0;font-size:1.5rem">'+gp2+' / '+gs.length+'</p><div class="progress" aria-hidden="true"><i style="width:'+(gs.length?gp2/gs.length*100:0)+'%"></i></div><button class="btn ghost" data-nav="map" style="margin-top:10px">노선 전체 보기</button></section>';
+  var semSt=d?d.items.filter(function(x){return !r.skip[x.uid];}).length:0, good=J.filter(function(j){return j.st==='filled'||j.st==='ok';}).length;
+  h+='<section class="side-plain"><p class="lab">'+g+'학년 '+sm+'학기 정류장</p><p class="num" style="margin:0;font-size:1.5rem">'+(hasRun?good+' / '+semSt:(semSt?semSt+'개':'—'))+'</p>'+(hasRun?'<div class="progress" aria-hidden="true"><i style="width:'+(semSt?good/semSt*100:0)+'%"></i></div><p class="small muted" style="margin:6px 0 0">튼튼한 정류장 / 이번 학기 점검 정류장</p>':'<p class="small muted" style="margin:6px 0 0">학기 점검을 하면 튼튼한 정류장과 채울 정류장이 나뉘어요.</p>')+'<button class="btn ghost" data-nav="map" style="margin-top:10px">노선 전체 보기</button></section>';
   h+='</aside></div></div>';
   return h+detailCol();
 }
@@ -794,27 +823,42 @@ function gStrip(g,title,sub){return '<div class="gstrip" style="background-image
 function viewMap(){
   var g=S.mapGrade||S.child.grade;
   var lead=DATA.gradeLeads[String(g)]||'';
-  var h='<div class="col"><div class="tabs" role="group" aria-label="학년">';
-  for(var i=1;i<=6;i++)h+='<button class="tab" aria-pressed="'+(i===g)+'" data-grade="'+i+'">'+i+'학년</button>';
-  var gs=DATA.stations.filter(function(s){return s.grade===g;}), n1=gs.filter(function(s){return SEMN(s.id)===1;}).length;
-  h+='</div>'+gStrip(g,g+'학년 노선','1학기 '+n1+'역 · 2학기 '+(gs.length-n1)+'역')+'<p class="small">'+esc(lead)+'</p><div class="list">';
-  var lastSem=0;
-  gs.forEach(function(s){var p=S.progress[s.id];
-    if(SEMN(s.id)!==lastSem){lastSem=SEMN(s.id);h+='<div class="semhead">'+g+'학년 '+lastSem+'학기</div>';}
-    h+='<button class="st" data-open="'+s.id+'" aria-selected="'+(S.sel===s.id)+'"><span class="no">'+s.id+'</span><span class="nm"><span class="dot" style="background:var('+LINE_VAR[s.lineKey]+')"></span>'+esc(s.name)+(s.gate?' <span class="pill gate">'+GATE_CH[s.gate-1]+'</span>':'')+'</span>'+
-      (p?'<span class="pill '+(p.s==='passed'?'pass':'stuck')+'">'+(p.s==='passed'?'통과':'막힘')+'</span>':(unlocked(s)&&!S.pass&&!ALL_OPEN?'<span class="small muted">맛보기</span>':''))+'</button>';});
-  h+='</div></div>';
+  var h='<div class="col"><div class="seg" role="group" aria-label="학년">';
+  for(var i=1;i<=6;i++)h+='<button class="seg-b" aria-pressed="'+(i===g)+'" data-grade="'+i+'">'+i+'학년</button>';
+  var gs=DATA.stations.filter(function(s){return s.grade===g;});
+  h+='</div><section class="map-head">'+MASCOT('wave','mh-m')+'<div><p class="lab">노선 · '+g+'학년</p><h1>'+g+'학년 1학기 · 2학기 단원</h1><p class="small">'+esc(lead)+'</p></div></section>';
+  [1,2].forEach(function(sm){
+    var list=gs.filter(function(s){return SEMN(s.id)===sm;}); if(!list.length)return;
+    var d=semData(g,sm), r=semFix(semRes()[g+'-'+sm]), hasRun=['A','C','B'].some(function(v){return r.runs[v].done;});
+    var J=(d&&hasRun)?semJudge(d,r):[];
+    h+='<section class="map-sem"><div class="ms-h"><h2>'+g+'학년 '+sm+'학기</h2><span class="small muted">단원 '+list.length+'개'+(hasRun?' · 학기 점검 결과 반영':'')+'</span><button class="btn ghost" data-nav="diag" data-dmode="sem" data-semg="'+g+'" data-sems="'+sm+'">이 학기 점검</button></div><ol class="ms-list">';
+    list.forEach(function(st){
+      var nSt=CAT?CAT.items.filter(function(x){return x.kind==='ga'&&(x.stations||[]).indexOf(st.id)>=0;}).length:0;
+      var mine=J.filter(function(j){return j.x.uid===st.id;}), gap=mine.filter(function(j){return j.st==='sure'||j.st==='gap'||j.st==='shaky';}).length;
+      var p=S.progress[st.id];
+      var tag=hasRun&&mine.length?(gap?'<span class="pill stuck">채울 정류장 '+gap+'</span>':'<span class="pill pass">튼튼해요</span>'):(p?'<span class="pill '+(p.s==='passed'?'pass':'stuck')+'">'+(p.s==='passed'?'통과':'막힘')+'</span>':'');
+      h+='<li><button class="ms-row" data-open="'+st.id+'" aria-selected="'+(S.sel===st.id)+'"><span class="ms-no">'+st.id+'</span><span class="ms-nm"><span class="dot" style="background:var('+LINE_VAR[st.lineKey]+')"></span>'+esc(st.name)+(nSt?'<small>정류장 '+nSt+'개</small>':'')+'</span>'+tag+'<span class="ms-go" aria-hidden="true">›</span></button></li>';});
+    h+='</ol></section>';});
+  h+='</div>';
   return h+detailCol();
 }
 
+function semHistoryCard(){
+  var R=semRes(), rows='';
+  Object.keys(R).sort().forEach(function(k){var r=semFix(R[k]); if(!['A','C','B'].some(function(v){return r.runs[v].done;}))return;
+    var gg=+k.split('-')[0], ss=+k.split('-')[1], d=semData(gg,ss);
+    var cell=function(v){if(!r.runs[v].done)return '<td class="muted">—</td>';if(!d)return '<td>✓</td>';var act=d.items.filter(function(x){return !r.skip[x.uid];});var sc=act.length?Math.round(act.filter(function(x){return !r.runs[v].wrong[x.n];}).length*100/act.length):0;return '<td><b class="num">'+sc+'</b>점'+(r.runs[v].at?'<br><small class="muted">'+esc(r.runs[v].at)+'</small>':'')+'</td>';};
+    rows+='<tr><td>'+gg+'학년 '+ss+'학기</td>'+cell('A')+cell('C')+cell('B')+'<td><button class="btn ghost" data-nav="diag" data-dmode="sem" data-semg="'+gg+'" data-sems="'+ss+'">보기</button></td></tr>';});
+  return '<section class="card"><h3>'+esc(S.child.nickname)+'의 학기 점검 기록</h3>'+(rows?'<div style="overflow-x:auto"><table class="rec"><thead><tr><th>학기</th><th>A안</th><th>C안</th><th>B안</th><th></th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p class="muted">아직 학기 점검 기록이 없어요. 학기 점검에서 틀린 번호를 넣으면 여기에 점수가 쌓여요.</p><button class="btn" data-nav="diag" data-dmode="sem">학기 점검 하러 가기</button>')+'</section>';
+}
 function viewRecord(){
   var rows=Object.keys(S.progress).sort().map(function(id){var p=S.progress[id],s=byId[id];
     return '<tr><td>'+id+'</td><td>'+esc(s.name)+'</td><td><span class="pill '+(p.s==='passed'?'pass':'stuck')+'">'+(p.s==='passed'?'통과':'막힘')+'</span></td><td class="muted">'+p.at+'</td></tr>';}).join('');
-  var h='<div class="col">'+accountCard()+(/[?&]qa=1/.test(location.search)?selfTestCard():'')+'<section class="card"><h3>'+esc(S.child.nickname)+'의 기록</h3>'+(rows?'<div style="overflow-x:auto"><table class="rec"><thead><tr><th>역</th><th>이름</th><th>상태</th><th>날짜</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p class="muted">아직 기록이 없어요. 역 카드에서 ‘통과’나 ‘막힘’을 누르면 여기에 쌓여요.</p>')+'</section>'+
+  var h='<div class="col">'+semHistoryCard()+'<section class="card"><h3>단원 카드 기록</h3>'+(rows?'<div style="overflow-x:auto"><table class="rec"><thead><tr><th>단원</th><th>이름</th><th>상태</th><th>날짜</th></tr></thead><tbody>'+rows+'</tbody></table></div>':'<p class="muted">아직 기록이 없어요. 단원 카드에서 ‘통과’나 ‘막힘’을 누르면 여기에 쌓여요.</p>')+'</section>'+
     '<section class="card"><h3>아이 프로필</h3><p class="small muted">별명과 학년만 저장해요. 실명·생년월일·사진은 받지 않아요.</p>'+
     '<form id="profile" class="row" style="align-items:end"><label class="field" for="nick">별명<input id="nick" maxlength="12" required value="'+esc(S.child.nickname)+'"></label>'+
     '<label class="field" for="grade">학년<select id="grade">'+[1,2,3,4,5,6].map(function(i){return '<option value="'+i+'"'+(i===S.child.grade?' selected':'')+'>'+i+'학년</option>';}).join('')+'</select></label><button class="btn" type="submit">저장</button></form></section>'+
-    feedbackCard()+sizeCard()+purchaseCard()+
+    accountCard()+(/[?&]qa=1/.test(location.search)?selfTestCard():'')+feedbackCard()+sizeCard()+purchaseCard()+
     (cloudOn()?'':'<section class="card"><button class="btn ghost" data-act="reset">예시 데이터로 되돌리기</button><p class="notice">로그인하지 않으면 기록은 이 기기의 브라우저에만 남아요.</p></section>')+'</div>';
   return h;
 }
@@ -945,50 +989,34 @@ function stationPrints(id){
 }
 function viewPrint(){
   if(!CAT)return '<div class="col"><div class="card"><p>출력물 목록을 불러오는 중이에요…</p></div></div>';
-  var g=S.printGrade||S.child.grade, k=S.printKind||'dowumji', set=S.printSet||'ga';
+  var g=S.printGrade||S.child.grade, sm=S.printSem||((S.semG===g&&S.semS)?S.semS:semNow()), set=S.printSet||'ga';
   var SETN={ga:'(가) 기본편',na:'(나) 다지기편',da:'(다) 생각편'};
-  var h='<div class="col pv"><header class="pv-head"><p class="eyebrow">출력하기</p><h1 class="pv-title">'+g+'학년 출력물</h1>'+
-    '<p class="pv-lead">A4 흑백으로 출력해요. 항목마다 몇 학년 몇 학기 과정인지 적혀 있어요(2022 개정 교과서 단원 기준).</p>'+
+  var h='<div class="col pv"><header class="pv-head"><p class="lab">출력 · A4 흑백 · 실제 크기(100%)</p><h1 class="pv-title">'+g+'학년 '+sm+'학기 출력물</h1>'+
     '<div class="pv-ctl"><div class="seg" role="group" aria-label="학년">';
   for(var i=1;i<=6;i++)h+='<button class="seg-b" aria-pressed="'+(i===g)+'" data-pgrade="'+i+'">'+i+'학년</button>';
-  h+='</div><div class="seg" role="group" aria-label="종류">'+[['dowumji','정류장 도움지'],['test','점검 시험지'],['book','문제집']].map(function(x){return '<button class="seg-b" aria-pressed="'+(x[0]===k)+'" data-pkind="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div>';
-  if(k==='dowumji')h+='<div class="seg seg-set" role="group" aria-label="편">'+['ga','na','da'].map(function(s){return '<button class="seg-b" aria-pressed="'+(s===set)+'" data-pset="'+s+'"><span class="km k-'+s+'">'+{ga:'가',na:'나',da:'다'}[s]+'</span> '+SETN[s].slice(4)+'</button>';}).join('')+'</div>';
-  h+='</div></header>';
-  var its=CAT.items.filter(function(x){return x.grade===g;});
-  if(k==='dowumji'){
-    var mods=[];its.filter(function(x){return x.group==='dowumji';}).forEach(function(x){if(mods.indexOf(x.mod)<0)mods.push(x.mod);});
-    h+='<p class="pv-order">쓰는 순서 &nbsp; 부모님 안내서 → 확인지 A로 출발 정류장 찾기 → 정류장마다 (가)·(나)·(다) → 확인지 B</p><div class="pr-grid">';
-    mods.forEach(function(m){var a=its.filter(function(x){return x.mod===m;}), area=a[0].area, open=S.prOpen&&S.prOpen[m];
-      var nos=[];a.forEach(function(x){if(x.st&&nos.indexOf(x.st)<0)nos.push(x.st);});
-      h+='<section class="pv-area"><div class="pv-ah"><h2>'+esc(area)+'</h2><span class="pv-sem">'+esc(semShort(a[0].sem))+'</span><span class="pv-cnt">정류장 '+nos.length+'개</span></div>'+
-        '<p class="pv-common">함께 쓰는 자료 &nbsp;'+a.filter(function(x){return !x.st;}).map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc(KIND_LABEL[x.kind]||x.title)+'</a>';}).join('<span class="sep">·</span>')+'</p><ol class="pv-list">';
-      nos.forEach(function(n,idx){var f=a.filter(function(x){return x.st===n&&x.kind===set;})[0]; if(!f)return;
-        var hide=!open&&nos.length>6&&idx>=5;
-        h+='<li class="pv-row"'+(hide?' hidden':'')+'><span class="pv-no">'+(n<10?'0'+n:n)+'</span><span class="pv-nm">'+esc(f.st_title)+'<small>'+esc(semShort(f.sem))+'</small></span>'+
-          '<a class="pv-go" data-pr="'+esc(f.kind)+'" href="'+esc(f.file)+'" target="_blank" rel="noopener" aria-label="정류장 '+n+' '+esc(f.st_title)+' '+SETN[set]+' 출력">출력 <span class="num">'+f.pages+'</span>쪽</a></li>';});
-      h+='</ol>'+(nos.length>6&&!open?'<button class="pv-more" data-propen="'+m+'">정류장 '+(nos.length-5)+'개 더 보기</button>':'')+'</section>';});
-    h+='</div>';
-  } else if(k==='test'){
-    var t=its.filter(function(x){return x.group==='test';});
-    h+='<section class="pv-area"><div class="pv-ah"><h2>수학 한 바퀴 (점검 시험)</h2><span class="pv-sem">'+g+'학년 1·2학기 전체</span></div>'+
-      '<p class="pv-common">A안으로 먼저 보고 결과 기록지에 채점해요. 도움지를 마친 뒤 B안으로 다시 봐요.</p><ol class="pv-list">'+
-      t.map(function(x){return '<li class="pv-row"><span class="pv-nm">'+esc(KIND_LABEL[x.kind]||x.title)+'</span><a class="pv-go" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">출력 <span class="num">'+x.pages+'</span>쪽</a></li>';}).join('')+'</ol></section>';
-    [1,2].forEach(function(ss){var dd=semData(g,ss);if(!dd)return;var b='worksheets/sem/g'+g+'-'+ss+'-';
-      h+='<section class="pv-area"><div class="pv-ah"><h2>학기 점검 승차권</h2><span class="pv-sem">'+g+'학년 '+ss+'학기</span><span class="pv-cnt">'+dd.n+'문제</span></div>'+
-        '<p class="pv-common">A안을 풀고 틀린 번호를 <button class="pill pass" data-nav="diag" data-dmode="sem">진단 → 학기 점검</button>에 넣으면 채울 정류장을 알려 줘요.</p><ol class="pv-list">'+
-        [['A','A안 (처음)'],['C','C안 (다른 모양 문제)'],['B','B안 (다 채운 뒤)'],['key','정답·처방표 (부모님용)'],['sol','해설집 (아이와 함께)'],['report','이해도 기록표 (손 채점용)']].map(function(x){return '<li class="pv-row"><span class="pv-nm">'+x[1]+'</span><a class="pv-go" data-pr="sem-'+x[0]+'" href="'+b+x[0]+'.pdf" target="_blank" rel="noopener">출력</a></li>';}).join('')+'</ol></section>';});
-  } else {
-    var b=CAT.items.filter(function(x){return x.group==='book'&&x.kind==='book';});
-    if(!b.length)h+='<p class="muted">아직 없어요.</p>';
-    h+='<section class="pv-area"><ol class="pv-list">';
-    b.sort(function(x,y){return (x.grade===g?0:1)-(y.grade===g?0:1)||x.grade-y.grade;}).forEach(function(x){
-      var ex=CAT.items.filter(function(y){return y.parent&&x.file.indexOf('/'+y.parent+'.')>0;});
-      h+='<li class="pv-row"><span class="pv-no">'+x.grade+'학년</span><span class="pv-nm">'+esc(x.title)+'<small>'+esc(semShort(x.sem))+(ex.length?' · '+ex.map(function(y){return '<a class="pv-link" data-pr="book-extra" href="'+esc(y.file)+'" target="_blank" rel="noopener">'+esc(y.title.split(' · ').pop())+'</a>';}).join(' · '):'')+'</small></span>'+
-        '<a class="pv-go" data-pr="book" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+(x.file.slice(-4)==='.zip'?'내려받기':'열기 <span class="num">'+x.pages+'</span>쪽')+'</a></li>';});
-    h+='</ol></section>';
-  }
+  h+='</div><div class="seg" role="group" aria-label="학기">'+[1,2].map(function(x){return '<button class="seg-b" aria-pressed="'+(x===sm)+'" data-psem="'+x+'">'+x+'학기</button>';}).join('')+'</div></div></header>';
+  var dd=semData(g,sm), b='worksheets/sem/g'+g+'-'+sm+'-';
+  h+='<section class="pv-block"><h2><span class="pv-n">1</span>학기 점검지</h2><p class="small muted">처음엔 A안, 하루 이틀 뒤 C안, 정류장을 다 채운 뒤 B안. 틀린 번호는 학기 점검 화면에 넣어요.</p><div class="pv-chips">'+
+    [['A','A안 · 처음'],['C','C안 · 다른 모양'],['B','B안 · 다 채운 뒤'],['key','정답·처방표'],['sol','해설집'],['report','이해도 기록표']].map(function(x){return '<a class="pv-chip'+(x[0]==='A'?' main':'')+'" data-pr="sem-'+x[0]+'" href="'+b+x[0]+'.pdf" target="_blank" rel="noopener">'+x[1]+'</a>';}).join('')+
+    '</div>'+(dd?'<p class="small muted" style="margin:8px 0 0">'+dd.n+'문제 · 단원 '+dd.units.length+'개</p>':'')+'</section>';
+  var units=DATA.stations.filter(function(s){return s.grade===g&&SEMN(s.id)===sm;});
+  h+='<section class="pv-block"><div class="pv-bh"><h2><span class="pv-n">2</span>정류장 학습지</h2><div class="seg seg-set" role="group" aria-label="편">'+['ga','na','da'].map(function(k){return '<button class="seg-b" aria-pressed="'+(k===set)+'" data-pset="'+k+'"><span class="km k-'+k+'">'+{ga:'가',na:'나',da:'다'}[k]+'</span> '+SETN[k].slice(4)+'</button>';}).join('')+'</div></div>'+
+    '<p class="small muted">단원마다 정류장 순서대로 풀어요. (가) 기본 → (나) 다지기 → (다) 생각.</p><div class="pv-units">';
+  units.forEach(function(u){
+    var its=CAT.items.filter(function(x){return x.kind===set&&(x.stations||[]).indexOf(u.id)>=0;}).sort(function(x,y){return x.mod<y.mod?-1:x.mod>y.mod?1:x.st-y.st;});
+    var mods=[];its.forEach(function(x){if(mods.indexOf(x.mod)<0)mods.push(x.mod);});
+    var common=CAT.items.filter(function(x){return mods.indexOf(x.mod)>=0&&!x.st&&x.group==='dowumji';});
+    h+='<article class="pv-unit"><h3><span class="ms-no">'+u.id+'</span>'+esc(u.name)+'</h3><ol class="pv-list">'+(its.length?its.map(function(f){
+      return '<li class="pv-row"><span class="pv-no">'+(f.st<10?'0'+f.st:f.st)+'</span><span class="pv-nm">'+esc(f.st_title)+'</span><a class="pv-go" data-pr="'+esc(f.kind)+'" href="'+esc(f.file)+'" target="_blank" rel="noopener" aria-label="'+esc(f.st_title)+' '+SETN[set]+' 출력">출력 <span class="num">'+f.pages+'</span>쪽</a></li>';}).join(''):'<li class="small muted">학습지 준비 중이에요</li>')+'</ol>'+
+      (common.length?'<p class="pv-common">'+common.map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc(KIND_LABEL[x.kind]||x.title)+'</a>';}).join('<span class="sep">·</span>')+'</p>':'')+'</article>';});
+  h+='</div></section>';
+  var t=CAT.items.filter(function(x){return x.grade===g&&x.group==='test';}), bk=CAT.items.filter(function(x){return x.group==='book'&&x.kind==='book'&&x.grade===g;});
+  if(t.length||bk.length){h+='<section class="pv-block"><h2><span class="pv-n">3</span>그 밖의 자료</h2><ol class="pv-list">'+
+    t.map(function(x){return '<li class="pv-row"><span class="pv-nm">수학 한 바퀴 · '+esc(KIND_LABEL[x.kind]||x.title)+'<small>'+g+'학년 1년 전체</small></span><a class="pv-go" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">출력 <span class="num">'+x.pages+'</span>쪽</a></li>';}).join('')+
+    bk.map(function(x){return '<li class="pv-row"><span class="pv-nm">문제집 · '+esc(x.title)+'<small>'+esc(semShort(x.sem))+'</small></span><a class="pv-go" data-pr="book" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+(x.file.slice(-4)==='.zip'?'내려받기':'열기 <span class="num">'+x.pages+'</span>쪽')+'</a></li>';}).join('')+'</ol></section>';}
   return h+'</div>';
 }
+
 function wsLink(id){return WS[id]?'<div class="wsbox"><a class="btn" data-ws="'+(byId[id].gate||'')+'" href="'+WS[id]+'" target="_blank" rel="noopener">학습지 열기 (PDF)</a><span class="small muted">A4 · 41문항 + 부모용 정답. PC에서 열면 바로 출력할 수 있어요.</span></div>':'';}
 function stationCard(id){
   var s=byId[id]; if(!s)return '';
@@ -1039,10 +1067,10 @@ function trackView(){var v=introOpen?'intro':S.view;if(v!==lastView){lastView=v;
 // 시작 화면 글: 아래는 기본값. 관리자 화면(admin.html)에서 고치면 그 글이 우선합니다.
 var SITE_DEFAULT={
   sub:'빨리 푸는 수학 말고, 고민하고 깊게 생각하는 수학',
-  lead:'초등 6년 수학을 지하철 노선도처럼 펼쳐 놓고, 우리 아이가 막힌 역을 찾아 함께 다시 걷는 **부모용 길안내 앱**이에요.',
-  step1t:'관문 진단', step1:'질문 5개, 10분이면 돼요. 정답보다 아이가 **어떻게 설명하는지**를 들어요.',
-  step2t:'노선도', step2:'초등 수학 {역수}개 역을 네 노선으로 이었어요. 막힌 역과, 그 앞에서 돌아갈 역이 보여요.',
-  step3t:'역 카드', step3:'확인 질문, 생각 문제(입구·가운데·도전), 흔한 오개념, 출력용 학습지까지 한 장에 담았어요.',
+  lead:'학교 진도(학년·학기)에 맞춰 점검하고, 비어 있는 정류장을 찾아 **몇 학년 몇 학기**로 돌아가 함께 채우는 **부모용 길안내 앱**이에요.',
+  step1t:'학기 점검', step1:'학교 진도에 맞춘 점검지 한 장(약 30분)으로 이번 학기 **어느 정류장이 비었는지** 찾아요.',
+  step2t:'빈 정류장 채우기', step2:'비어 있는 정류장의 학습지를 하루 한 장씩. 필요하면 **몇 학년 몇 학기**로 돌아가 기초부터 함께 채워요.',
+  step3t:'다시 점검', step3:'다 채우면 B안으로 다시 점검해요. 분석 보고서의 원형 그래프로 **얼마나 자랐는지** 한눈에 봐요.',
   story:'저는 수학을 잘하던 사람이 아닙니다. 고졸 아빠예요.\n\n첫째는 저학년 때 어느 수가 더 큰지 가늠하는 감각이 자리 잡기까지 오래 걸렸습니다. 둘째는 수 감각은 있는데, 오래 붙잡고 생각해야 하는 계산 앞에서는 몸부터 들썩였지요. 그리고 둘 다 같은 말을 했습니다.\n\n“아빠, 수학하기 시러여!”\n\n문제집을 한 권 더 푼다고 달라지지 않았습니다. 필요한 건 빨리 푸는 요령이 아니라, 아이가 지금 어느 역에서 멈춰 섰는지 아는 일이었어요. 그래서 초등 6년 수학을 하나의 노선도로 펼쳐 놓고, 막힌 역으로 돌아가 손으로 만지고 말로 설명하게 했습니다.\n\n이 앱은 그 길을 정리한 길안내입니다. 수학 전문가가 아니어도, 부모가 아이 옆에서 같이 걸을 수 있도록요.',
   sign:'— 두 아이의 아빠, 현우',
   who:'홈스쿨·대안학교처럼 다른 길을 택했지만, 수학적 사고력은 놓치고 싶지 않은 부모님\n빠른 문제 풀이에 지쳐 “수학 싫어”가 입에 붙은 아이를 둔 부모님\n우리 아이가 어디서 막혔는지, 어디로 돌아가야 하는지 알고 싶은 부모님',
@@ -1072,7 +1100,7 @@ function viewIntro(){
   var startBtn=fresh?'<button class="btn lg" data-act="intro-start">우리 아이로 시작하기</button>':'<button class="btn lg" data-act="intro-start">앱으로 돌아가기</button>';
   var sampleBtn=fresh?'<button class="btn ghost lg" data-act="intro-sample">예시 아이로 먼저 둘러보기</button>':'';
   var h='<div class="intro">';
-  h+='<section class="hero"><div class="hero-art" role="img" aria-label="새싹 차장이 연필 기차를 타고 노선을 달리는 그림"><h1 class="brandmark"><span class="bm-top">수학하기</span><span class="bm-main">시러여<span class="bm-bang">!</span></span></h1></div>'
+  h+='<section class="hero"><div class="hero-art" role="img" aria-label="새싹 역장이 인사하는 그림"><img class="hero-m" src="img/mascot-hello.webp" alt="" width="190" height="252"><h1 class="brandmark"><span class="bm-top">수학하기</span><span class="bm-main">시러여<span class="bm-bang">!</span></span></h1></div>'
     +'<p class="sub">'+rich(site('sub'))+'</p>'
     +'<p class="lead">'+rich(site('lead'))+'</p>'
     +'<div class="row">'+startBtn+sampleBtn+'</div></section>';
@@ -1089,7 +1117,7 @@ function viewIntro(){
 }
 
 var WIDE='(min-width:900px)';
-function detailCol(){if(!(S.sel&&S.detailOpen))return '';return '<aside class="panel-detail" aria-label="역 카드"><div class="row" style="justify-content:flex-end"><button class="btn ghost" data-act="detail-close">닫기 ✕</button></div>'+stationCard(S.sel)+'</aside>';}
+function detailCol(){if(!(S.sel&&S.detailOpen))return '';return '<aside class="panel-detail" aria-label="단원 카드"><div class="row" style="justify-content:flex-end"><button class="btn ghost" data-act="detail-close">닫기 ✕</button></div>'+stationCard(S.sel)+'</aside>';}
 
 function render(){
   document.documentElement.setAttribute('data-size',S.size==='lg'?'lg':'md');
@@ -1112,7 +1140,7 @@ document.addEventListener('click',function(e){
   var w=e.target.closest('a[data-ws]'); if(w){track('ws_open','ws_'+w.dataset.ws);return;}
   var pr=e.target.closest('a[data-pr]'); if(pr){track('pr_open','pr_'+pr.dataset.pr);return;}
   var t=e.target.closest('button'); if(!t)return;
-  if(t.dataset.nav){S.view=t.dataset.nav;S.detailOpen=false;S.semReport=false;if(S.view==='diag')S.diagStep=null;if(t.dataset.dmode)S.diagMode=t.dataset.dmode;render();window.scrollTo(0,0);return;}
+  if(t.dataset.nav){S.view=t.dataset.nav;S.detailOpen=false;S.semReport=false;if(S.view==='diag')S.diagStep=null;if(t.dataset.dmode)S.diagMode=t.dataset.dmode;if(t.dataset.semg)S.semG=+t.dataset.semg;if(t.dataset.sems)S.semS=+t.dataset.sems;render();window.scrollTo(0,0);return;}
   if(t.dataset.open){track('st_open','st_'+t.dataset.open);S.sel=t.dataset.open;S.detailOpen=true;if(S.view==='print'){S.view='map';}S.mapGrade=byId[S.sel].grade;render();if(!window.matchMedia(WIDE).matches)window.scrollTo(0,0);return;}
   if(t.dataset.grade){S.mapGrade=+t.dataset.grade;render();return;}
   if(t.dataset.dmode){S.diagMode=t.dataset.dmode;S.diagStep=null;track('dm_'+t.dataset.dmode);render();return;}
@@ -1122,6 +1150,7 @@ document.addEventListener('click',function(e){
   if(t.dataset.semskip){semSet(function(r){if(r.skip[t.dataset.semskip])delete r.skip[t.dataset.semskip];else r.skip[t.dataset.semskip]=1;});return;}
   if(t.dataset.semscope){var dd=SEMD[(S.semG||S.child.grade)+'-'+(S.semS||semNow())];semSet(function(r){r.scope=t.dataset.semscope;r.skip={};if(r.scope==='mid'&&dd)dd.units.slice(dd.units.length/2).forEach(function(u){r.skip[u.uid]=1;});});return;}
   if(t.dataset.pgrade){S.printGrade=+t.dataset.pgrade;render();return;}
+  if(t.dataset.psem){S.printSem=+t.dataset.psem;render();return;}
   if(t.dataset.pkind){S.printKind=t.dataset.pkind;render();return;}
   if(t.dataset.pset){S.printSet=t.dataset.pset;render();return;}
   if(t.dataset.propen){S.prOpen=S.prOpen||{};S.prOpen[t.dataset.propen]=1;render();return;}
