@@ -479,6 +479,7 @@ body{background:var(--paper);background-image:linear-gradient(180deg,var(--sunbg
 .hero-art .brandmark{margin-right:24%!important}
 .field input,.field select,.field textarea{max-width:100%;box-sizing:border-box}
 .rec td:first-child,.rec td:last-child{white-space:nowrap}
+.pv-nm .pv-link{display:block;font-size:.75rem;margin-top:2px;white-space:nowrap;width:max-content}
 </style>
 
 </head>
@@ -613,7 +614,7 @@ function viewToday(){
   // 오늘 탈 기차
   if(need.length){var x=need[0].x,ga=semCat(x.mod,x.st,'ga');
     h+='<section class="today-card"><p class="lab">오늘 탈 기차</p><h2>'+esc(x.unit)+' · 정류장 '+x.st+'</h2><p class="sub">'+esc(x.title)+' · <b>'+g+'학년 '+sm+'학기</b>'+(x.pre.length?' · 함께 다질 곳 ↩ '+esc(x.pre[0].label):'')+'</p>'+
-      '<div class="row">'+(ga?'<a class="btn" data-pr="ga" href="'+esc(ga.file)+'" target="_blank" rel="noopener">(가) 기본편 출력 · '+ga.pages+'쪽</a>':'')+'<button class="btn ghost" data-nav="diag" data-dmode="sem">학기 점검 결과 보기</button></div></section>';
+      '<div class="row">'+(ga?'<a class="btn" data-pr="ga" href="'+esc(ga.file)+'" target="_blank" rel="noopener">(가) 기본편 출력 · '+ga.pages+'쪽</a>':'')+(conFile(g,sm,x.mod,x.st)?'<a class="btn ghost" data-pr="concept" href="'+conFile(g,sm,x.mod,x.st)+'" target="_blank" rel="noopener">개념 카드 보기</a>':'')+'<button class="btn ghost" data-nav="diag" data-dmode="sem">학기 점검 결과 보기</button></div></section>';
   } else if(!hasRun){
     h+='<section class="today-card"><p class="lab">처음이라면</p><h2>'+g+'학년 '+sm+'학기 노선 점검</h2><p class="sub">승차권(점검지) 한 장, 30분이면 이번 학기에 어디가 비었는지 알 수 있어요.</p>'+
       '<div class="row"><button class="btn" data-nav="diag" data-dmode="sem">학기 점검 시작</button><button class="btn ghost" data-nav="diag" data-dmode="gate">빠른 관문 진단 (10분)</button></div></section>';
@@ -648,6 +649,8 @@ function semRes(){try{return JSON.parse(localStorage.getItem(SEM_KEY)||'{}');}ca
 function semSave(r){try{localStorage.setItem(SEM_KEY,JSON.stringify(r));}catch(e){}}
 function semNow(){var m=new Date().getMonth()+1;return (m>=8||m<=1)?2:1;}
 function semData(g,s){var k=g+'-'+s;if(SEMD[k]===undefined){SEMD[k]=null;fetch('worksheets/sem/g'+k+'.json').then(function(r){return r.ok?r.json():0;}).then(function(d){SEMD[k]=d||0;render();}).catch(function(){SEMD[k]=0;render();});}return SEMD[k];}
+var COND={};function conData(g,s){var k=g+'-'+s;if(COND[k]===undefined){COND[k]=null;fetch('worksheets/concept/g'+k+'.json').then(function(r){return r.ok?r.json():0;}).then(function(d){COND[k]=d||0;render();}).catch(function(){COND[k]=0;});}return COND[k];}
+function conFile(g,s,mod,st){var d=conData(g,s);if(!d)return null;var c=d.cards.filter(function(x){return x.mod===mod&&x.st===st;})[0];return c?c.file:null;}
 function semCat(mod,st,kind){if(!CAT)return null;return CAT.items.filter(function(x){return x.mod===mod&&x.st===st&&x.kind===kind;})[0]||null;}
 function semFix(r){r=r||{};r.skip=r.skip||{};r.runs=r.runs||{};if(r.wrong){r.runs.A={wrong:r.wrong,done:!!r.done,at:r.at};delete r.wrong;delete r.done;delete r.at;}
   ['A','B','C'].forEach(function(v){r.runs[v]=r.runs[v]||{wrong:{}};});r.ver=r.ver||'A';return r;}
@@ -999,6 +1002,8 @@ function viewPrint(){
   h+='<section class="pv-block"><h2><span class="pv-n">1</span>학기 점검지</h2><p class="small muted">처음엔 A안, 하루 이틀 뒤 C안, 정류장을 다 채운 뒤 B안. 틀린 번호는 학기 점검 화면에 넣어요.</p><div class="pv-chips">'+
     [['A','A안 · 처음'],['C','C안 · 다른 모양'],['B','B안 · 다 채운 뒤'],['key','정답·처방표'],['sol','해설집'],['report','이해도 기록표']].map(function(x){return '<a class="pv-chip'+(x[0]==='A'?' main':'')+'" data-pr="sem-'+x[0]+'" href="'+b+x[0]+'.pdf" target="_blank" rel="noopener">'+x[1]+'</a>';}).join('')+
     '</div>'+(dd?'<p class="small muted" style="margin:8px 0 0">'+dd.n+'문제 · 단원 '+dd.units.length+'개</p>':'')+'</section>';
+  var cd=conData(g,sm);
+  if(cd)h+='<section class="pv-block"><h2><span class="pv-n">✦</span>한 장 개념 카드</h2><p class="small muted">정류장마다 한 장. 아이 혼자 읽고, 부모님과 함께 봐요. 채울 정류장의 카드부터 출력하세요.</p><div class="pv-chips"><a class="pv-chip main" data-pr="concept-all" href="'+cd.all+'" target="_blank" rel="noopener">'+g+'학년 '+sm+'학기 개념 카드 묶음 ('+(cd.cards.length+1)+'쪽)</a></div></section>';
   var units=DATA.stations.filter(function(s){return s.grade===g&&SEMN(s.id)===sm;});
   h+='<section class="pv-block"><div class="pv-bh"><h2><span class="pv-n">2</span>정류장 학습지</h2><div class="seg seg-set" role="group" aria-label="편">'+['ga','na','da'].map(function(k){return '<button class="seg-b" aria-pressed="'+(k===set)+'" data-pset="'+k+'"><span class="km k-'+k+'">'+{ga:'가',na:'나',da:'다'}[k]+'</span> '+SETN[k].slice(4)+'</button>';}).join('')+'</div></div>'+
     '<p class="small muted">단원마다 정류장 순서대로 풀어요. (가) 기본 → (나) 다지기 → (다) 생각.</p><div class="pv-units">';
@@ -1007,7 +1012,7 @@ function viewPrint(){
     var mods=[];its.forEach(function(x){if(mods.indexOf(x.mod)<0)mods.push(x.mod);});
     var common=CAT.items.filter(function(x){return mods.indexOf(x.mod)>=0&&!x.st&&x.group==='dowumji';});
     h+='<article class="pv-unit"><h3><span class="ms-no">'+u.id+'</span>'+esc(u.name)+'</h3><ol class="pv-list">'+(its.length?its.map(function(f){
-      return '<li class="pv-row"><span class="pv-no">'+(f.st<10?'0'+f.st:f.st)+'</span><span class="pv-nm">'+esc(f.st_title)+'</span><a class="pv-go" data-pr="'+esc(f.kind)+'" href="'+esc(f.file)+'" target="_blank" rel="noopener" aria-label="'+esc(f.st_title)+' '+SETN[set]+' 출력">출력 <span class="num">'+f.pages+'</span>쪽</a></li>';}).join(''):'<li class="small muted">학습지 준비 중이에요</li>')+'</ol>'+
+      return '<li class="pv-row"><span class="pv-no">'+(f.st<10?'0'+f.st:f.st)+'</span><span class="pv-nm">'+esc(f.st_title)+(conFile(g,sm,f.mod,f.st)?' <a class="pv-link" data-pr="concept" href="'+conFile(g,sm,f.mod,f.st)+'" target="_blank" rel="noopener">개념 카드</a>':'')+'</span><a class="pv-go" data-pr="'+esc(f.kind)+'" href="'+esc(f.file)+'" target="_blank" rel="noopener" aria-label="'+esc(f.st_title)+' '+SETN[set]+' 출력">출력 <span class="num">'+f.pages+'</span>쪽</a></li>';}).join(''):'<li class="small muted">학습지 준비 중이에요</li>')+'</ol>'+
       (common.length?'<p class="pv-common">'+common.map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc(KIND_LABEL[x.kind]||x.title)+'</a>';}).join('<span class="sep">·</span>')+'</p>':'')+'</article>';});
   h+='</div></section>';
   var t=CAT.items.filter(function(x){return x.grade===g&&x.group==='test';}), bk=CAT.items.filter(function(x){return x.group==='book'&&x.kind==='book'&&x.grade===g;});
