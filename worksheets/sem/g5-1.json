@@ -50,7 +50,12 @@
      "st": 3,
      "label": "4-1 규칙 찾기 · 규칙을 식으로 나타내기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_hon-s1.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 곱셈과 나눗셈 · 나머지 이야기"
+   }
   },
   {
    "n": 2,
@@ -73,7 +78,12 @@
      "st": 3,
      "label": "4-1 규칙 찾기 · 규칙을 식으로 나타내기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_hon-s2.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 곱셈과 나눗셈 · 나머지 이야기"
+   }
   },
   {
    "n": 3,
@@ -96,7 +106,12 @@
      "st": 3,
      "label": "4-1 규칙 찾기 · 규칙을 식으로 나타내기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_hon-s3.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 곱셈과 나눗셈 · 나머지 이야기"
+   }
   },
   {
    "n": 4,
@@ -119,7 +134,12 @@
      "st": 8,
      "label": "2-2 곱셈 · 1단, 0, 곱셈표"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_yak-s1.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 나눗셈 · 나머지 이야기 문제"
+   }
   },
   {
    "n": 5,
@@ -142,7 +162,12 @@
      "st": 8,
      "label": "2-2 곱셈 · 1단, 0, 곱셈표"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_yak-s2.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 나눗셈 · 나머지 이야기 문제"
+   }
   },
   {
    "n": 6,
@@ -165,7 +190,12 @@
      "st": 8,
      "label": "2-2 곱셈 · 1단, 0, 곱셈표"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_yak-s3.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 나눗셈 · 나머지 이야기 문제"
+   }
   },
   {
    "n": 7,
@@ -188,7 +218,12 @@
      "st": 8,
      "label": "2-2 곱셈 · 1단, 0, 곱셈표"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_yak-s4.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 나눗셈 · 나머지 이야기 문제"
+   }
   },
   {
    "n": 8,
@@ -206,7 +241,12 @@
      "st": 3,
      "label": "4-1 규칙 찾기 · 규칙을 식으로 나타내기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_dae-s1.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 규칙 찾기 · 규칙을 식으로 나타내기"
+   }
   },
   {
    "n": 9,
@@ -224,7 +264,12 @@
      "st": 3,
      "label": "4-1 규칙 찾기 · 규칙을 식으로 나타내기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_dae-s2.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 규칙 찾기 · 규칙을 식으로 나타내기"
+   }
   },
   {
    "n": 10,
@@ -242,7 +287,12 @@
      "st": 3,
      "label": "4-1 규칙 찾기 · 규칙을 식으로 나타내기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_dae-s3.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 규칙 찾기 · 규칙을 식으로 나타내기"
+   }
   },
   {
    "n": 11,
@@ -265,7 +315,12 @@
      "st": 5,
      "label": "3-2 분수와 소수 · 분모가 같은 분수의 크기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_bun-s1.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 약수와 배수 · 공배수와 최소공배수"
+   }
   },
   {
    "n": 12,
@@ -288,7 +343,12 @@
      "st": 5,
      "label": "3-2 분수와 소수 · 분모가 같은 분수의 크기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_bun-s2.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 약수와 배수 · 공배수와 최소공배수"
+   }
   },
   {
    "n": 13,
@@ -311,7 +371,12 @@
      "st": 5,
      "label": "3-2 분수와 소수 · 분모가 같은 분수의 크기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_bun-s3.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 약수와 배수 · 공배수와 최소공배수"
+   }
   },
   {
    "n": 14,
@@ -334,7 +399,12 @@
      "st": 3,
      "label": "4-2 분수와 소수의 덧셈과 뺄셈 · 대분수의 뺄셈"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_bun-s4.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 분수 · 통분과 크기 비교"
+   }
   },
   {
    "n": 15,
@@ -357,7 +427,12 @@
      "st": 3,
      "label": "4-2 분수와 소수의 덧셈과 뺄셈 · 대분수의 뺄셈"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_bun-s5.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 분수 · 통분과 크기 비교"
+   }
   },
   {
    "n": 16,
@@ -380,7 +455,12 @@
      "st": 3,
      "label": "4-2 분수와 소수의 덧셈과 뺄셈 · 대분수의 뺄셈"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_bun-s6.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 분수 · 통분과 크기 비교"
+   }
   },
   {
    "n": 17,
@@ -403,7 +483,12 @@
      "st": 7,
      "label": "3-2 곱셈 · (두 자리)×(두 자리)"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_neol-s1.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 각도와 도형 · 사각형 사이의 관계"
+   }
   },
   {
    "n": 18,
@@ -426,7 +511,12 @@
      "st": 7,
      "label": "3-2 곱셈 · (두 자리)×(두 자리)"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_neol-s2.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 각도와 도형 · 사각형 사이의 관계"
+   }
   },
   {
    "n": 19,
@@ -449,7 +539,12 @@
      "st": 7,
      "label": "3-2 곱셈 · (두 자리)×(두 자리)"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_neol-s3.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 각도와 도형 · 사각형 사이의 관계"
+   }
   },
   {
    "n": 20,
@@ -472,7 +567,12 @@
      "st": 7,
      "label": "3-2 곱셈 · (두 자리)×(두 자리)"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_neol-s4.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 각도와 도형 · 사각형 사이의 관계"
+   }
   },
   {
    "n": 21,
@@ -495,7 +595,12 @@
      "st": 7,
      "label": "3-2 곱셈 · (두 자리)×(두 자리)"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_neol-s5.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 각도와 도형 · 사각형 사이의 관계"
+   }
   }
  ]
 }

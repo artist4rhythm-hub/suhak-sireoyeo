@@ -45,7 +45,12 @@
      "st": 5,
      "label": "3-2 분수와 소수 · 분모가 같은 분수의 크기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_bunso-s1.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 분수와 소수 · 분모가 같은 분수의 크기"
+   }
   },
   {
    "n": 2,
@@ -63,7 +68,12 @@
      "st": 5,
      "label": "3-2 분수와 소수 · 분모가 같은 분수의 크기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_bunso-s2.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 분수와 소수 · 분모가 같은 분수의 크기"
+   }
   },
   {
    "n": 3,
@@ -81,7 +91,12 @@
      "st": 5,
      "label": "3-2 분수와 소수 · 분모가 같은 분수의 크기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_bunso-s3.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 분수와 소수 · 분모가 같은 분수의 크기"
+   }
   },
   {
    "n": 4,
@@ -99,7 +114,12 @@
      "st": 3,
      "label": "4-1 각도와 도형 · 각의 합"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s4.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 각도와 도형 · 각의 합"
+   }
   },
   {
    "n": 5,
@@ -117,7 +137,12 @@
      "st": 3,
      "label": "4-1 각도와 도형 · 각의 합"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s5.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 각도와 도형 · 각의 합"
+   }
   },
   {
    "n": 6,
@@ -135,7 +160,12 @@
      "st": 3,
      "label": "4-1 각도와 도형 · 각의 합"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s6.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 각도와 도형 · 각의 합"
+   }
   },
   {
    "n": 7,
@@ -158,7 +188,12 @@
      "st": 5,
      "label": "3-1 덧셈과 뺄셈 · 이야기 문제"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_bunso-s4.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 분수와 소수 · 소수 비교"
+   }
   },
   {
    "n": 8,
@@ -181,7 +216,12 @@
      "st": 5,
      "label": "3-1 덧셈과 뺄셈 · 이야기 문제"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_bunso-s5.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 분수와 소수 · 소수 비교"
+   }
   },
   {
    "n": 9,
@@ -204,7 +244,12 @@
      "st": 5,
      "label": "3-1 덧셈과 뺄셈 · 이야기 문제"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_bunso-s6.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 분수와 소수 · 소수 비교"
+   }
   },
   {
    "n": 10,
@@ -227,7 +272,12 @@
      "st": 3,
      "label": "4-1 각도와 도형 · 각의 합"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s7.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 11,
@@ -250,7 +300,12 @@
      "st": 3,
      "label": "4-1 각도와 도형 · 각의 합"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s8.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 12,
@@ -273,7 +328,12 @@
      "st": 3,
      "label": "4-1 각도와 도형 · 각의 합"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s9.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 13,
@@ -291,7 +351,12 @@
      "st": 3,
      "label": "4-1 막대그래프와 꺾은선그래프 · 막대그래프로 이야기하기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_ja-s4.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 막대그래프와 꺾은선그래프 · 막대그래프로 이야기하기"
+   }
   },
   {
    "n": 14,
@@ -309,7 +374,12 @@
      "st": 3,
      "label": "4-1 막대그래프와 꺾은선그래프 · 막대그래프로 이야기하기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_ja-s5.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 막대그래프와 꺾은선그래프 · 막대그래프로 이야기하기"
+   }
   },
   {
    "n": 15,
@@ -327,7 +397,12 @@
      "st": 3,
      "label": "4-1 막대그래프와 꺾은선그래프 · 막대그래프로 이야기하기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_ja-s6.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 막대그래프와 꺾은선그래프 · 막대그래프로 이야기하기"
+   }
   },
   {
    "n": 16,
@@ -350,7 +425,12 @@
      "st": 9,
      "label": "4-2 각도와 도형 · 사각형 사이의 관계"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s10.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 각도와 도형 · 두 가지 이름의 삼각형"
+   }
   },
   {
    "n": 17,
@@ -373,7 +453,12 @@
      "st": 9,
      "label": "4-2 각도와 도형 · 사각형 사이의 관계"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s11.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 각도와 도형 · 두 가지 이름의 삼각형"
+   }
   },
   {
    "n": 18,
@@ -396,7 +481,12 @@
      "st": 9,
      "label": "4-2 각도와 도형 · 사각형 사이의 관계"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s12.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 각도와 도형 · 두 가지 이름의 삼각형"
+   }
   }
  ]
 }

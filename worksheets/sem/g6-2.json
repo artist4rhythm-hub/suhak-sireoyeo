@@ -55,7 +55,12 @@
      "st": 3,
      "label": "3-1 나눗셈 · 몫을 구구로"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s4.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 분수와 소수의 나눗셈 · (분수) ÷ (자연수) 활용"
+   }
   },
   {
    "n": 2,
@@ -83,7 +88,12 @@
      "st": 3,
      "label": "3-1 나눗셈 · 몫을 구구로"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s5.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 분수와 소수의 나눗셈 · (분수) ÷ (자연수) 활용"
+   }
   },
   {
    "n": 3,
@@ -111,7 +121,12 @@
      "st": 3,
      "label": "3-1 나눗셈 · 몫을 구구로"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s6.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 분수와 소수의 나눗셈 · (분수) ÷ (자연수) 활용"
+   }
   },
   {
    "n": 4,
@@ -134,7 +149,12 @@
      "st": 3,
      "label": "5-2 소수의 곱셈 · 곱의 크기 어림"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s10.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 분수와 소수의 나눗셈 · (소수) ÷ (자연수) 활용"
+   }
   },
   {
    "n": 5,
@@ -157,7 +177,12 @@
      "st": 3,
      "label": "5-2 소수의 곱셈 · 곱의 크기 어림"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s11.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 분수와 소수의 나눗셈 · (소수) ÷ (자연수) 활용"
+   }
   },
   {
    "n": 6,
@@ -180,7 +205,12 @@
      "st": 3,
      "label": "5-2 소수의 곱셈 · 곱의 크기 어림"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s12.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 분수와 소수의 나눗셈 · (소수) ÷ (자연수) 활용"
+   }
   },
   {
    "n": 7,
@@ -203,7 +233,12 @@
      "st": 6,
      "label": "2-1 도형 · 쌓기나무 개수 세기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_gong-s1.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   },
   {
    "n": 8,
@@ -226,7 +261,12 @@
      "st": 6,
      "label": "2-1 도형 · 쌓기나무 개수 세기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_gong-s2.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   },
   {
    "n": 9,
@@ -249,7 +289,12 @@
      "st": 6,
      "label": "2-1 도형 · 쌓기나무 개수 세기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_gong-s3.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   },
   {
    "n": 10,
@@ -267,7 +312,12 @@
      "st": 3,
      "label": "6-1 비와 비율, 비례식과 비례배분 · 백분율"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bi-s4.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 비와 비율, 비례식과 비례배분 · 백분율"
+   }
   },
   {
    "n": 11,
@@ -285,7 +335,12 @@
      "st": 3,
      "label": "6-1 비와 비율, 비례식과 비례배분 · 백분율"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bi-s5.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 비와 비율, 비례식과 비례배분 · 백분율"
+   }
   },
   {
    "n": 12,
@@ -303,7 +358,12 @@
      "st": 3,
      "label": "6-1 비와 비율, 비례식과 비례배분 · 백분율"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bi-s6.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 비와 비율, 비례식과 비례배분 · 백분율"
+   }
   },
   {
    "n": 13,
@@ -326,7 +386,12 @@
      "st": 5,
      "label": "5-1 다각형의 둘레와 넓이 · 사다리꼴·마름모"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_won-s1.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 평면도형과 원 · 컴퍼스로 원 그리기"
+   }
   },
   {
    "n": 14,
@@ -349,7 +414,12 @@
      "st": 5,
      "label": "5-1 다각형의 둘레와 넓이 · 사다리꼴·마름모"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_won-s2.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 평면도형과 원 · 컴퍼스로 원 그리기"
+   }
   },
   {
    "n": 15,
@@ -372,7 +442,12 @@
      "st": 5,
      "label": "5-1 다각형의 둘레와 넓이 · 사다리꼴·마름모"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_won-s3.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 평면도형과 원 · 컴퍼스로 원 그리기"
+   }
   },
   {
    "n": 16,
@@ -395,7 +470,12 @@
      "st": 3,
      "label": "6-2 원의 둘레와 넓이 · 원 문제 해결"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_ip-s4.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 각기둥과 각뿔, 원기둥·원뿔·구 · 각기둥과 각뿔 비교"
+   }
   },
   {
    "n": 17,
@@ -418,7 +498,12 @@
      "st": 3,
      "label": "6-2 원의 둘레와 넓이 · 원 문제 해결"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_ip-s5.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 각기둥과 각뿔, 원기둥·원뿔·구 · 각기둥과 각뿔 비교"
+   }
   },
   {
    "n": 18,
@@ -441,7 +526,12 @@
      "st": 3,
      "label": "6-2 원의 둘레와 넓이 · 원 문제 해결"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_ip-s6.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 각기둥과 각뿔, 원기둥·원뿔·구 · 각기둥과 각뿔 비교"
+   }
   }
  ]
 }
