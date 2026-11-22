@@ -1,0 +1,169 @@
+{
+ "grade": 5,
+ "sem": 2,
+ "all": "worksheets/concept/g5-2/all.pdf",
+ "cards": [
+  {
+   "n": 1,
+   "uid": "5-07",
+   "mod": "g5_eo",
+   "st": 1,
+   "title": "이상·이하·초과·미만",
+   "unit": "수의 범위와 어림하기",
+   "file": "worksheets/concept/g5-2/g5_eo-s1.pdf"
+  },
+  {
+   "n": 2,
+   "uid": "5-07",
+   "mod": "g5_eo",
+   "st": 2,
+   "title": "올림·버림·반올림",
+   "unit": "수의 범위와 어림하기",
+   "file": "worksheets/concept/g5-2/g5_eo-s2.pdf"
+  },
+  {
+   "n": 3,
+   "uid": "5-07",
+   "mod": "g5_eo",
+   "st": 3,
+   "title": "어림으로 생활 문제 해결",
+   "unit": "수의 범위와 어림하기",
+   "file": "worksheets/concept/g5-2/g5_eo-s3.pdf"
+  },
+  {
+   "n": 4,
+   "uid": "5-08",
+   "mod": "g5_bun",
+   "st": 7,
+   "title": "분수 × 자연수",
+   "unit": "분수의 곱셈",
+   "file": "worksheets/concept/g5-2/g5_bun-s7.pdf"
+  },
+  {
+   "n": 5,
+   "uid": "5-08",
+   "mod": "g5_bun",
+   "st": 8,
+   "title": "분수 × 분수",
+   "unit": "분수의 곱셈",
+   "file": "worksheets/concept/g5-2/g5_bun-s8.pdf"
+  },
+  {
+   "n": 6,
+   "uid": "5-08",
+   "mod": "g5_bun",
+   "st": 9,
+   "title": "분수 곱셈 활용",
+   "unit": "분수의 곱셈",
+   "file": "worksheets/concept/g5-2/g5_bun-s9.pdf"
+  },
+  {
+   "n": 7,
+   "uid": "5-09",
+   "mod": "g5_do",
+   "st": 1,
+   "title": "합동과 대응",
+   "unit": "합동과 대칭",
+   "file": "worksheets/concept/g5-2/g5_do-s1.pdf"
+  },
+  {
+   "n": 8,
+   "uid": "5-09",
+   "mod": "g5_do",
+   "st": 2,
+   "title": "선대칭·점대칭",
+   "unit": "합동과 대칭",
+   "file": "worksheets/concept/g5-2/g5_do-s2.pdf"
+  },
+  {
+   "n": 9,
+   "uid": "5-09",
+   "mod": "g5_do",
+   "st": 3,
+   "title": "합동과 대칭 활용",
+   "unit": "합동과 대칭",
+   "file": "worksheets/concept/g5-2/g5_do-s3.pdf"
+  },
+  {
+   "n": 10,
+   "uid": "5-10",
+   "mod": "g5_so",
+   "st": 1,
+   "title": "(소수) × (자연수)",
+   "unit": "소수의 곱셈",
+   "file": "worksheets/concept/g5-2/g5_so-s1.pdf"
+  },
+  {
+   "n": 11,
+   "uid": "5-10",
+   "mod": "g5_so",
+   "st": 2,
+   "title": "(소수) × (소수)",
+   "unit": "소수의 곱셈",
+   "file": "worksheets/concept/g5-2/g5_so-s2.pdf"
+  },
+  {
+   "n": 12,
+   "uid": "5-10",
+   "mod": "g5_so",
+   "st": 3,
+   "title": "곱의 크기 어림",
+   "unit": "소수의 곱셈",
+   "file": "worksheets/concept/g5-2/g5_so-s3.pdf"
+  },
+  {
+   "n": 13,
+   "uid": "5-11",
+   "mod": "g5_do",
+   "st": 4,
+   "title": "직육면체와 전개도",
+   "unit": "직육면체",
+   "file": "worksheets/concept/g5-2/g5_do-s4.pdf"
+  },
+  {
+   "n": 14,
+   "uid": "5-11",
+   "mod": "g5_do",
+   "st": 5,
+   "title": "직육면체의 평행과 수직",
+   "unit": "직육면체",
+   "file": "worksheets/concept/g5-2/g5_do-s5.pdf"
+  },
+  {
+   "n": 15,
+   "uid": "5-11",
+   "mod": "g5_do",
+   "st": 6,
+   "title": "직육면체 활용",
+   "unit": "직육면체",
+   "file": "worksheets/concept/g5-2/g5_do-s6.pdf"
+  },
+  {
+   "n": 16,
+   "uid": "5-12",
+   "mod": "g5_pyeong",
+   "st": 1,
+   "title": "평균",
+   "unit": "평균과 가능성",
+   "file": "worksheets/concept/g5-2/g5_pyeong-s1.pdf"
+  },
+  {
+   "n": 17,
+   "uid": "5-12",
+   "mod": "g5_pyeong",
+   "st": 2,
+   "title": "일이 일어날 가능성",
+   "unit": "평균과 가능성",
+   "file": "worksheets/concept/g5-2/g5_pyeong-s2.pdf"
+  },
+  {
+   "n": 18,
+   "uid": "5-12",
+   "mod": "g5_pyeong",
+   "st": 3,
+   "title": "평균으로 문제 해결",
+   "unit": "평균과 가능성",
+   "file": "worksheets/concept/g5-2/g5_pyeong-s3.pdf"
+  }
+ ]
+}
