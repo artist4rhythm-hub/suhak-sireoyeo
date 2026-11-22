@@ -56,7 +56,12 @@
      "st": 1,
      "label": "3-1 덧셈과 뺄셈 · 세 자리 수 다시 보기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_eo-s1.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 큰 수 · 뛰어 세기와 크기 비교"
+   }
   },
   {
    "n": 2,
@@ -84,7 +89,12 @@
      "st": 4,
      "label": "4-2 분수와 소수의 덧셈과 뺄셈 · 소수 두·세 자리"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_eo-s2.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 덧셈과 뺄셈 · 어림하고 확인하기"
+   }
   },
   {
    "n": 3,
@@ -112,7 +122,12 @@
      "st": 5,
      "label": "3-1 덧셈과 뺄셈 · 이야기 문제"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_eo-s3.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 나눗셈 · 나머지 이야기 문제"
+   }
   },
   {
    "n": 4,
@@ -140,7 +155,12 @@
      "st": 2,
      "label": "4-2 분수와 소수의 덧셈과 뺄셈 · 대분수의 덧셈"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_bun-s7.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 분수 · 약분과 기약분수"
+   }
   },
   {
    "n": 5,
@@ -168,7 +188,12 @@
      "st": 1,
      "label": "2-2 곱셈 · 곱셈구구 다시 보기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_bun-s8.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 분수 · 약분과 기약분수"
+   }
   },
   {
    "n": 6,
@@ -196,7 +221,12 @@
      "st": 3,
      "label": "4-2 분수와 소수의 덧셈과 뺄셈 · 대분수의 뺄셈"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_bun-s9.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 분수 · 분수 덧셈·뺄셈 활용"
+   }
   },
   {
    "n": 7,
@@ -224,7 +254,12 @@
      "st": 4,
      "label": "4-2 각도와 도형 · 여러 가지 삼각형"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_do-s1.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 평면도형의 이동 · 밀기"
+   }
   },
   {
    "n": 8,
@@ -252,7 +287,12 @@
      "st": 8,
      "label": "4-2 각도와 도형 · 평행사변형과 마름모"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_do-s2.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 평면도형의 이동 · 뒤집기"
+   }
   },
   {
    "n": 9,
@@ -280,7 +320,12 @@
      "st": 1,
      "label": "5-1 다각형의 둘레와 넓이 · 둘레"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_do-s3.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 각도와 도형 · 각의 합"
+   }
   },
   {
    "n": 10,
@@ -308,7 +353,12 @@
      "st": 6,
      "label": "3-1 분수와 소수 · 0.1과 소수 한 자리"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_so-s1.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 분수와 소수의 덧셈과 뺄셈 · 소수의 덧셈과 뺄셈"
+   }
   },
   {
    "n": 11,
@@ -336,7 +386,12 @@
      "st": 3,
      "label": "5-1 다각형의 둘레와 넓이 · 직사각형의 넓이"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_so-s2.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 분수와 소수의 덧셈과 뺄셈 · 소수 두·세 자리"
+   }
   },
   {
    "n": 12,
@@ -364,7 +419,12 @@
      "st": 2,
      "label": "5-2 수의 범위와 어림하기 · 올림·버림·반올림"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_so-s3.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 덧셈과 뺄셈 · 어림하고 확인하기"
+   }
   },
   {
    "n": 13,
@@ -392,7 +452,12 @@
      "st": 3,
      "label": "5-1 다각형의 둘레와 넓이 · 직사각형의 넓이"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_do-s4.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 14,
@@ -420,7 +485,12 @@
      "st": 9,
      "label": "4-2 각도와 도형 · 사각형 사이의 관계"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_do-s5.pdf",
+    "roles": "pbbat",
+    "pre": "4-2 각도와 도형 · 수직·평행과 사각형"
+   }
   },
   {
    "n": 15,
@@ -448,7 +518,12 @@
      "st": 6,
      "label": "3-2 곱셈 · (세 자리)×(한 자리)"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_do-s6.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 다각형의 둘레와 넓이 · 둘레"
+   }
   },
   {
    "n": 16,
@@ -476,7 +551,12 @@
      "st": 1,
      "label": "4-1 막대그래프와 꺾은선그래프 · 막대그래프 읽기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_pyeong-s1.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 덧셈과 뺄셈 · 받아올림 덧셈"
+   }
   },
   {
    "n": 17,
@@ -504,7 +584,12 @@
      "st": 1,
      "label": "3-2 자료의 정리 · 모으고 표로"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_pyeong-s2.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 분수와 소수 · 분수의 뜻"
+   }
   },
   {
    "n": 18,
@@ -532,7 +617,12 @@
      "st": 3,
      "label": "5-1 자연수의 혼합 계산 · 이야기를 하나의 식으로"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g5_pyeong-s3.pdf",
+    "roles": "pbbat",
+    "pre": "4-1 곱셈과 나눗셈 · (세 자리)÷(두 자리)"
+   }
   }
  ]
 }

@@ -480,6 +480,22 @@ body{background:var(--paper);background-image:linear-gradient(180deg,var(--sunbg
 .field input,.field select,.field textarea{max-width:100%;box-sizing:border-box}
 .rec td:first-child,.rec td:last-child{white-space:nowrap}
 .pv-nm .pv-link{display:block;font-size:.75rem;margin-top:2px;white-space:nowrap;width:max-content}
+
+/* ---- 2단계 정밀 확인 · 틀린 이유 ---- */
+.why-box{margin-top:16px;border-top:1px solid var(--grid);padding-top:12px}.why-box h4{margin:0 0 6px;font-size:1rem}.why-box h4 small{font-weight:400;color:var(--muted);font-size:.75rem}
+.why-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:8px 0;border-bottom:1px dotted var(--grid)}
+.why-t{flex:1 1 200px;font-size:.875rem}.why-c{display:flex;flex-wrap:wrap;gap:6px}
+.why-b{font:inherit;font-size:.8125rem;border:1.5px solid var(--edge);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;min-height:36px;cursor:pointer}
+.why-b[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--card)}
+.fine-tk .fine{flex:1 1 100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;border-top:1px dashed var(--edge);padding-top:10px;margin-top:2px}
+.fine-pdf{border-radius:999px;padding:6px 12px;border:1.5px solid var(--ink);color:var(--ink);text-decoration:none;font-size:.8125rem;white-space:nowrap;margin-right:6px}
+.fine-n{font:inherit;min-width:44px;min-height:44px;border-radius:12px;border:1.5px solid var(--edge);background:var(--card);color:var(--ink);font-family:var(--title);cursor:pointer;padding:2px 6px}
+.fine-n small{display:block;font-family:inherit;font-size:.625rem;opacity:.75}
+.fine-n[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.fine-ok{min-height:40px;padding:6px 14px}
+.fine-v{flex:1 1 100%;margin:4px 0 0;font-size:.875rem;background:#FFF8E1;border-radius:12px;padding:8px 12px}
+.rep-two{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+@media (max-width:640px){.rep-two{grid-template-columns:1fr}}
 </style>
 
 </head>
@@ -653,15 +669,26 @@ var COND={};function conData(g,s){var k=g+'-'+s;if(COND[k]===undefined){COND[k]=
 function conFile(g,s,mod,st){var d=conData(g,s);if(!d)return null;var c=d.cards.filter(function(x){return x.mod===mod&&x.st===st;})[0];return c?c.file:null;}
 function semCat(mod,st,kind){if(!CAT)return null;return CAT.items.filter(function(x){return x.mod===mod&&x.st===st&&x.kind===kind;})[0]||null;}
 function semFix(r){r=r||{};r.skip=r.skip||{};r.runs=r.runs||{};if(r.wrong){r.runs.A={wrong:r.wrong,done:!!r.done,at:r.at};delete r.wrong;delete r.done;delete r.at;}
-  ['A','B','C'].forEach(function(v){r.runs[v]=r.runs[v]||{wrong:{}};});r.ver=r.ver||'A';return r;}
+  ['A','B','C'].forEach(function(v){r.runs[v]=r.runs[v]||{wrong:{}};r.runs[v].why=r.runs[v].why||{};});r.fine=r.fine||{};r.ver=r.ver||'A';return r;}
 function modeSeg(){var m=S.diagMode||'sem';return '<div class="seg dmode" role="group" aria-label="진단 종류">'+[['sem','학기 점검'],['gate','관문 진단 (빠른 10분)']].map(function(x){return '<button class="seg-b" aria-pressed="'+(x[0]===m)+'" data-dmode="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div>';}
+var WHY={k:'몰랐어요',c:'계산 실수',r:'문제를 잘못 읽음',t:'시간이 모자람'}, WHYS={k:'몰',c:'계',r:'읽',t:'시'};
+var FINE_V={back:{t:'돌아가기',d:'아래 학년 기초가 비어 있어요. 돌아갈 곳의 (가) 기본편을 먼저 풀어요.'},concept:{t:'개념부터',d:'개념 카드를 읽고 (가) 기본편부터 차례로 풀어요.'},apply:{t:'다지기부터',d:'기본은 돼요. (가)는 통과 확인만 풀고 (나) 다지기편 → (다) 생각편으로 가요.'},slip:{t:'실수였어요',d:'정밀 확인을 모두 맞혔어요. 이 정류장은 통과!'}};
+function fineVerdict(x,f){
+  if(!x.fine||!f||!f.done)return null;var ro=x.fine.roles,w=f.w||{},hit=function(set){for(var i=0;i<ro.length;i++)if(set.indexOf(ro[i])>=0&&w[i+1])return true;return false;};
+  return hit('p')?'back':hit('b')?'concept':hit('at')?'apply':'slip';
+}
+function semWhy(r,n){var o=null;['B','C','A'].forEach(function(v){if(!o&&r.runs[v].done&&r.runs[v].wrong[n]&&r.runs[v].why[n])o=r.runs[v].why[n];});return o;}
 function semJudge(d,r){
   var first=['A','C'].filter(function(v){return r.runs[v].done;}), B=r.runs.B.done;
   return d.items.map(function(x){
     if(r.skip[x.uid])return {x:x,st:'skip'};
-    var wr=first.filter(function(v){return r.runs[v].wrong[x.n];}).length;
-    if(B){var wb=!!r.runs.B.wrong[x.n];return {x:x,st:wb?(wr?'sure':'shaky'):(wr?'filled':'ok'),wr:wr+(wb?1:0)};}
-    return {x:x,st:wr===0?'ok':(wr===first.length&&first.length>1?'sure':(first.length>1?'shaky':'gap')),wr:wr};});
+    var wr=first.filter(function(v){return r.runs[v].wrong[x.n];}).length, st, why=semWhy(r,x.n);
+    if(B){var wb=!!r.runs.B.wrong[x.n];st=wb?(wr?'sure':'shaky'):(wr?'filled':'ok');wr+=wb?1:0;}
+    else{st=wr===0?'ok':(wr===first.length&&first.length>1?'sure':(first.length>1?'shaky':'gap'));
+      if(st==='gap'&&why==='k')st='sure';else if(st==='gap'&&(why==='c'||why==='r'))st='shaky';}
+    var fv=fineVerdict(x,r.fine[x.n]);
+    if(fv&&st!=='ok'&&st!=='filled'){if(fv==='slip')return {x:x,st:'ok',wr:wr,why:why,fv:fv,slip:true};if(fv==='back'||fv==='concept')st=st==='shaky'?'gap':st;}
+    return {x:x,st:st,wr:wr,why:why,fv:fv};});
 }
 function viewSem(){
   if(S.semReport)return viewSemReport();
@@ -674,9 +701,9 @@ function viewSem(){
   if(d===null)return h+'<div class="card"><p class="muted">불러오는 중이에요…</p></div></div>'+detailCol();
   if(!d)return h+'<div class="card"><p>'+g+'학년 '+s+'학기 승차권을 불러오지 못했어요. 잠시 뒤 다시 열어 주세요.</p><button class="btn ghost" data-semg="5" data-sems="2">5학년 2학기 보기</button></div></div>'+detailCol();
   var base='worksheets/sem/g'+k+'-', half=Math.ceil(d.units.length/2);
-  h+='<section class="card"><h3>1. 승차권 출력</h3><div class="sem-tk" style="border-style:dashed"><div class="t"><b>'+g+'학년 '+s+'학기 노선 점검 · 3가지 승차권</b><small>'+d.n+'문제 · 약 30분 · A4 흑백</small></div><div class="go">'+
+  h+='<section class="card"><h3>1. 승차권 출력 <small class="muted" style="font-weight:400">— 1단계 · 학기 전체 훑기</small></h3><div class="sem-tk" style="border-style:dashed"><div class="t"><b>'+g+'학년 '+s+'학기 노선 점검 · 3가지 승차권</b><small>'+d.n+'문제 · 약 30분 · A4 흑백</small></div><div class="go">'+
     '<a class="main" data-pr="sem-A" href="'+base+'A.pdf" target="_blank" rel="noopener">A안 (처음)</a><a data-pr="sem-C" href="'+base+'C.pdf" target="_blank" rel="noopener">C안 (다른 모양)</a><a data-pr="sem-B" href="'+base+'B.pdf" target="_blank" rel="noopener">B안 (다 채운 뒤)</a><a data-pr="sem-key" href="'+base+'key.pdf" target="_blank" rel="noopener">정답·처방표</a><a data-pr="sem-sol" href="'+base+'sol.pdf" target="_blank" rel="noopener">해설집</a><a data-pr="sem-report" href="'+base+'report.pdf" target="_blank" rel="noopener">이해도 기록표</a></div></div>'+
-    '<p class="small muted" style="margin-top:8px">A안 → 하루 이틀 뒤 C안을 풀면 더 정확해요. 두 번 다 틀린 곳은 확실히 빈 곳, 한 번만 틀린 곳은 흔들리는 곳이에요. 정류장을 다 채우면 B안으로 다시 확인해요. 중간고사 전이라면 1~'+half+'번 역만 풀어요.</p></section>';
+    '<p class="small muted" style="margin-top:8px">A안 → 하루 이틀 뒤 C안을 풀면 더 정확해요. 틀린 정류장은 2단계 <b>정밀 확인지</b>(5문제)로 어디서부터 채울지 알아봐요. 정류장을 다 채우면 B안으로 다시 확인해요. 중간고사 전이라면 1~'+half+'번 역만 풀어요.</p></section>';
   var cur=r.runs[r.ver], anyDone=['A','B','C'].some(function(v){return r.runs[v].done;});
   if(!S.semEdit&&anyDone){
     var J=semJudge(d,r), taken=['A','C','B'].filter(function(v){return r.runs[v].done;});
@@ -688,11 +715,16 @@ function viewSem(){
       '<div class="sem-route" style="--n:'+d.units.length+'"><div class="sem-rail"></div><ol>'+d.units.map(function(u,ui){var sk=r.skip[u.uid],gp=need.some(function(j){return j.x.uid===u.uid;});
         return '<li><span class="sem-dot '+(sk?'skip':(gp?'gap':'ok'))+'">'+(sk?(ui+1):(gp?'!':'✓'))+'</span><p>'+(gp?'<b>'+esc(u.name)+'</b>':esc(u.name))+'</p></li>';}).join('')+'</ol></div>'+
       (taken.length<2&&!r.runs.C.done&&need.length?'<p class="small" style="margin-top:10px">💡 C안까지 풀면 “확실히 빈 곳”과 “흔들리는 곳”을 나눠서 알려 줘요.</p>':'')+'</section>';
-    if(need.length){h+='<section class="card"><h3>오늘 탈 기차 · 채울 정류장</h3>';
-      need.sort(function(a,b){return ({sure:0,gap:1,shaky:2}[a.st])-({sure:0,gap:1,shaky:2}[b.st]);}).forEach(function(j){var x=j.x,ga=semCat(x.mod,x.st,'ga'),na=semCat(x.mod,x.st,'na'),da=semCat(x.mod,x.st,'da');
-        h+='<div class="sem-tk"><span class="u">'+esc(x.unit)+'</span><div class="t"><b>정류장 '+x.st+' · '+esc(x.title)+' <span class="pill '+(j.st==='shaky'?'pass':'stuck')+'">'+LB[j.st]+'</span></b><small>'+(x.pre.length?'함께 다질 곳 ↩ '+esc(x.pre[0].label):'')+'</small></div><div class="go">'+
-          (ga?'<a class="main" data-pr="ga" href="'+esc(ga.file)+'" target="_blank" rel="noopener">(가) '+ga.pages+'쪽</a>':'')+(na?'<a data-pr="na" href="'+esc(na.file)+'" target="_blank" rel="noopener">(나) '+na.pages+'쪽</a>':'')+(da?'<a data-pr="da" href="'+esc(da.file)+'" target="_blank" rel="noopener">(다) '+da.pages+'쪽</a>':'')+'</div></div>';});
-      h+='<p class="small muted" style="margin-top:10px">“흔들리는 곳”은 (가)의 통과 확인 3문제를 먼저 풀어 보고, 모두 맞으면 넘어가도 돼요.</p></section>';}
+    if(need.length){h+='<section class="card"><h3>채울 정류장 · 어디서부터 채울까</h3><p class="small muted">틀린 정류장마다 <b>정밀 확인지</b>(5문제 · 10분)를 풀면 어디서부터 채울지 정확히 알려 줘요. 건너뛰면 (가) 기본편부터 시작해요.</p>';
+      need.sort(function(a,b){return ({sure:0,gap:1,shaky:2}[a.st])-({sure:0,gap:1,shaky:2}[b.st]);}).forEach(function(j){var x=j.x,ga=semCat(x.mod,x.st,'ga'),na=semCat(x.mod,x.st,'na'),da=semCat(x.mod,x.st,'da'),f=r.fine[x.n]||{w:{}},cf=conFile(g,s,x.mod,x.st),fv=j.fv;
+        var mainK=fv==='apply'?'na':'ga';
+        h+='<div class="sem-tk fine-tk"><span class="u">'+esc(x.unit)+'</span><div class="t"><b>정류장 '+x.st+' · '+esc(x.title)+' <span class="pill '+(j.st==='shaky'?'pass':'stuck')+'">'+LB[j.st]+'</span>'+(j.why?' <span class="pill">'+WHY[j.why]+'</span>':'')+'</b><small>'+(x.pre.length?'돌아갈 곳 ↩ '+esc(x.pre[0].label):'')+'</small></div><div class="go">'+
+          (ga?'<a class="'+(mainK==='ga'?'main':'')+'" data-pr="ga" href="'+esc(ga.file)+'" target="_blank" rel="noopener">(가) '+ga.pages+'쪽</a>':'')+(na?'<a class="'+(mainK==='na'?'main':'')+'" data-pr="na" href="'+esc(na.file)+'" target="_blank" rel="noopener">(나) '+na.pages+'쪽</a>':'')+(da?'<a data-pr="da" href="'+esc(da.file)+'" target="_blank" rel="noopener">(다) '+da.pages+'쪽</a>':'')+(cf?'<a data-pr="concept" href="'+cf+'" target="_blank" rel="noopener">개념 카드</a>':'')+'</div>'+
+          (x.fine?'<div class="fine"><a class="fine-pdf" data-pr="fine" href="'+esc(x.fine.file)+'" target="_blank" rel="noopener">정밀 확인지 출력</a><span class="small muted">틀린 번호</span>'+x.fine.roles.split('').map(function(ro,i){return '<button class="fine-n" aria-pressed="'+(!!f.w[i+1])+'" data-finen="'+x.n+'" data-finek="'+(i+1)+'">'+(i+1)+'<small>'+({p:'선수',b:'기본',a:'적용',t:'생각'}[ro])+'</small></button>';}).join('')+
+            '<button class="btn ghost fine-ok" data-fined="'+x.n+'">'+(f.done?'다시 넣기':'판정 보기')+'</button>'+(fv?'<p class="fine-v"><b>'+FINE_V[fv].t+'</b> '+(fv==='back'&&x.fine.pre?esc(x.fine.pre)+'부터. ':'')+FINE_V[fv].d+'</p>':'')+'</div>':'')+'</div>';});
+      h+='</section>';}
+    var slips=J.filter(function(j){return j.slip;});
+    if(slips.length)h+='<section class="card"><h3>실수였던 곳</h3><p class="small">'+slips.map(function(j){return '정류장 '+j.x.st+' '+esc(j.x.title);}).join(' · ')+' — 정밀 확인을 모두 맞혀서 통과로 봤어요.</p></section>';
     var filled=J.filter(function(j){return j.st==='filled';});
     if(filled.length)h+='<section class="card"><h3>채움 완료 🎉</h3><p class="small">'+filled.map(function(j){return '정류장 '+j.x.st+' '+esc(j.x.title);}).join(' · ')+' — B안에서 맞혔어요.</p></section>';
     h+='<div class="row"><button class="btn" data-act="sem-report">분석 보고서 보기</button>'+['A','C','B'].map(function(v){return '<button class="btn ghost" data-semver="'+v+'">'+(r.runs[v].done?v+'안 고치기':v+'안 결과 넣기')+'</button>';}).join('')+'<button class="btn ghost" data-act="sem-reset">새로 점검하기</button></div>';
@@ -704,6 +736,9 @@ function viewSem(){
       h+='<div class="sem-unit'+(off?' off':'')+'"><h3><span class="sem-dot '+(off?'skip':'ok')+'" style="width:30px;height:30px;font-size:.9rem">'+(ui+1)+'</span>'+esc(u.name)+' 역<span class="sp"></span><button class="pill '+(off?'stuck':'pass')+'" data-semskip="'+u.uid+'">'+(off?'아직 안 배웠어요':'배웠어요')+'</button></h3><div class="sem-nums">'+
         d.items.filter(function(x){return x.uid===u.uid;}).map(function(x){return '<button class="sem-n" aria-pressed="'+(!!cur.wrong[x.n])+'" data-semn="'+x.n+'">'+x.n+'<small>정류장 '+x.st+'</small></button>';}).join('')+'</div></div>';});
     var nw=Object.keys(cur.wrong).length;
+    if(nw){h+='<div class="why-box"><h4>3. 왜 틀렸을까요? <small>(골라 두면 판정이 더 정확해져요 · 안 골라도 돼요)</small></h4>';
+      d.items.filter(function(x){return cur.wrong[x.n]&&!r.skip[x.uid];}).forEach(function(x){h+='<div class="why-row"><span class="why-t"><b class="num">'+x.n+'</b> 정류장 '+x.st+' · '+esc(x.title)+'</span><span class="why-c">'+['k','c','r','t'].map(function(k){return '<button class="why-b" aria-pressed="'+(cur.why[x.n]===k)+'" data-whyn="'+x.n+'" data-whyk="'+k+'">'+WHY[k]+'</button>';}).join('')+'</span></div>';});
+      h+='</div>';}
     h+='<div class="row" style="margin-top:12px"><button class="btn" data-act="sem-done">'+r.ver+'안 결과 보기'+(nw?' (틀린 '+nw+'개)':' (모두 맞음)')+'</button>'+(nw?'<button class="btn ghost" data-act="sem-clear">다시 고르기</button>':'')+(anyDone?'<button class="btn ghost" data-act="sem-back">결과로 돌아가기</button>':'')+'</div></section>';
   }
   return h+'</div>'+detailCol();
@@ -768,21 +803,33 @@ function viewSemReport(){
     var pl=upct(L), pf=first.length&&r.runs.B.done?pct(L,first[0]):null;
     h+='<tr><td class="nm">'+esc(u.name)+'</td><td><div class="rep-track"><span class="zone"></span>'+(pf!==null?'<span class="bar first" style="width:'+pf+'%"></span>':'')+'<span class="bar" style="width:'+pl+'%"></span></div></td><td class="pc">'+pl+'</td><td class="vd"><span class="rep-tag'+(pl<60?' low':pl<90?' mid':'')+'">'+(pl>=90?'튼튼':pl>=60?'보통':'부족')+'</span></td></tr>';});
   h+='</table><div class="rep-legend"><span><i></i>'+bLabel.replace(' 기준','')+' 정답률</span>'+(r.runs.B.done&&first.length?'<span><i class="f"></i>처음 정답률</span>':'')+'<span><i class="z"></i>보통 구간(60~90%)</span></div>';
+  // 영역별 · 틀린 이유
+  var LN={};DATA.lines.forEach(function(l){LN[l.key]=l.name;});var byId2={};DATA.stations.forEach(function(st){byId2[st.id]=st;});
+  var AR=DATA.lines.map(function(l){var L=active.filter(function(x){return byId2[x.uid]&&byId2[x.uid].lineKey===l.key;});return {name:l.name,n:L.length,p:upct(L)};}).filter(function(a){return a.n;});
+  var YC={k:0,c:0,r:0,t:0,x:0},YT=0;runs.forEach(function(v){active.forEach(function(x){if(r.runs[v].wrong[x.n]){YT++;YC[r.runs[v].why[x.n]||'x']++;}});});
+  h+='</section><section class="rep-sec"><h2>4. 영역별 강약 · 틀린 이유</h2><div class="rep-two"><div><table class="rep-bars"><tr><th>영역</th><th>정답률</th><th style="text-align:right">%</th></tr>'+
+    AR.map(function(a){return '<tr><td class="nm">'+esc(a.name)+' <span class="small muted">'+a.n+'문항</span></td><td><div class="rep-track"><span class="zone"></span><span class="bar" style="width:'+a.p+'%"></span></div></td><td class="pc">'+a.p+'</td></tr>';}).join('')+'</table></div><div>';
+  if(YT){var known=YT-YC.x;h+='<table class="rep-bars"><tr><th>틀린 이유</th><th>'+YT+'번 중</th><th style="text-align:right">번</th></tr>'+['k','c','r','t','x'].filter(function(k){return YC[k];}).map(function(k){return '<tr><td class="nm">'+(k==='x'?'표시 안 함':WHY[k])+'</td><td><div class="rep-track"><span class="bar" style="width:'+Math.round(YC[k]*100/YT)+'%"></span></div></td><td class="pc">'+YC[k]+'</td></tr>';}).join('')+'</table>';
+    var top=['k','c','r','t'].sort(function(a,b){return YC[b]-YC[a];})[0];
+    if(known)h+='<p class="small" style="margin:6px 0 0">'+({k:'<b>몰라서 틀린 곳</b>이 가장 많아요. 개념 카드와 (가) 기본편부터 차근차근 채워요.',c:'<b>계산 실수</b>가 가장 많아요. 개념은 알고 있어요. (나) 다지기편으로 정확하게 푸는 연습을 해요.',r:'<b>문제를 잘못 읽은 곳</b>이 가장 많아요. 묻는 말에 밑줄을 긋고, 답을 쓰기 전에 다시 읽는 습관을 들여요.',t:'<b>시간이 모자란 곳</b>이 가장 많아요. 못 푼 정류장은 정밀 확인지로 따로 확인해 보세요.'}[top])+'</p>';
+    else h+='<p class="small muted" style="margin:6px 0 0">틀린 번호마다 이유를 골라 두면 여기에서 비율을 볼 수 있어요.</p>';}
+  else h+='<p class="small">틀린 문제가 없어요.</p>';
+  h+='</div></div>';
   // 3. 정류장 표
-  h+='</section><section class="rep-sec long"><h2>4. 정류장별 결과</h2><table class="rep-st"><thead><tr><th>번호</th><th>단원</th><th>정류장</th>'+['A','C','B'].map(function(v){return '<th style="width:40px">'+v+'안</th>';}).join('')+'<th>판정</th></tr></thead><tbody>';
+  h+='</section><section class="rep-sec long"><h2>5. 정류장별 결과</h2><table class="rep-st"><thead><tr><th>번호</th><th>단원</th><th>정류장</th>'+['A','C','B'].map(function(v){return '<th style="width:40px">'+v+'안</th>';}).join('')+'<th>틀린 이유</th><th>정밀 확인</th><th>판정</th></tr></thead><tbody>';
   J.forEach(function(j){var x=j.x;h+='<tr><td class="c">'+x.n+'</td><td>'+esc(x.unit)+'</td><td>정류장 '+x.st+' '+esc(x.title)+'</td>'+
-    ['A','C','B'].map(function(v){return '<td class="c">'+(j.st==='skip'||!r.runs[v].done?'':(r.runs[v].wrong[x.n]?'✕':'○'))+'</td>';}).join('')+'<td>'+(j.st==='sure'||j.st==='gap'?'<b>'+VD[j.st]+'</b>':VD[j.st])+'</td></tr>';});
+    ['A','C','B'].map(function(v){return '<td class="c">'+(j.st==='skip'||!r.runs[v].done?'':(r.runs[v].wrong[x.n]?'✕':'○'))+'</td>';}).join('')+'<td>'+(j.why?WHY[j.why]:'')+'</td><td>'+(j.fv?FINE_V[j.fv].t:'')+'</td><td>'+(j.st==='sure'||j.st==='gap'?'<b>'+VD[j.st]+'</b>':(j.slip?'통과(실수)':VD[j.st]))+'</td></tr>';});
   h+='</tbody></table>';
   // 4. 처방
   var need=J.filter(function(j){return j.st==='sure'||j.st==='gap'||j.st==='shaky';}).sort(function(a,b){return ({sure:0,gap:1,shaky:2}[a.st])-({sure:0,gap:1,shaky:2}[b.st]);});
-  h+='</section><section class="rep-sec"><h2>5. 채울 순서 (처방)</h2>';
-  if(need.length){h+='<ol class="rep-plan">'+need.map(function(j){var x=j.x;return '<li><div><b>정류장 '+x.st+' '+esc(x.title)+'</b> <span class="small muted">'+esc(x.unit)+' · '+VD[j.st]+'</span><br><span class="small">(가) 기본편 → (나) 다지기편'+(x.pre.length?' · 함께 다질 곳: '+esc(x.pre[0].label):'')+'</span></div></li>';}).join('')+'</ol>'+
+  h+='</section><section class="rep-sec"><h2>6. 채울 순서 (처방)</h2>';
+  if(need.length){h+='<ol class="rep-plan">'+need.map(function(j){var x=j.x;return '<li><div><b>정류장 '+x.st+' '+esc(x.title)+'</b> <span class="small muted">'+esc(x.unit)+' · '+VD[j.st]+'</span><br><span class="small">'+(j.fv?'<b>'+FINE_V[j.fv].t+'</b> — '+(j.fv==='back'&&x.fine&&x.fine.pre?esc(x.fine.pre)+' (가) 기본편 → 이 정류장 (가)':j.fv==='apply'?'(가) 통과 확인 → (나) 다지기편 → (다) 생각편':'개념 카드 → (가) 기본편 → (나) 다지기편'):'정밀 확인지로 시작할 곳 확인 → (가) 기본편 → (나) 다지기편'+(x.pre.length?' · 돌아갈 곳: '+esc(x.pre[0].label):''))+'</span></div></li>';}).join('')+'</ol>'+
     '<p class="small" style="margin-top:6px">한 정류장에 보통 3~5일, 하루 10~15분이면 약 <b>'+(need.length*3)+'~'+(need.length*5)+'일</b>이 걸려요. 다 채우면 B안으로 다시 점검해요.</p>';}
   else h+='<p>채울 정류장이 없어요. 생각편(다)으로 더 깊이 다져 보세요.</p>';
   // 5. 부모님께
   var strong=d.units.filter(function(u){var L=d.items.filter(function(x){return x.uid===u.uid;});return !r.skip[u.uid]&&upct(L)>=90;}).map(function(u){return u.name;});
   var weak=d.units.filter(function(u){var L=d.items.filter(function(x){return x.uid===u.uid;});return !r.skip[u.uid]&&upct(L)<60;}).map(function(u){return u.name;});
-  h+='</section><section class="rep-sec"><h2>6. 부모님께</h2><div class="rep-note">'+(strong.length?'<b>잘하는 곳</b> '+esc(strong.join(', '))+'. 잘한 점을 먼저 말해 주세요.<br>':'')+(weak.length?'<b>먼저 채울 곳</b> '+esc(weak.join(', '))+'. 이 단원은 아래 학년 기초(함께 다질 곳)부터 짧게 확인하면 훨씬 빨리 채워져요.<br>':'')+
+  h+='</section><section class="rep-sec"><h2>7. 부모님께</h2><div class="rep-note">'+(strong.length?'<b>잘하는 곳</b> '+esc(strong.join(', '))+'. 잘한 점을 먼저 말해 주세요.<br>':'')+(weak.length?'<b>먼저 채울 곳</b> '+esc(weak.join(', '))+'. 이 단원은 아래 학년 기초(함께 다질 곳)부터 짧게 확인하면 훨씬 빨리 채워져요.<br>':'')+
     (first.length<2&&!r.runs.B.done?'<b>정확도 높이기</b> 하루 이틀 뒤 C안을 풀면 “확실히 빈 곳”과 “흔들리는 곳”을 나눠 볼 수 있어요.':'<b>다음 점검</b> 정류장을 다 채운 뒤 B안으로 다시 점검하고 이 보고서를 나란히 비교해 보세요.')+'</div>';
   h+='<p class="small muted" style="margin-top:14px">이 보고서는 학교 시험 점수가 아니라, 이번 학기에 어디가 비어 있는지 찾는 지도예요. 정답률 구간: 90% 이상 튼튼 · 60~89% 보통 · 60% 미만 부족.</p></section></article></div>';
   return h;
@@ -1150,7 +1197,10 @@ document.addEventListener('click',function(e){
   if(t.dataset.grade){S.mapGrade=+t.dataset.grade;render();return;}
   if(t.dataset.dmode){S.diagMode=t.dataset.dmode;S.diagStep=null;track('dm_'+t.dataset.dmode);render();return;}
   if(t.dataset.semg||t.dataset.sems){if(t.dataset.semg)S.semG=+t.dataset.semg;if(t.dataset.sems)S.semS=+t.dataset.sems;render();return;}
-  if(t.dataset.semn){semSet(function(r){var w=r.runs[r.ver].wrong;if(w[t.dataset.semn])delete w[t.dataset.semn];else w[t.dataset.semn]=1;});return;}
+  if(t.dataset.semn){semSet(function(r){var w=r.runs[r.ver].wrong;if(w[t.dataset.semn]){delete w[t.dataset.semn];delete r.runs[r.ver].why[t.dataset.semn];}else w[t.dataset.semn]=1;});return;}
+  if(t.dataset.whyn){semSet(function(r){var y=r.runs[r.ver].why;if(y[t.dataset.whyn]===t.dataset.whyk)delete y[t.dataset.whyn];else y[t.dataset.whyn]=t.dataset.whyk;});return;}
+  if(t.dataset.finen){semSet(function(r){var f=r.fine[t.dataset.finen]=r.fine[t.dataset.finen]||{w:{}};f.done=false;if(f.w[t.dataset.finek])delete f.w[t.dataset.finek];else f.w[t.dataset.finek]=1;});return;}
+  if(t.dataset.fined){track('fine_done');semSet(function(r){var f=r.fine[t.dataset.fined]=r.fine[t.dataset.fined]||{w:{}};f.done=!f.done;if(f.done)f.at=today();});return;}
   if(t.dataset.semver){S.semEdit=true;semSet(function(r){r.ver=t.dataset.semver;});return;}
   if(t.dataset.semskip){semSet(function(r){if(r.skip[t.dataset.semskip])delete r.skip[t.dataset.semskip];else r.skip[t.dataset.semskip]=1;});return;}
   if(t.dataset.semscope){var dd=SEMD[(S.semG||S.child.grade)+'-'+(S.semS||semNow())];semSet(function(r){r.scope=t.dataset.semscope;r.skip={};if(r.scope==='mid'&&dd)dd.units.slice(dd.units.length/2).forEach(function(u){r.skip[u.uid]=1;});});return;}
@@ -1178,8 +1228,8 @@ document.addEventListener('click',function(e){
   if(a==='rep-close'){S.semReport=false;render();return;}
   if(a==='rep-print'){track('rep_print');window.print();return;}
   if(a==='sem-back'){S.semEdit=false;render();return;}
-  if(a==='sem-clear'){semSet(function(r){r.runs[r.ver].wrong={};});return;}
-  if(a==='sem-reset'){S.semEdit=true;semSet(function(r){r.runs={};r.skip={};r.scope='all';r.ver='A';});return;}
+  if(a==='sem-clear'){semSet(function(r){r.runs[r.ver].wrong={};r.runs[r.ver].why={};});return;}
+  if(a==='sem-reset'){S.semEdit=true;semSet(function(r){r.runs={};r.skip={};r.fine={};r.scope='all';r.ver='A';});return;}
   if(a==='diag-start'){track('diag_start');S.diagStep=0;render();}
   else if(a==='diag-reset'){S.diag={};S.diagStep=0;render();}
   else if(a==='login-google'){cloudCall('loginGoogle');}

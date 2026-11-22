@@ -45,7 +45,12 @@
      "st": 9,
      "label": "1-2 수 · 짝수와 홀수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_su-s1.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 수 · 짝수와 홀수"
+   }
   },
   {
    "n": 2,
@@ -63,7 +68,12 @@
      "st": 9,
      "label": "1-2 수 · 짝수와 홀수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_su-s2.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 수 · 짝수와 홀수"
+   }
   },
   {
    "n": 3,
@@ -81,7 +91,12 @@
      "st": 9,
      "label": "1-2 수 · 짝수와 홀수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_su-s3.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 수 · 짝수와 홀수"
+   }
   },
   {
    "n": 4,
@@ -99,7 +114,12 @@
      "st": 9,
      "label": "1-2 수 · 짝수와 홀수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_su-s4.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 수 · 짝수와 홀수"
+   }
   },
   {
    "n": 5,
@@ -117,7 +137,12 @@
      "st": 9,
      "label": "1-2 수 · 짝수와 홀수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_su-s5.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 수 · 짝수와 홀수"
+   }
   },
   {
    "n": 6,
@@ -135,7 +160,12 @@
      "st": 6,
      "label": "1-2 모양 · 모양으로 꾸미기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_do-s1.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 모양 · 모양으로 꾸미기"
+   }
   },
   {
    "n": 7,
@@ -153,7 +183,12 @@
      "st": 6,
      "label": "1-2 모양 · 모양으로 꾸미기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_do-s2.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 모양 · 모양으로 꾸미기"
+   }
   },
   {
    "n": 8,
@@ -171,7 +206,12 @@
      "st": 6,
      "label": "1-2 모양 · 모양으로 꾸미기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_do-s3.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 모양 · 모양으로 꾸미기"
+   }
   },
   {
    "n": 9,
@@ -189,7 +229,12 @@
      "st": 6,
      "label": "1-2 모양 · 모양으로 꾸미기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_do-s4.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 모양 · 모양으로 꾸미기"
+   }
   },
   {
    "n": 10,
@@ -207,7 +252,12 @@
      "st": 6,
      "label": "1-2 모양 · 모양으로 꾸미기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_do-s5.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 모양 · 모양으로 꾸미기"
+   }
   },
   {
    "n": 11,
@@ -225,7 +275,12 @@
      "st": 6,
      "label": "1-2 모양 · 모양으로 꾸미기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_do-s6.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 모양 · 모양으로 꾸미기"
+   }
   },
   {
    "n": 12,
@@ -248,7 +303,12 @@
      "st": 5,
      "label": "2-1 수와 자릿값 · 크기 비교와 0이 있는 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_yeon-s1.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 덧셈과 뺄셈 · 두 자리 수 셈"
+   }
   },
   {
    "n": 13,
@@ -271,7 +331,12 @@
      "st": 5,
      "label": "2-1 수와 자릿값 · 크기 비교와 0이 있는 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_yeon-s2.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 덧셈과 뺄셈 · 두 자리 수 셈"
+   }
   },
   {
    "n": 14,
@@ -294,7 +359,12 @@
      "st": 5,
      "label": "2-1 수와 자릿값 · 크기 비교와 0이 있는 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_yeon-s3.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 덧셈과 뺄셈 · 두 자리 수 셈"
+   }
   },
   {
    "n": 15,
@@ -317,7 +387,12 @@
      "st": 5,
      "label": "2-1 수와 자릿값 · 크기 비교와 0이 있는 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_yeon-s4.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 덧셈과 뺄셈 · 두 자리 수 셈"
+   }
   },
   {
    "n": 16,
@@ -340,7 +415,12 @@
      "st": 5,
      "label": "2-1 수와 자릿값 · 크기 비교와 0이 있는 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_yeon-s5.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 덧셈과 뺄셈 · 두 자리 수 셈"
+   }
   },
   {
    "n": 17,
@@ -363,7 +443,12 @@
      "st": 5,
      "label": "2-1 수와 자릿값 · 크기 비교와 0이 있는 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_yeon-s6.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 덧셈과 뺄셈 · 두 자리 수 셈"
+   }
   },
   {
    "n": 18,
@@ -386,7 +471,12 @@
      "st": 5,
      "label": "2-1 수와 자릿값 · 크기 비교와 0이 있는 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_yeon-s7.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 덧셈과 뺄셈 · 두 자리 수 셈"
+   }
   },
   {
    "n": 19,
@@ -404,7 +494,12 @@
      "st": 3,
      "label": "1-1 비교하기 · 넓이와 들이"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_gil-s1.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 비교하기 · 넓이와 들이"
+   }
   },
   {
    "n": 20,
@@ -422,7 +517,12 @@
      "st": 3,
      "label": "1-1 비교하기 · 넓이와 들이"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_gil-s2.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 비교하기 · 넓이와 들이"
+   }
   },
   {
    "n": 21,
@@ -440,7 +540,12 @@
      "st": 3,
      "label": "1-1 비교하기 · 넓이와 들이"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_gil-s3.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 비교하기 · 넓이와 들이"
+   }
   },
   {
    "n": 22,
@@ -458,7 +563,12 @@
      "st": 3,
      "label": "1-1 비교하기 · 넓이와 들이"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_gil-s4.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 비교하기 · 넓이와 들이"
+   }
   },
   {
    "n": 23,
@@ -476,7 +586,12 @@
      "st": 3,
      "label": "1-1 비교하기 · 넓이와 들이"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_gil-s5.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 비교하기 · 넓이와 들이"
+   }
   },
   {
    "n": 24,
@@ -494,7 +609,12 @@
      "st": 3,
      "label": "1-1 모양 · 모양 만들기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_ja-s1.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 모양 · 모양 만들기"
+   }
   },
   {
    "n": 25,
@@ -512,7 +632,12 @@
      "st": 3,
      "label": "1-1 모양 · 모양 만들기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_ja-s2.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 모양 · 모양 만들기"
+   }
   },
   {
    "n": 26,
@@ -530,7 +655,12 @@
      "st": 3,
      "label": "1-1 모양 · 모양 만들기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_ja-s3.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 모양 · 모양 만들기"
+   }
   },
   {
    "n": 27,
@@ -553,7 +683,12 @@
      "st": 7,
      "label": "2-1 덧셈과 뺄셈 · 덧셈과 뺄셈의 관계"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_gop-s1.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 수 · 짝수와 홀수"
+   }
   },
   {
    "n": 28,
@@ -576,7 +711,12 @@
      "st": 7,
      "label": "2-1 덧셈과 뺄셈 · 덧셈과 뺄셈의 관계"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_gop-s2.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 수 · 짝수와 홀수"
+   }
   },
   {
    "n": 29,
@@ -599,7 +739,12 @@
      "st": 7,
      "label": "2-1 덧셈과 뺄셈 · 덧셈과 뺄셈의 관계"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g2_gop-s3.pdf",
+    "roles": "pbbat",
+    "pre": "1-2 수 · 짝수와 홀수"
+   }
   }
  ]
 }

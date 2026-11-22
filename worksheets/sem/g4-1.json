@@ -45,7 +45,12 @@
      "st": 8,
      "label": "2-2 수와 자릿값 · 네 자리 수 뛰어 세기와 비교"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_keun-s1.pdf",
+    "roles": "pbbat",
+    "pre": "2-2 수와 자릿값 · 네 자리 수 뛰어 세기와 비교"
+   }
   },
   {
    "n": 2,
@@ -63,7 +68,12 @@
      "st": 8,
      "label": "2-2 수와 자릿값 · 네 자리 수 뛰어 세기와 비교"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_keun-s2.pdf",
+    "roles": "pbbat",
+    "pre": "2-2 수와 자릿값 · 네 자리 수 뛰어 세기와 비교"
+   }
   },
   {
    "n": 3,
@@ -81,7 +91,12 @@
      "st": 8,
      "label": "2-2 수와 자릿값 · 네 자리 수 뛰어 세기와 비교"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_keun-s3.pdf",
+    "roles": "pbbat",
+    "pre": "2-2 수와 자릿값 · 네 자리 수 뛰어 세기와 비교"
+   }
   },
   {
    "n": 4,
@@ -99,7 +114,12 @@
      "st": 8,
      "label": "2-2 수와 자릿값 · 네 자리 수 뛰어 세기와 비교"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_keun-s4.pdf",
+    "roles": "pbbat",
+    "pre": "2-2 수와 자릿값 · 네 자리 수 뛰어 세기와 비교"
+   }
   },
   {
    "n": 5,
@@ -117,7 +137,12 @@
      "st": 3,
      "label": "3-1 평면도형과 원 · 직사각형과 정사각형"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s1.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 6,
@@ -135,7 +160,12 @@
      "st": 3,
      "label": "3-1 평면도형과 원 · 직사각형과 정사각형"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s2.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 7,
@@ -153,7 +183,12 @@
      "st": 3,
      "label": "3-1 평면도형과 원 · 직사각형과 정사각형"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_do-s3.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 8,
@@ -176,7 +211,12 @@
      "st": 6,
      "label": "3-2 나눗셈 · 나머지 이야기 문제"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_gopna-s1.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 곱셈 · (두 자리)×(두 자리)"
+   }
   },
   {
    "n": 9,
@@ -199,7 +239,12 @@
      "st": 6,
      "label": "3-2 나눗셈 · 나머지 이야기 문제"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_gopna-s2.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 곱셈 · (두 자리)×(두 자리)"
+   }
   },
   {
    "n": 10,
@@ -222,7 +267,12 @@
      "st": 6,
      "label": "3-2 나눗셈 · 나머지 이야기 문제"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_gopna-s3.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 곱셈 · (두 자리)×(두 자리)"
+   }
   },
   {
    "n": 11,
@@ -245,7 +295,12 @@
      "st": 6,
      "label": "3-2 나눗셈 · 나머지 이야기 문제"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_gopna-s4.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 곱셈 · (두 자리)×(두 자리)"
+   }
   },
   {
    "n": 12,
@@ -268,7 +323,12 @@
      "st": 6,
      "label": "3-2 나눗셈 · 나머지 이야기 문제"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_gopna-s5.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 곱셈 · (두 자리)×(두 자리)"
+   }
   },
   {
    "n": 13,
@@ -286,7 +346,12 @@
      "st": 3,
      "label": "3-1 평면도형과 원 · 직사각형과 정사각형"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_idong-s1.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 14,
@@ -304,7 +369,12 @@
      "st": 3,
      "label": "3-1 평면도형과 원 · 직사각형과 정사각형"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_idong-s2.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 15,
@@ -322,7 +392,12 @@
      "st": 3,
      "label": "3-1 평면도형과 원 · 직사각형과 정사각형"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_idong-s3.pdf",
+    "roles": "pbbat",
+    "pre": "3-1 평면도형과 원 · 직사각형과 정사각형"
+   }
   },
   {
    "n": 16,
@@ -340,7 +415,12 @@
      "st": 3,
      "label": "3-2 자료의 정리 · 그림그래프 그리기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_ja-s1.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 자료의 정리 · 그림그래프 그리기"
+   }
   },
   {
    "n": 17,
@@ -358,7 +438,12 @@
      "st": 3,
      "label": "3-2 자료의 정리 · 그림그래프 그리기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_ja-s2.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 자료의 정리 · 그림그래프 그리기"
+   }
   },
   {
    "n": 18,
@@ -376,7 +461,12 @@
      "st": 3,
      "label": "3-2 자료의 정리 · 그림그래프 그리기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_ja-s3.pdf",
+    "roles": "pbbat",
+    "pre": "3-2 자료의 정리 · 그림그래프 그리기"
+   }
   },
   {
    "n": 19,
@@ -394,7 +484,12 @@
      "st": 4,
      "label": "2-2 규칙 찾기 · 곱셈표와 생활 속 규칙"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_gyu-s1.pdf",
+    "roles": "pbbat",
+    "pre": "2-2 규칙 찾기 · 곱셈표와 생활 속 규칙"
+   }
   },
   {
    "n": 20,
@@ -412,7 +507,12 @@
      "st": 4,
      "label": "2-2 규칙 찾기 · 곱셈표와 생활 속 규칙"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_gyu-s2.pdf",
+    "roles": "pbbat",
+    "pre": "2-2 규칙 찾기 · 곱셈표와 생활 속 규칙"
+   }
   },
   {
    "n": 21,
@@ -430,7 +530,12 @@
      "st": 4,
      "label": "2-2 규칙 찾기 · 곱셈표와 생활 속 규칙"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g4_gyu-s3.pdf",
+    "roles": "pbbat",
+    "pre": "2-2 규칙 찾기 · 곱셈표와 생활 속 규칙"
+   }
   }
  ]
 }

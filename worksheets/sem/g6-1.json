@@ -50,7 +50,12 @@
      "st": 3,
      "label": "3-1 나눗셈 · 몫을 구구로"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s1.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 분수 · 분수 곱셈 활용"
+   }
   },
   {
    "n": 2,
@@ -73,7 +78,12 @@
      "st": 3,
      "label": "3-1 나눗셈 · 몫을 구구로"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s2.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 분수 · 분수 곱셈 활용"
+   }
   },
   {
    "n": 3,
@@ -96,7 +106,12 @@
      "st": 3,
      "label": "3-1 나눗셈 · 몫을 구구로"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s3.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 분수 · 분수 곱셈 활용"
+   }
   },
   {
    "n": 4,
@@ -119,7 +134,12 @@
      "st": 12,
      "label": "4-2 각도와 도형 · 모양 조각으로 채우기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_ip-s1.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   },
   {
    "n": 5,
@@ -142,7 +162,12 @@
      "st": 12,
      "label": "4-2 각도와 도형 · 모양 조각으로 채우기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_ip-s2.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   },
   {
    "n": 6,
@@ -165,7 +190,12 @@
      "st": 12,
      "label": "4-2 각도와 도형 · 모양 조각으로 채우기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_ip-s3.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   },
   {
    "n": 7,
@@ -188,7 +218,12 @@
      "st": 5,
      "label": "4-1 곱셈과 나눗셈 · 나머지 이야기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s7.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 소수의 곱셈 · 곱의 크기 어림"
+   }
   },
   {
    "n": 8,
@@ -211,7 +246,12 @@
      "st": 5,
      "label": "4-1 곱셈과 나눗셈 · 나머지 이야기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s8.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 소수의 곱셈 · 곱의 크기 어림"
+   }
   },
   {
    "n": 9,
@@ -234,7 +274,12 @@
      "st": 5,
      "label": "4-1 곱셈과 나눗셈 · 나머지 이야기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_na-s9.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 소수의 곱셈 · 곱의 크기 어림"
+   }
   },
   {
    "n": 10,
@@ -262,7 +307,12 @@
      "st": 3,
      "label": "6-1 분수와 소수의 나눗셈 · (분수) ÷ (자연수) 활용"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bi-s1.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 규칙과 대응 · 대응 관계로 문제 해결"
+   }
   },
   {
    "n": 11,
@@ -290,7 +340,12 @@
      "st": 3,
      "label": "6-1 분수와 소수의 나눗셈 · (분수) ÷ (자연수) 활용"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bi-s2.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 규칙과 대응 · 대응 관계로 문제 해결"
+   }
   },
   {
    "n": 12,
@@ -318,7 +373,12 @@
      "st": 3,
      "label": "6-1 분수와 소수의 나눗셈 · (분수) ÷ (자연수) 활용"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bi-s3.pdf",
+    "roles": "pbbat",
+    "pre": "5-1 규칙과 대응 · 대응 관계로 문제 해결"
+   }
   },
   {
    "n": 13,
@@ -341,7 +401,12 @@
      "st": 6,
      "label": "4-2 막대그래프와 꺾은선그래프 · 꺾은선그래프로 예상하기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_geu-s1.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 비와 비율, 비례식과 비례배분 · 백분율"
+   }
   },
   {
    "n": 14,
@@ -364,7 +429,12 @@
      "st": 6,
      "label": "4-2 막대그래프와 꺾은선그래프 · 꺾은선그래프로 예상하기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_geu-s2.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 비와 비율, 비례식과 비례배분 · 백분율"
+   }
   },
   {
    "n": 15,
@@ -387,7 +457,12 @@
      "st": 6,
      "label": "4-2 막대그래프와 꺾은선그래프 · 꺾은선그래프로 예상하기"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_geu-s3.pdf",
+    "roles": "pbbat",
+    "pre": "6-1 비와 비율, 비례식과 비례배분 · 백분율"
+   }
   },
   {
    "n": 16,
@@ -410,7 +485,12 @@
      "st": 5,
      "label": "5-1 다각형의 둘레와 넓이 · 사다리꼴·마름모"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bu-s1.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   },
   {
    "n": 17,
@@ -433,7 +513,12 @@
      "st": 5,
      "label": "5-1 다각형의 둘레와 넓이 · 사다리꼴·마름모"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bu-s2.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   },
   {
    "n": 18,
@@ -456,7 +541,12 @@
      "st": 5,
      "label": "5-1 다각형의 둘레와 넓이 · 사다리꼴·마름모"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bu-s3.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   },
   {
    "n": 19,
@@ -479,7 +569,12 @@
      "st": 5,
      "label": "5-1 다각형의 둘레와 넓이 · 사다리꼴·마름모"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g6_bu-s4.pdf",
+    "roles": "pbbat",
+    "pre": "5-2 합동과 대칭, 직육면체 · 직육면체 활용"
+   }
   }
  ]
 }

@@ -35,7 +35,12 @@
    "ansA": "6개",
    "ansB": "9개",
    "ansC": "6개",
-   "pre": []
+   "pre": [],
+   "fine": {
+    "file": "worksheets/fine/g1_su-s1.pdf",
+    "roles": "bbat",
+    "pre": ""
+   }
   },
   {
    "n": 2,
@@ -47,7 +52,12 @@
    "ansA": "왼쪽에서 4번째 하나",
    "ansB": "오른쪽에서 2번째 하나",
    "ansC": "하나만 가리키면 통과",
-   "pre": []
+   "pre": [],
+   "fine": {
+    "file": "worksheets/fine/g1_su-s2.pdf",
+    "roles": "bbat",
+    "pre": ""
+   }
   },
   {
    "n": 3,
@@ -59,7 +69,12 @@
    "ansA": "0",
    "ansB": "9",
    "ansC": "5",
-   "pre": []
+   "pre": [],
+   "fine": {
+    "file": "worksheets/fine/g1_su-s3.pdf",
+    "roles": "bbat",
+    "pre": ""
+   }
   },
   {
    "n": 4,
@@ -71,7 +86,12 @@
    "ansA": "ㄷ",
    "ansB": "ㄴ",
    "ansC": "공 모양",
-   "pre": []
+   "pre": [],
+   "fine": {
+    "file": "worksheets/fine/g1_mo-s1.pdf",
+    "roles": "bbat",
+    "pre": ""
+   }
   },
   {
    "n": 5,
@@ -83,7 +103,12 @@
    "ansA": "둥근기둥 모양",
    "ansB": "공 모양",
    "ansC": "둥근기둥 모양",
-   "pre": []
+   "pre": [],
+   "fine": {
+    "file": "worksheets/fine/g1_mo-s2.pdf",
+    "roles": "bbat",
+    "pre": ""
+   }
   },
   {
    "n": 6,
@@ -95,7 +120,12 @@
    "ansA": "2개",
    "ansB": "1개",
    "ansC": "맨 위",
-   "pre": []
+   "pre": [],
+   "fine": {
+    "file": "worksheets/fine/g1_mo-s3.pdf",
+    "roles": "bbat",
+    "pre": ""
+   }
   },
   {
    "n": 7,
@@ -113,7 +143,12 @@
      "st": 3,
      "label": "1-1 수 · 1 큰 수·1 작은 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g1_yeon-s1.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 수 · 1 큰 수·1 작은 수"
+   }
   },
   {
    "n": 8,
@@ -131,7 +166,12 @@
      "st": 3,
      "label": "1-1 수 · 1 큰 수·1 작은 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g1_yeon-s2.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 수 · 1 큰 수·1 작은 수"
+   }
   },
   {
    "n": 9,
@@ -149,7 +189,12 @@
      "st": 3,
      "label": "1-1 수 · 1 큰 수·1 작은 수"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g1_yeon-s3.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 수 · 1 큰 수·1 작은 수"
+   }
   },
   {
    "n": 10,
@@ -161,7 +206,12 @@
    "ansA": "ㄱ",
    "ansB": "ㄷ",
    "ansC": "가장 긴 연필",
-   "pre": []
+   "pre": [],
+   "fine": {
+    "file": "worksheets/fine/g1_bi-s1.pdf",
+    "roles": "bbat",
+    "pre": ""
+   }
   },
   {
    "n": 11,
@@ -173,7 +223,12 @@
    "ansA": "필통",
    "ansB": "멜론",
    "ansC": "더 무거운 쪽",
-   "pre": []
+   "pre": [],
+   "fine": {
+    "file": "worksheets/fine/g1_bi-s2.pdf",
+    "roles": "bbat",
+    "pre": ""
+   }
   },
   {
    "n": 12,
@@ -185,7 +240,12 @@
    "ansA": "ㄴ",
    "ansB": "ㄷ",
    "ansC": "더 넓은 쪽",
-   "pre": []
+   "pre": [],
+   "fine": {
+    "file": "worksheets/fine/g1_bi-s3.pdf",
+    "roles": "bbat",
+    "pre": ""
+   }
   },
   {
    "n": 13,
@@ -208,7 +268,12 @@
      "st": 3,
      "label": "1-1 덧셈과 뺄셈 · 뺄셈 이야기와 식"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g1_su-s4.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 수 · 1 큰 수·1 작은 수"
+   }
   },
   {
    "n": 14,
@@ -231,7 +296,12 @@
      "st": 3,
      "label": "1-1 덧셈과 뺄셈 · 뺄셈 이야기와 식"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g1_su-s5.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 수 · 1 큰 수·1 작은 수"
+   }
   },
   {
    "n": 15,
@@ -254,7 +324,12 @@
      "st": 3,
      "label": "1-1 덧셈과 뺄셈 · 뺄셈 이야기와 식"
     }
-   ]
+   ],
+   "fine": {
+    "file": "worksheets/fine/g1_su-s6.pdf",
+    "roles": "pbbat",
+    "pre": "1-1 수 · 1 큰 수·1 작은 수"
+   }
   }
  ]
 }
