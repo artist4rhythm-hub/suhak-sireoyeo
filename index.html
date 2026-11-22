@@ -479,7 +479,7 @@ body{background:var(--paper);background-image:linear-gradient(180deg,var(--sunbg
 .hero-art .brandmark{margin-right:24%!important}
 .field input,.field select,.field textarea{max-width:100%;box-sizing:border-box}
 .rec td:first-child,.rec td:last-child{white-space:nowrap}
-.pv-nm .pv-link{display:block;font-size:.75rem;margin-top:2px;white-space:nowrap;width:max-content}
+.pv-nm .pv-link{display:inline-block;margin-right:10px;font-size:.75rem;margin-top:2px;white-space:nowrap;width:max-content}
 
 /* ---- 2단계 정밀 확인 · 틀린 이유 ---- */
 .why-box{margin-top:16px;border-top:1px solid var(--grid);padding-top:12px}.why-box h4{margin:0 0 6px;font-size:1rem}.why-box h4 small{font-weight:400;color:var(--muted);font-size:.75rem}
@@ -666,6 +666,7 @@ function semSave(r){try{localStorage.setItem(SEM_KEY,JSON.stringify(r));}catch(e
 function semNow(){var m=new Date().getMonth()+1;return (m>=8||m<=1)?2:1;}
 function semData(g,s){var k=g+'-'+s;if(SEMD[k]===undefined){SEMD[k]=null;fetch('worksheets/sem/g'+k+'.json').then(function(r){return r.ok?r.json():0;}).then(function(d){SEMD[k]=d||0;render();}).catch(function(){SEMD[k]=0;render();});}return SEMD[k];}
 var COND={};function conData(g,s){var k=g+'-'+s;if(COND[k]===undefined){COND[k]=null;fetch('worksheets/concept/g'+k+'.json').then(function(r){return r.ok?r.json():0;}).then(function(d){COND[k]=d||0;render();}).catch(function(){COND[k]=0;});}return COND[k];}
+var DRILL;function drillFile(mod,st){if(DRILL===undefined){DRILL=null;fetch('worksheets/drill/index.json').then(function(r){return r.ok?r.json():0;}).then(function(d){DRILL=d||0;render();}).catch(function(){DRILL=0;});}return DRILL&&DRILL[mod+'-'+st]?DRILL[mod+'-'+st]:null;}
 function conFile(g,s,mod,st){var d=conData(g,s);if(!d)return null;var c=d.cards.filter(function(x){return x.mod===mod&&x.st===st;})[0];return c?c.file:null;}
 function semCat(mod,st,kind){if(!CAT)return null;return CAT.items.filter(function(x){return x.mod===mod&&x.st===st&&x.kind===kind;})[0]||null;}
 function semFix(r){r=r||{};r.skip=r.skip||{};r.runs=r.runs||{};if(r.wrong){r.runs.A={wrong:r.wrong,done:!!r.done,at:r.at};delete r.wrong;delete r.done;delete r.at;}
@@ -719,7 +720,7 @@ function viewSem(){
       need.sort(function(a,b){return ({sure:0,gap:1,shaky:2}[a.st])-({sure:0,gap:1,shaky:2}[b.st]);}).forEach(function(j){var x=j.x,ga=semCat(x.mod,x.st,'ga'),na=semCat(x.mod,x.st,'na'),da=semCat(x.mod,x.st,'da'),f=r.fine[x.n]||{w:{}},cf=conFile(g,s,x.mod,x.st),fv=j.fv;
         var mainK=fv==='apply'?'na':'ga';
         h+='<div class="sem-tk fine-tk"><span class="u">'+esc(x.unit)+'</span><div class="t"><b>정류장 '+x.st+' · '+esc(x.title)+' <span class="pill '+(j.st==='shaky'?'pass':'stuck')+'">'+LB[j.st]+'</span>'+(j.why?' <span class="pill">'+WHY[j.why]+'</span>':'')+'</b><small>'+(x.pre.length?'돌아갈 곳 ↩ '+esc(x.pre[0].label):'')+'</small></div><div class="go">'+
-          (ga?'<a class="'+(mainK==='ga'?'main':'')+'" data-pr="ga" href="'+esc(ga.file)+'" target="_blank" rel="noopener">(가) '+ga.pages+'쪽</a>':'')+(na?'<a class="'+(mainK==='na'?'main':'')+'" data-pr="na" href="'+esc(na.file)+'" target="_blank" rel="noopener">(나) '+na.pages+'쪽</a>':'')+(da?'<a data-pr="da" href="'+esc(da.file)+'" target="_blank" rel="noopener">(다) '+da.pages+'쪽</a>':'')+(cf?'<a data-pr="concept" href="'+cf+'" target="_blank" rel="noopener">개념 카드</a>':'')+'</div>'+
+          (ga?'<a class="'+(mainK==='ga'?'main':'')+'" data-pr="ga" href="'+esc(ga.file)+'" target="_blank" rel="noopener">(가) '+ga.pages+'쪽</a>':'')+(na?'<a class="'+(mainK==='na'?'main':'')+'" data-pr="na" href="'+esc(na.file)+'" target="_blank" rel="noopener">(나) '+na.pages+'쪽</a>':'')+(da?'<a data-pr="da" href="'+esc(da.file)+'" target="_blank" rel="noopener">(다) '+da.pages+'쪽</a>':'')+(cf?'<a data-pr="concept" href="'+cf+'" target="_blank" rel="noopener">개념 카드</a>':'')+(drillFile(x.mod,x.st)?'<a data-pr="drill" href="'+drillFile(x.mod,x.st).file+'" target="_blank" rel="noopener">연습장 '+drillFile(x.mod,x.st).rounds+'회</a>':'')+'</div>'+
           (x.fine?'<div class="fine"><a class="fine-pdf" data-pr="fine" href="'+esc(x.fine.file)+'" target="_blank" rel="noopener">정밀 확인지 출력</a><span class="small muted">틀린 번호</span>'+x.fine.roles.split('').map(function(ro,i){return '<button class="fine-n" aria-pressed="'+(!!f.w[i+1])+'" data-finen="'+x.n+'" data-finek="'+(i+1)+'">'+(i+1)+'<small>'+({p:'선수',b:'기본',a:'적용',t:'생각'}[ro])+'</small></button>';}).join('')+
             '<button class="btn ghost fine-ok" data-fined="'+x.n+'">'+(f.done?'다시 넣기':'판정 보기')+'</button>'+(fv?'<p class="fine-v"><b>'+FINE_V[fv].t+'</b> '+(fv==='back'&&x.fine.pre?esc(x.fine.pre)+'부터. ':'')+FINE_V[fv].d+'</p>':'')+'</div>':'')+'</div>';});
       h+='</section>';}
@@ -1059,7 +1060,7 @@ function viewPrint(){
     var mods=[];its.forEach(function(x){if(mods.indexOf(x.mod)<0)mods.push(x.mod);});
     var common=CAT.items.filter(function(x){return mods.indexOf(x.mod)>=0&&!x.st&&x.group==='dowumji';});
     h+='<article class="pv-unit"><h3><span class="ms-no">'+u.id+'</span>'+esc(u.name)+'</h3><ol class="pv-list">'+(its.length?its.map(function(f){
-      return '<li class="pv-row"><span class="pv-no">'+(f.st<10?'0'+f.st:f.st)+'</span><span class="pv-nm">'+esc(f.st_title)+(conFile(g,sm,f.mod,f.st)?' <a class="pv-link" data-pr="concept" href="'+conFile(g,sm,f.mod,f.st)+'" target="_blank" rel="noopener">개념 카드</a>':'')+'</span><a class="pv-go" data-pr="'+esc(f.kind)+'" href="'+esc(f.file)+'" target="_blank" rel="noopener" aria-label="'+esc(f.st_title)+' '+SETN[set]+' 출력">출력 <span class="num">'+f.pages+'</span>쪽</a></li>';}).join(''):'<li class="small muted">학습지 준비 중이에요</li>')+'</ol>'+
+      return '<li class="pv-row"><span class="pv-no">'+(f.st<10?'0'+f.st:f.st)+'</span><span class="pv-nm">'+esc(f.st_title)+(conFile(g,sm,f.mod,f.st)?' <a class="pv-link" data-pr="concept" href="'+conFile(g,sm,f.mod,f.st)+'" target="_blank" rel="noopener">개념 카드</a>':'')+(drillFile(f.mod,f.st)?' <a class="pv-link" data-pr="drill" href="'+drillFile(f.mod,f.st).file+'" target="_blank" rel="noopener">일일 연습장 '+drillFile(f.mod,f.st).rounds+'회</a>':'')+'</span><a class="pv-go" data-pr="'+esc(f.kind)+'" href="'+esc(f.file)+'" target="_blank" rel="noopener" aria-label="'+esc(f.st_title)+' '+SETN[set]+' 출력">출력 <span class="num">'+f.pages+'</span>쪽</a></li>';}).join(''):'<li class="small muted">학습지 준비 중이에요</li>')+'</ol>'+
       (common.length?'<p class="pv-common">'+common.map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc(KIND_LABEL[x.kind]||x.title)+'</a>';}).join('<span class="sep">·</span>')+'</p>':'')+'</article>';});
   h+='</div></section>';
   var t=CAT.items.filter(function(x){return x.grade===g&&x.group==='test';}), bk=CAT.items.filter(function(x){return x.group==='book'&&x.kind==='book'&&x.grade===g;});

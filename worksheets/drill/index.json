@@ -1,0 +1,17 @@
+{
+ "g5_so-1": {
+  "file": "worksheets/drill/g5_so-s1.pdf",
+  "rounds": 10,
+  "per": 20
+ },
+ "g5_so-2": {
+  "file": "worksheets/drill/g5_so-s2.pdf",
+  "rounds": 10,
+  "per": 20
+ },
+ "g5_so-3": {
+  "file": "worksheets/drill/g5_so-s3.pdf",
+  "rounds": 10,
+  "per": 20
+ }
+}
