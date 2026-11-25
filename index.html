@@ -520,6 +520,17 @@ main.pv-on{display:block;max-width:none;padding:0 0 24px}
 .cu-v{flex:1 1 260px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:.875rem}.cu-v small{flex:1 1 100%;color:var(--muted)}
 .ladder{display:inline-flex;align-items:flex-end;gap:2px;height:18px}.ladder i{width:7px;border:1.5px solid var(--ink);background:var(--card)}.ladder i:nth-child(1){height:7px}.ladder i:nth-child(2){height:12px}.ladder i:nth-child(3){height:17px}.ladder i.on{background:var(--ink)}
 @media (max-width:640px){.cu-n{flex-basis:100%}}
+
+/* ---- 묶음 출력 ---- */
+.bundle{border:2px solid var(--ink)}
+.bd-pre{display:flex;flex-wrap:wrap;gap:6px}.bd-pre .btn{min-height:36px;padding:4px 12px;font-size:.8125rem}
+.bd-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:10px 18px;margin-top:10px}
+.bd-gt{margin:0 0 4px;font-size:.8125rem;color:var(--muted)}
+.bd-i{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:.9375rem;cursor:pointer;min-height:36px}
+.bd-i input{width:20px;height:20px;accent-color:var(--green);flex:none}
+.bd-go{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
+.bd-go .btn[disabled]{opacity:.55;cursor:default}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:#222;color:#fff;padding:10px 16px;border-radius:12px;font-size:.875rem;opacity:0;transition:.25s;z-index:50;pointer-events:none}.toast.on{opacity:1;transform:translateX(-50%)}
 </style>
 
 </head>
@@ -1078,6 +1089,58 @@ function stationPrints(id){
   if(others.length)h+='<p class="pv-common">문제집·학습지 &nbsp;'+others.map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc(x.title)+'</a>';}).join('<span class="sep">·</span>')+'</p>';
   return h+'<span class="small muted">A4 · 흑백 인쇄 · 실제 크기(100%)로 출력하세요. 전체 목록은 <button class="pill pass" data-nav="print">출력</button> 탭에 있어요.</span></div>';
 }
+/* ---------- 묶음 출력: 고른 PDF를 브라우저에서 하나로 합쳐요 ---------- */
+var BSEL={}, BBUSY=null, PDFLIB=null;
+function bundleItems(g,sm){
+  var b='worksheets/sem/g'+g+'-'+sm+'-', out=[], cd=conData(g,sm), cp=compData(g,sm);
+  var units=DATA.stations.filter(function(s){return s.grade===g&&SEMN(s.id)===sm;});
+  var setFiles=function(kind){var fs=[];units.forEach(function(u){CAT.items.filter(function(x){return x.kind===kind&&(x.stations||[]).indexOf(u.id)>=0;}).sort(function(x,y){return x.mod<y.mod?-1:x.mod>y.mod?1:x.st-y.st;}).forEach(function(x){if(fs.indexOf(x.file)<0)fs.push(x.file);});});return fs;};
+  var pages=function(kind){var n=0;units.forEach(function(u){CAT.items.filter(function(x){return x.kind===kind&&(x.stations||[]).indexOf(u.id)>=0;}).forEach(function(x){n+=x.pages||0;});});return n;};
+  out.push({grp:'학기 점검 (승차권)',k:'A',t:'A안 · 처음',f:[b+'A.pdf'],set:'sem'},{grp:'학기 점검 (승차권)',k:'C',t:'C안 · 다른 모양',f:[b+'C.pdf'],set:'sem'},{grp:'학기 점검 (승차권)',k:'B',t:'B안 · 다 채운 뒤',f:[b+'B.pdf'],set:'sem'},
+    {grp:'학기 점검 (승차권)',k:'key',t:'정답·처방표',f:[b+'key.pdf'],set:'sem'},{grp:'학기 점검 (승차권)',k:'sol',t:'해설집',f:[b+'sol.pdf'],set:'sem'},{grp:'학기 점검 (승차권)',k:'report',t:'이해도 기록표(그래프)',f:[b+'report.pdf'],set:'sem'});
+  if(cp)out.push({grp:'학기 종합평가',k:'ct',t:'종합평가 문제지',f:[cp.test],set:'comp'},{grp:'학기 종합평가',k:'ck',t:'정답·해설·계단 기록표',f:[cp.key],set:'comp'});
+  if(cd)out.push({grp:'개념',k:'con',t:'한 장 개념 카드 묶음',f:[cd.all],set:'con'});
+  [['ga','(가) 기본편'],['na','(나) 다지기편'],['da','(다) 생각편']].forEach(function(x){var fs=setFiles(x[0]);if(fs.length)out.push({grp:'정류장 학습지 (학기 전체)',k:x[0],t:x[1]+' · '+fs.length+'개 · '+pages(x[0])+'쪽',f:fs,set:'ws'});});
+  if(DRILL){var dfs=[];units.forEach(function(u){CAT.items.filter(function(x){return x.kind==='ga'&&(x.stations||[]).indexOf(u.id)>=0;}).forEach(function(x){var d=drillFile(x.mod,x.st);if(d&&dfs.indexOf(d.file)<0)dfs.push(d.file);});});if(dfs.length)out.push({grp:'정류장 학습지 (학기 전체)',k:'drill',t:'일일 연습장 · '+dfs.length+'개',f:dfs,set:'ws'});}
+  return out;
+}
+function bundleCard(g,sm){
+  var its=bundleItems(g,sm), key=g+'-'+sm, sel=BSEL[key]||(BSEL[key]={A:1,C:1,B:1,key:1,sol:1,report:1}), grp='', h='', nsel=0;
+  h+='<section class="pv-block bundle"><div class="pv-bh"><h2><span class="pv-n">⎘</span>묶음 출력</h2><div class="bd-pre">'+
+    '<button class="btn ghost" data-bpre="sem">학기 점검 한 벌</button>'+(compData(g,sm)?'<button class="btn ghost" data-bpre="comp">종합평가 한 벌</button>':'')+'<button class="btn ghost" data-bpre="all">모두</button><button class="btn ghost" data-bpre="none">모두 해제</button></div></div>'+
+    '<p class="small muted">고른 것을 차례대로 하나의 PDF로 합쳐요. 한 번에 인쇄하거나 내려받을 수 있어요.</p><div class="bd-list">';
+  its.forEach(function(it){if(it.grp!==grp){if(grp)h+='</div>';grp=it.grp;h+='<div class="bd-g"><p class="bd-gt">'+esc(grp)+'</p>';}
+    var on=!!sel[it.k];if(on)nsel+=it.f.length;h+='<label class="bd-i"><input type="checkbox" data-bsel="'+it.k+'"'+(on?' checked':'')+'><span>'+esc(it.t)+'</span></label>';});
+  if(grp)h+='</div>';
+  h+='</div><div class="bd-go"><button class="btn" data-act="bundle-make"'+(nsel&&!BBUSY?'':' disabled')+'>'+(BBUSY?esc(BBUSY):'묶음 만들기 · 파일 '+nsel+'개')+'</button><span class="small muted">파일이 많으면 1분쯤 걸려요.</span></div></section>';
+  return h;
+}
+function bundleMake(g,sm){
+  var its=bundleItems(g,sm), sel=BSEL[g+'-'+sm]||{}, files=[], names=[];
+  its.forEach(function(it){if(sel[it.k]){it.f.forEach(function(f){files.push(f);});names.push(it.t.split(' · ')[0]);}});
+  if(!files.length)return;
+  var go=function(lib){
+    BBUSY='준비하는 중…';render();
+    lib.PDFDocument.create().then(function(out){
+      var i=0;
+      var next=function(){
+        if(i>=files.length){BBUSY='마무리하는 중…';render();return out.save().then(function(bytes){
+          var url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));BBUSY=null;
+          var title=g+'학년 '+sm+'학기 묶음 · '+(names.length>3?names.slice(0,3).join('·')+' 외 '+(names.length-3)+'개':names.join('·'));
+          pvOpen(url,title,'bundle');PV.dl=g+'학년'+sm+'학기-묶음.pdf';render();track('bundle_make','n_'+files.length);});}
+        BBUSY='합치는 중 '+(i+1)+' / '+files.length;render();
+        fetch(files[i]).then(function(r){if(!r.ok)throw 0;return r.arrayBuffer();}).then(function(buf){return lib.PDFDocument.load(buf);}).then(function(src){return out.copyPages(src,src.getPageIndices()).then(function(ps){ps.forEach(function(p){out.addPage(p);});});})
+          .catch(function(){}).then(function(){i++;next();});
+      };next();
+    });
+  };
+  if(PDFLIB)return go(PDFLIB);
+  BBUSY='도구를 불러오는 중…';render();
+  var sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js';
+  sc.onload=function(){PDFLIB=window.PDFLib;go(PDFLIB);};sc.onerror=function(){BBUSY=null;render();alertMsg('묶음 도구를 불러오지 못했어요. 인터넷 연결을 확인해 주세요.');};
+  document.head.appendChild(sc);
+}
+function alertMsg(t){var d=document.getElementById('toast');if(!d){d=document.createElement('div');d.id='toast';d.className='toast';document.body.appendChild(d);}d.textContent=t;d.classList.add('on');setTimeout(function(){d.classList.remove('on');},3500);}
 function viewPrint(){
   if(!CAT)return '<div class="col"><div class="card"><p>출력물 목록을 불러오는 중이에요…</p></div></div>';
   var g=S.printGrade||S.child.grade, sm=S.printSem||((S.semG===g&&S.semS)?S.semS:semNow()), set=S.printSet||'ga';
@@ -1087,6 +1150,7 @@ function viewPrint(){
   for(var i=1;i<=6;i++)h+='<button class="seg-b" aria-pressed="'+(i===g)+'" data-pgrade="'+i+'">'+i+'학년</button>';
   h+='</div><div class="seg" role="group" aria-label="학기">'+[1,2].map(function(x){return '<button class="seg-b" aria-pressed="'+(x===sm)+'" data-psem="'+x+'">'+x+'학기</button>';}).join('')+'</div></div></header>';
   var dd=semData(g,sm), b='worksheets/sem/g'+g+'-'+sm+'-';
+  h+=bundleCard(g,sm);
   h+='<section class="pv-block"><h2><span class="pv-n">1</span>학기 점검지</h2><p class="small muted">처음엔 A안, 하루 이틀 뒤 C안, 정류장을 다 채운 뒤 B안. 틀린 번호는 학기 점검 화면에 넣어요.</p><div class="pv-chips">'+
     [['A','A안 · 처음'],['C','C안 · 다른 모양'],['B','B안 · 다 채운 뒤'],['key','정답·처방표'],['sol','해설집'],['report','이해도 기록표']].map(function(x){return '<a class="pv-chip'+(x[0]==='A'?' main':'')+'" data-pr="sem-'+x[0]+'" href="'+b+x[0]+'.pdf" target="_blank" rel="noopener">'+x[1]+'</a>';}).join('')+
     '</div>'+(dd?'<p class="small muted" style="margin:8px 0 0">'+dd.n+'문제 · 단원 '+dd.units.length+'개</p>':'')+'</section>';
@@ -1222,7 +1286,7 @@ function viewPdf(){
   return '<section class="pv-wrap"><div class="pv-bar"><button class="btn ghost pv-back" data-act="pv-close" aria-label="목록으로 돌아가기">‹ 돌아가기</button>'+
     '<div class="pv-ttl"><b>'+esc(PV.title)+'</b><small id="pvInfo">불러오는 중…</small></div>'+
     '<div class="pv-tools"><button class="btn ghost pv-z" data-act="pv-zoom" data-z="-1" aria-label="작게">－</button><button class="btn ghost pv-z" data-act="pv-zoom" data-z="1" aria-label="크게">＋</button>'+
-    (ios?'':'<button class="btn" data-act="pv-print">인쇄</button>')+'<a class="btn ghost" href="'+u+'" download data-pr="dl">내려받기</a>'+(ios?'<a class="btn" href="'+u+'" target="_blank" rel="noopener" data-pr="ios-print">인쇄용으로 열기</a>':'')+'</div></div>'+
+    (ios?'':'<button class="btn" data-act="pv-print">인쇄</button>')+'<a class="btn ghost" href="'+u+'" download="'+esc(PV.dl||'')+'" data-pr="dl">내려받기</a>'+(ios?'<a class="btn" href="'+u+'" target="_blank" rel="noopener" data-pr="ios-print">인쇄용으로 열기</a>':'')+'</div></div>'+
     '<div class="pv-pages" id="pvPages" style="--z:'+PV.zoom+'"><p class="muted" style="text-align:center;padding:40px 0">문제지를 펼치는 중이에요…</p></div></section>';
 }
 function pvLoadLib(cb){
@@ -1304,6 +1368,9 @@ document.addEventListener('click',function(e){
   if(t.dataset.semskip){semSet(function(r){if(r.skip[t.dataset.semskip])delete r.skip[t.dataset.semskip];else r.skip[t.dataset.semskip]=1;});return;}
   if(t.dataset.semscope){var dd=SEMD[(S.semG||S.child.grade)+'-'+(S.semS||semNow())];semSet(function(r){r.scope=t.dataset.semscope;r.skip={};if(r.scope==='mid'&&dd)dd.units.slice(dd.units.length/2).forEach(function(u){r.skip[u.uid]=1;});});return;}
   if(t.dataset.pgrade){S.printGrade=+t.dataset.pgrade;render();return;}
+  if(t.dataset.bpre){var g0=S.printGrade||S.child.grade,s0=S.printSem||((S.semG===g0&&S.semS)?S.semS:semNow()),k0=g0+'-'+s0,its=bundleItems(g0,s0),o={};
+    its.forEach(function(it){if(t.dataset.bpre==='all'||it.set===t.dataset.bpre)o[it.k]=1;});BSEL[k0]=o;render();return;}
+  if(t.dataset.act==='bundle-make'){var g1=S.printGrade||S.child.grade,s1=S.printSem||((S.semG===g1&&S.semS)?S.semS:semNow());bundleMake(g1,s1);return;}
   if(t.dataset.psem){S.printSem=+t.dataset.psem;render();return;}
   if(t.dataset.pkind){S.printKind=t.dataset.pkind;render();return;}
   if(t.dataset.pset){S.printSet=t.dataset.pset;render();return;}
@@ -1351,6 +1418,7 @@ document.addEventListener('click',function(e){
   else if(a==='setup'){S={sample:false,child:{nickname:'우리 아이',grade:S.child.grade},progress:{},diag:{},pass:false,view:'record',sel:null,mapGrade:S.child.grade,diagStep:null,detailOpen:false,selftest:S.selftest||{},size:S.size,cloud:S.cloud};render();var n=document.getElementById('nick');if(n){n.focus();n.select();}}
 });
 document.addEventListener('change',function(e){
+  if(e.target.dataset&&e.target.dataset.bsel){var g0=S.printGrade||S.child.grade,s0=S.printSem||((S.semG===g0&&S.semS)?S.semS:semNow()),k0=g0+'-'+s0;BSEL[k0]=BSEL[k0]||{};if(e.target.checked)BSEL[k0][e.target.dataset.bsel]=1;else delete BSEL[k0][e.target.dataset.bsel];render();return;}
   if(e.target.dataset&&e.target.dataset.region&&cloudOn()){cloudCall('saveRegion',e.target.value);return;}
   var k=e.target.dataset&&e.target.dataset.st; if(!k)return;
   S.selftest=S.selftest||{}; S.selftest[k]=e.target.checked; render();
