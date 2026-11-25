@@ -496,6 +496,30 @@ body{background:var(--paper);background-image:linear-gradient(180deg,var(--sunbg
 .fine-v{flex:1 1 100%;margin:4px 0 0;font-size:.875rem;background:#FFF8E1;border-radius:12px;padding:8px 12px}
 .rep-two{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
 @media (max-width:640px){.rep-two{grid-template-columns:1fr}}
+
+/* ---- 홈페이지 안 PDF 보기 ---- */
+main.pv-on{display:block;max-width:none;padding:0 0 24px}
+.pv-wrap{display:flex;flex-direction:column;min-height:calc(100vh - 140px)}
+.pv-bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 16px;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--edge)}
+.pv-ttl{flex:1 1 220px;min-width:0;display:flex;flex-direction:column}.pv-ttl b{font-family:var(--title);font-weight:400;font-size:1.05rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pv-ttl small{color:var(--muted);font-size:.75rem}
+.pv-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.pv-tools .btn{min-height:40px;padding:6px 14px;white-space:nowrap}.pv-z{min-width:40px;padding:6px 0!important;font-size:1.1rem}
+.pv-back{min-height:40px;padding:6px 14px}
+.pv-pages{flex:1;background:#E9E6DD;padding:20px 12px 40px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.pv-pg{margin:0;width:min(100%,calc(820px * var(--z,1)));display:flex;flex-direction:column;align-items:center;gap:6px}
+.pv-sheet{width:100%;aspect-ratio:210/297;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.05);border-radius:2px;overflow:hidden}
+.pv-sheet canvas{display:block;width:100%;height:100%}
+.pv-pg figcaption{font-size:.75rem;color:#6b665b;font-family:"Num",var(--title)}
+.pv-frame{width:100%;max-width:900px;height:80vh;border:0;background:#fff}
+@media (max-width:640px){.pv-pages{padding:12px 6px 30px;gap:12px}.pv-bar{padding:8px 10px}.pv-tools .btn{padding:6px 10px;font-size:.8125rem}}
+@media print{.pv-bar,.top,.bottom,.rail,.foot{display:none!important}}
+
+/* ---- 학기 종합평가 ---- */
+.comp-grid{display:grid;gap:8px}
+.comp-u{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:10px 0;border-top:1px solid var(--grid)}
+.cu-n{flex:0 0 150px;font-size:.9375rem}.cu-b{display:flex;gap:6px}
+.cu-v{flex:1 1 260px;display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;font-size:.875rem}.cu-v small{flex:1 1 100%;color:var(--muted)}
+.ladder{display:inline-flex;align-items:flex-end;gap:2px;height:18px}.ladder i{width:7px;border:1.5px solid var(--ink);background:var(--card)}.ladder i:nth-child(1){height:7px}.ladder i:nth-child(2){height:12px}.ladder i:nth-child(3){height:17px}.ladder i.on{background:var(--ink)}
+@media (max-width:640px){.cu-n{flex-basis:100%}}
 </style>
 
 </head>
@@ -670,13 +694,28 @@ var DRILL;function drillFile(mod,st){if(DRILL===undefined){DRILL=null;fetch('wor
 function conFile(g,s,mod,st){var d=conData(g,s);if(!d)return null;var c=d.cards.filter(function(x){return x.mod===mod&&x.st===st;})[0];return c?c.file:null;}
 function semCat(mod,st,kind){if(!CAT)return null;return CAT.items.filter(function(x){return x.mod===mod&&x.st===st&&x.kind===kind;})[0]||null;}
 function semFix(r){r=r||{};r.skip=r.skip||{};r.runs=r.runs||{};if(r.wrong){r.runs.A={wrong:r.wrong,done:!!r.done,at:r.at};delete r.wrong;delete r.done;delete r.at;}
-  ['A','B','C'].forEach(function(v){r.runs[v]=r.runs[v]||{wrong:{}};r.runs[v].why=r.runs[v].why||{};});r.fine=r.fine||{};r.ver=r.ver||'A';return r;}
+  ['A','B','C'].forEach(function(v){r.runs[v]=r.runs[v]||{wrong:{}};r.runs[v].why=r.runs[v].why||{};});r.fine=r.fine||{};r.comp=r.comp||{w:{}};r.comp.w=r.comp.w||{};r.ver=r.ver||'A';return r;}
 function modeSeg(){var m=S.diagMode||'sem';return '<div class="seg dmode" role="group" aria-label="진단 종류">'+[['sem','학기 점검'],['gate','관문 진단 (빠른 10분)']].map(function(x){return '<button class="seg-b" aria-pressed="'+(x[0]===m)+'" data-dmode="'+x[0]+'">'+x[1]+'</button>';}).join('')+'</div>';}
 var WHY={k:'몰랐어요',c:'계산 실수',r:'문제를 잘못 읽음',t:'시간이 모자람'}, WHYS={k:'몰',c:'계',r:'읽',t:'시'};
 var FINE_V={back:{t:'돌아가기',d:'아래 학년 기초가 비어 있어요. 돌아갈 곳의 (가) 기본편을 먼저 풀어요.'},concept:{t:'개념부터',d:'개념 카드를 읽고 (가) 기본편부터 차례로 풀어요.'},apply:{t:'다지기부터',d:'기본은 돼요. (가)는 통과 확인만 풀고 (나) 다지기편 → (다) 생각편으로 가요.'},slip:{t:'실수였어요',d:'정밀 확인을 모두 맞혔어요. 이 정류장은 통과!'}};
 function fineVerdict(x,f){
   if(!x.fine||!f||!f.done)return null;var ro=x.fine.roles,w=f.w||{},hit=function(set){for(var i=0;i<ro.length;i++)if(set.indexOf(ro[i])>=0&&w[i+1])return true;return false;};
   return hit('p')?'back':hit('b')?'concept':hit('at')?'apply':'slip';
+}
+var COMPD={};function compData(g,s){var k=g+'-'+s;if(COMPD[k]===undefined){COMPD[k]=null;fetch('worksheets/comp/g'+k+'.json').then(function(x){return x.ok?x.json():0;}).then(function(d){COMPD[k]=d||0;render();}).catch(function(){COMPD[k]=0;});}return COMPD[k];}
+var COMP_V={base:{t:'뼈대부터',d:'개념 카드를 읽고 그 단원 (가) 기본편부터. 학기 점검(승차권)으로 어느 정류장인지 찾아요.'},link:{t:'잇기 연습',d:'(나) 다지기편의 여러 단계·거꾸로 문제를 풀어요.'},deep:{t:'종합 도전',d:'(다) 생각편과 일일 연습장의 문장제로 길게 생각하는 연습을 해요.'},done:{t:'완성',d:'세 계단 모두 올랐어요. 학교 시험 수준을 넘었어요.'},slip:{t:'실수 확인',d:'연결·종합은 맞았어요. 기본 계산을 천천히 다시 확인하는 습관을 들여요.'}};
+function compVerdict(u,w){var by={};u.items.forEach(function(it){by[it.lv]=!w[it.n];});if(!by.b&&by.l&&by.c)return 'slip';if(!by.b)return 'base';if(!by.l)return 'link';if(!by.c)return 'deep';return 'done';}
+function compCard(g,s,r){
+  var cd=compData(g,s);if(!cd)return '';var c=r.comp,LVN={b:'기본',l:'연결',c:'종합'};
+  var h='<section class="card comp" data-pvt="'+g+'학년 '+s+'학기 종합평가"><h3>학기 종합평가 <small class="muted" style="font-weight:400">— 단원마다 세 계단: 기본 → 연결 → 종합</small></h3>'+
+    '<p class="small muted">학기 점검(승차권)으로 빈 정류장을 채운 뒤, 학교 시험 전에 풀어요. 단원마다 한 가지 생각(기본), 두 가지를 잇기(연결), 세 가지 이상을 함께(종합) 문제가 하나씩 있어요. '+cd.n+'문제 · 약 40분.</p>'+
+    '<div class="pv-chips"><a class="pv-chip main" data-pr="comp-test" href="'+esc(cd.test)+'">종합평가 문제지</a><a class="pv-chip" data-pr="comp-key" href="'+esc(cd.key)+'">정답·해설·기록표</a></div>'+
+    '<p class="small" style="margin:14px 0 6px">틀린 번호를 눌러요</p><div class="comp-grid">';
+  cd.units.forEach(function(u){var v=c.done?compVerdict(u,c.w):null,k=v?['base','link','deep','done'].indexOf(v==='slip'?'done':v):-1;
+    h+='<div class="comp-u"><span class="cu-n">'+esc(u.unit)+'</span><span class="cu-b">'+u.items.map(function(it){return '<button class="fine-n" aria-pressed="'+(!!c.w[it.n])+'" data-compn="'+it.n+'">'+it.n+'<small>'+LVN[it.lv]+'</small></button>';}).join('')+'</span>'+
+      (v?'<span class="cu-v"><span class="ladder" aria-hidden="true">'+[0,1,2].map(function(i){return '<i class="'+(i<(v==='slip'?2:k)?'on':'')+'"></i>';}).join('')+'</span><b>'+COMP_V[v].t+'</b><small>'+COMP_V[v].d+'</small></span>':'')+'</div>';});
+  h+='</div><button class="btn'+(c.done?' ghost':'')+'" data-act="comp-done" style="margin-top:12px">'+(c.done?'다시 넣기':'판정 보기')+'</button>'+(c.at?'<span class="small muted" style="margin-left:10px">'+esc(c.at)+'</span>':'')+'</section>';
+  return h;
 }
 function semWhy(r,n){var o=null;['B','C','A'].forEach(function(v){if(!o&&r.runs[v].done&&r.runs[v].wrong[n]&&r.runs[v].why[n])o=r.runs[v].why[n];});return o;}
 function semJudge(d,r){
@@ -742,6 +781,7 @@ function viewSem(){
       h+='</div>';}
     h+='<div class="row" style="margin-top:12px"><button class="btn" data-act="sem-done">'+r.ver+'안 결과 보기'+(nw?' (틀린 '+nw+'개)':' (모두 맞음)')+'</button>'+(nw?'<button class="btn ghost" data-act="sem-clear">다시 고르기</button>':'')+(anyDone?'<button class="btn ghost" data-act="sem-back">결과로 돌아가기</button>':'')+'</div></section>';
   }
+  h+=compCard(g,s,r);
   return h+'</div>'+detailCol();
 }
 
@@ -1059,7 +1099,7 @@ function viewPrint(){
     var its=CAT.items.filter(function(x){return x.kind===set&&(x.stations||[]).indexOf(u.id)>=0;}).sort(function(x,y){return x.mod<y.mod?-1:x.mod>y.mod?1:x.st-y.st;});
     var mods=[];its.forEach(function(x){if(mods.indexOf(x.mod)<0)mods.push(x.mod);});
     var common=CAT.items.filter(function(x){return mods.indexOf(x.mod)>=0&&!x.st&&x.group==='dowumji';});
-    h+='<article class="pv-unit"><h3><span class="ms-no">'+u.id+'</span>'+esc(u.name)+'</h3><ol class="pv-list">'+(its.length?its.map(function(f){
+    h+='<article class="pv-unit" data-pvt="'+esc(u.id+' '+u.name)+'"><h3><span class="ms-no">'+u.id+'</span>'+esc(u.name)+'</h3><ol class="pv-list">'+(its.length?its.map(function(f){
       return '<li class="pv-row"><span class="pv-no">'+(f.st<10?'0'+f.st:f.st)+'</span><span class="pv-nm">'+esc(f.st_title)+(conFile(g,sm,f.mod,f.st)?' <a class="pv-link" data-pr="concept" href="'+conFile(g,sm,f.mod,f.st)+'" target="_blank" rel="noopener">개념 카드</a>':'')+(drillFile(f.mod,f.st)?' <a class="pv-link" data-pr="drill" href="'+drillFile(f.mod,f.st).file+'" target="_blank" rel="noopener">일일 연습장 '+drillFile(f.mod,f.st).rounds+'회</a>':'')+'</span><a class="pv-go" data-pr="'+esc(f.kind)+'" href="'+esc(f.file)+'" target="_blank" rel="noopener" aria-label="'+esc(f.st_title)+' '+SETN[set]+' 출력">출력 <span class="num">'+f.pages+'</span>쪽</a></li>';}).join(''):'<li class="small muted">학습지 준비 중이에요</li>')+'</ol>'+
       (common.length?'<p class="pv-common">'+common.map(function(x){return '<a class="pv-link" data-pr="'+esc(x.kind)+'" href="'+esc(x.file)+'" target="_blank" rel="noopener">'+esc(KIND_LABEL[x.kind]||x.title)+'</a>';}).join('<span class="sep">·</span>')+'</p>':'')+'</article>';});
   h+='</div></section>';
@@ -1172,6 +1212,54 @@ function viewIntro(){
 var WIDE='(min-width:900px)';
 function detailCol(){if(!(S.sel&&S.detailOpen))return '';return '<aside class="panel-detail" aria-label="단원 카드"><div class="row" style="justify-content:flex-end"><button class="btn ghost" data-act="detail-close">닫기 ✕</button></div>'+stationCard(S.sel)+'</aside>';}
 
+/* ---------- 홈페이지 안에서 PDF 보기 ---------- */
+var PV=null, PDFJS=null;
+function pvOpen(url,title,kind){var y=window.scrollY;PV={url:url,title:title||'학습지',kind:kind||'',y:y,n:0,zoom:1};try{history.pushState({pv:1},'');}catch(e){}render();window.scrollTo(0,0);track('pv_open','pr_'+(kind||'pdf'));}
+function pvClose(fromPop){if(!PV)return;var y=PV.y;PV=null;render();window.scrollTo(0,y||0);if(!fromPop){try{if(history.state&&history.state.pv)history.back();}catch(e){}}}
+window.addEventListener('popstate',function(){if(PV)pvClose(true);});
+function viewPdf(){
+  var u=esc(PV.url), ios=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  return '<section class="pv-wrap"><div class="pv-bar"><button class="btn ghost pv-back" data-act="pv-close" aria-label="목록으로 돌아가기">‹ 돌아가기</button>'+
+    '<div class="pv-ttl"><b>'+esc(PV.title)+'</b><small id="pvInfo">불러오는 중…</small></div>'+
+    '<div class="pv-tools"><button class="btn ghost pv-z" data-act="pv-zoom" data-z="-1" aria-label="작게">－</button><button class="btn ghost pv-z" data-act="pv-zoom" data-z="1" aria-label="크게">＋</button>'+
+    (ios?'':'<button class="btn" data-act="pv-print">인쇄</button>')+'<a class="btn ghost" href="'+u+'" download data-pr="dl">내려받기</a>'+(ios?'<a class="btn" href="'+u+'" target="_blank" rel="noopener" data-pr="ios-print">인쇄용으로 열기</a>':'')+'</div></div>'+
+    '<div class="pv-pages" id="pvPages" style="--z:'+PV.zoom+'"><p class="muted" style="text-align:center;padding:40px 0">문제지를 펼치는 중이에요…</p></div></section>';
+}
+function pvLoadLib(cb){
+  if(PDFJS)return cb(PDFJS);
+  var sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+  sc.onload=function(){PDFJS=window.pdfjsLib;PDFJS.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';cb(PDFJS);};
+  sc.onerror=function(){var b=document.getElementById('pvPages');if(b)b.innerHTML='<iframe class="pv-frame" src="'+esc(PV.url)+'" title="'+esc(PV.title)+'"></iframe>';};
+  document.head.appendChild(sc);
+}
+function pvMount(){
+  var url=PV.url, me=PV;
+  pvLoadLib(function(lib){
+    lib.getDocument(url).promise.then(function(doc){
+      if(PV!==me)return; var box=document.getElementById('pvPages'); if(!box)return;
+      PV.doc=doc;PV.n=doc.numPages; document.getElementById('pvInfo').textContent=doc.numPages+'쪽 · A4';
+      box.innerHTML='';
+      for(var i=1;i<=doc.numPages;i++){var f=document.createElement('figure');f.className='pv-pg';f.dataset.p=i;f.innerHTML='<div class="pv-sheet"></div><figcaption>'+i+' / '+doc.numPages+'</figcaption>';box.appendChild(f);}
+      var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){io.unobserve(en.target);pvDraw(me,en.target);}});},{rootMargin:'600px 0px'});
+      PV.io=io; box.querySelectorAll('.pv-pg').forEach(function(f){io.observe(f);});
+    }).catch(function(){var b=document.getElementById('pvPages');if(b)b.innerHTML='<p style="text-align:center;padding:30px">문제지를 불러오지 못했어요. <a href="'+esc(url)+'" target="_blank" rel="noopener">PDF로 열기</a></p>';});
+  });
+}
+function pvDraw(me,fig){
+  if(PV!==me||!me.doc)return; var p=+fig.dataset.p;
+  me.doc.getPage(p).then(function(pg){
+    var sheet=fig.querySelector('.pv-sheet'); var w=sheet.clientWidth||600; var v0=pg.getViewport({scale:1});
+    var dpr=Math.min(window.devicePixelRatio||1,2.5), sc=w/v0.width*dpr, vp=pg.getViewport({scale:sc});
+    var c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;c.setAttribute('aria-label',me.title+' '+p+'쪽');
+    sheet.innerHTML='';sheet.appendChild(c);sheet.style.aspectRatio=v0.width+'/'+v0.height;
+    pg.render({canvasContext:c.getContext('2d'),viewport:vp});
+  });
+}
+function pvPrint(){
+  var f=document.getElementById('pvPrintFrame'); if(f)f.remove();
+  f=document.createElement('iframe');f.id='pvPrintFrame';f.style.cssText='position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0';f.src=PV.url;
+  f.onload=function(){try{f.contentWindow.focus();f.contentWindow.print();}catch(e){window.open(PV.url,'_blank');}};document.body.appendChild(f);track('pv_print');
+}
 function render(){
   document.documentElement.setAttribute('data-size',S.size==='lg'?'lg':'md');
   document.body.classList.toggle('intro-on',introOpen);
@@ -1182,6 +1270,8 @@ function render(){
   document.querySelectorAll('[data-nav]').forEach(function(b){b.setAttribute('aria-current',b.dataset.nav===S.view?'page':'false');});
   var wide=window.matchMedia(WIDE).matches;
   var m=document.getElementById('main');
+  if(PV){m.innerHTML=viewPdf();m.classList.add('pv-on');m.classList.remove('single','wide-print');save();pvMount();return;}
+  m.classList.remove('pv-on');
   if(!wide && S.detailOpen && S.sel){m.innerHTML='<div class="col">'+stationCard(S.sel)+'</div>';}
   else m.innerHTML=({today:viewToday,diag:viewDiag,map:viewMap,print:viewPrint,record:viewRecord}[S.view]||viewToday)();
   m.classList.toggle('single',S.view==='record'||S.view==='print');
@@ -1190,16 +1280,24 @@ function render(){
 }
 
 document.addEventListener('click',function(e){
+  var pa=e.target.closest('a[href]');
+  if(pa&&!e.metaKey&&!e.ctrlKey&&!e.shiftKey&&/\.pdf(#.*)?$/i.test(pa.getAttribute('href'))&&!pa.hasAttribute('download')&&!/ios-print/.test(pa.dataset.pr||'')&&!pa.closest('.pv-wrap')){
+    e.preventDefault(); var tt=(pa.getAttribute('aria-label')||pa.textContent||'').replace(/\s+/g,' ').replace(/\s*(출력|열기)\s*(\d+\s*쪽)?\s*$/,'').replace(/·\s*\d+쪽$/,'').trim(); var ctx=pa.closest('[data-pvt]'); pvOpen(pa.getAttribute('href'),(ctx?ctx.dataset.pvt+' · ':'')+tt,pa.dataset.pr); return;}
   var w=e.target.closest('a[data-ws]'); if(w){track('ws_open','ws_'+w.dataset.ws);return;}
   var pr=e.target.closest('a[data-pr]'); if(pr){track('pr_open','pr_'+pr.dataset.pr);return;}
   var t=e.target.closest('button'); if(!t)return;
-  if(t.dataset.nav){S.view=t.dataset.nav;S.detailOpen=false;S.semReport=false;if(S.view==='diag')S.diagStep=null;if(t.dataset.dmode)S.diagMode=t.dataset.dmode;if(t.dataset.semg)S.semG=+t.dataset.semg;if(t.dataset.sems)S.semS=+t.dataset.sems;render();window.scrollTo(0,0);return;}
+  if(t.dataset.act==='pv-close'){pvClose();return;}
+  if(t.dataset.act==='pv-print'){pvPrint();return;}
+  if(t.dataset.act==='pv-zoom'){PV.zoom=Math.max(.6,Math.min(1.6,PV.zoom+(+t.dataset.z)*.2));var b=document.getElementById('pvPages');b.style.setProperty('--z',PV.zoom);if(PV.io)b.querySelectorAll('.pv-pg').forEach(function(f){f.querySelector('.pv-sheet').innerHTML='';PV.io.observe(f);});return;}
+  if(t.dataset.nav){if(PV){PV=null;try{if(history.state&&history.state.pv)history.replaceState(null,'');}catch(e){}}S.view=t.dataset.nav;S.detailOpen=false;S.semReport=false;if(S.view==='diag')S.diagStep=null;if(t.dataset.dmode)S.diagMode=t.dataset.dmode;if(t.dataset.semg)S.semG=+t.dataset.semg;if(t.dataset.sems)S.semS=+t.dataset.sems;render();window.scrollTo(0,0);return;}
   if(t.dataset.open){track('st_open','st_'+t.dataset.open);S.sel=t.dataset.open;S.detailOpen=true;if(S.view==='print'){S.view='map';}S.mapGrade=byId[S.sel].grade;render();if(!window.matchMedia(WIDE).matches)window.scrollTo(0,0);return;}
   if(t.dataset.grade){S.mapGrade=+t.dataset.grade;render();return;}
   if(t.dataset.dmode){S.diagMode=t.dataset.dmode;S.diagStep=null;track('dm_'+t.dataset.dmode);render();return;}
   if(t.dataset.semg||t.dataset.sems){if(t.dataset.semg)S.semG=+t.dataset.semg;if(t.dataset.sems)S.semS=+t.dataset.sems;render();return;}
   if(t.dataset.semn){semSet(function(r){var w=r.runs[r.ver].wrong;if(w[t.dataset.semn]){delete w[t.dataset.semn];delete r.runs[r.ver].why[t.dataset.semn];}else w[t.dataset.semn]=1;});return;}
   if(t.dataset.whyn){semSet(function(r){var y=r.runs[r.ver].why;if(y[t.dataset.whyn]===t.dataset.whyk)delete y[t.dataset.whyn];else y[t.dataset.whyn]=t.dataset.whyk;});return;}
+  if(t.dataset.compn){semSet(function(r){r.comp.done=false;if(r.comp.w[t.dataset.compn])delete r.comp.w[t.dataset.compn];else r.comp.w[t.dataset.compn]=1;});return;}
+  if(t.dataset.act==='comp-done'){track('comp_done');semSet(function(r){r.comp.done=!r.comp.done;if(r.comp.done)r.comp.at=today();});return;}
   if(t.dataset.finen){semSet(function(r){var f=r.fine[t.dataset.finen]=r.fine[t.dataset.finen]||{w:{}};f.done=false;if(f.w[t.dataset.finek])delete f.w[t.dataset.finek];else f.w[t.dataset.finek]=1;});return;}
   if(t.dataset.fined){track('fine_done');semSet(function(r){var f=r.fine[t.dataset.fined]=r.fine[t.dataset.fined]||{w:{}};f.done=!f.done;if(f.done)f.at=today();});return;}
   if(t.dataset.semver){S.semEdit=true;semSet(function(r){r.ver=t.dataset.semver;});return;}
@@ -1230,7 +1328,7 @@ document.addEventListener('click',function(e){
   if(a==='rep-print'){track('rep_print');window.print();return;}
   if(a==='sem-back'){S.semEdit=false;render();return;}
   if(a==='sem-clear'){semSet(function(r){r.runs[r.ver].wrong={};r.runs[r.ver].why={};});return;}
-  if(a==='sem-reset'){S.semEdit=true;semSet(function(r){r.runs={};r.skip={};r.fine={};r.scope='all';r.ver='A';});return;}
+  if(a==='sem-reset'){S.semEdit=true;semSet(function(r){r.runs={};r.skip={};r.fine={};r.comp={w:{}};r.scope='all';r.ver='A';});return;}
   if(a==='diag-start'){track('diag_start');S.diagStep=0;render();}
   else if(a==='diag-reset'){S.diag={};S.diagStep=0;render();}
   else if(a==='login-google'){cloudCall('loginGoogle');}
